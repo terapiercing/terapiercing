@@ -66,9 +66,17 @@ export async function getAvailableSlots(serviceId: string, dateStr: string) {
   const slots: string[] = []
   const interval = 30 // minutes
 
+  // Se a data é hoje, calcular o horário atual para filtrar slots passados
+  const now = new Date()
+  const isToday = year === now.getFullYear() && month === now.getMonth() + 1 && day === now.getDate()
+  const currentMinutes = isToday ? now.getHours() * 60 + now.getMinutes() : 0
+
   for (let current = startMin; current + serviceDuration <= endMin; current += interval) {
     const slotStart = current
     const slotEnd = current + serviceDuration
+
+    // Se é hoje, pular slots que já passaram
+    if (isToday && slotStart <= currentMinutes) continue
 
     // Check if slot is in any block
     let isBlocked = false
@@ -196,6 +204,14 @@ export async function createAppointment(
   if (requestedMin < startMin || requestedMin + serviceDuration > endMin) {
     return {
       error: `O horário selecionado está fora do expediente (${availability.hora_inicio.slice(0, 5)} às ${availability.hora_fim.slice(0, 5)}).`,
+    }
+  }
+
+  // --- Validação: se é hoje, verificar se expediente ainda está aberto ---
+  if (isToday) {
+    const currentMin = now.getHours() * 60 + now.getMinutes()
+    if (currentMin >= endMin) {
+      return { error: 'O expediente de hoje já encerrou. Por favor, escolha outro dia.' }
     }
   }
 

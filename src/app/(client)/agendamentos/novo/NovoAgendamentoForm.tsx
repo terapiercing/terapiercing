@@ -21,9 +21,11 @@ const WEEKDAYS_PT = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 export default function NovoAgendamentoForm({
   servicos,
   initialServiceId,
+  todayClosed,
 }: {
   servicos: Servico[]
   initialServiceId: string
+  todayClosed: boolean
 }) {
   const router = useRouter()
   const [selectedServiceId, setSelectedServiceId] = useState(initialServiceId || (servicos[0]?.id ?? ''))
@@ -78,8 +80,24 @@ export default function NovoAgendamentoForm({
 
   const calendarDays: { date: Date; isCurrentMonth: boolean; isPast: boolean; isSunday: boolean }[] = []
 
+  const formatDateStr = (d: Date) => {
+    const y = d.getFullYear()
+    const m = String(d.getMonth() + 1).padStart(2, '0')
+    const dateStr = String(d.getDate()).padStart(2, '0')
+    return `${y}-${m}-${dateStr}`
+  }
+
   const todayStart = new Date()
   todayStart.setHours(0, 0, 0, 0)
+  const todayStr = formatDateStr(todayStart)
+
+  // Helper to check if a date should be treated as unavailable
+  const isDateUnavailable = (d: Date) => {
+    if (d.getDay() === 0) return true // Domingo
+    if (d < todayStart) return true // Passado
+    if (todayClosed && formatDateStr(d) === todayStr) return true // Hoje mas expediente encerrou
+    return false
+  }
 
   // Add padding days from previous month
   const prevMonthLastDay = new Date(year, month, 0).getDate()
@@ -88,7 +106,7 @@ export default function NovoAgendamentoForm({
     calendarDays.push({
       date: d,
       isCurrentMonth: false,
-      isPast: d < todayStart,
+      isPast: isDateUnavailable(d),
       isSunday: d.getDay() === 0
     })
   }
@@ -99,7 +117,7 @@ export default function NovoAgendamentoForm({
     calendarDays.push({
       date: d,
       isCurrentMonth: true,
-      isPast: d < todayStart,
+      isPast: isDateUnavailable(d),
       isSunday: d.getDay() === 0
     })
   }
@@ -111,7 +129,7 @@ export default function NovoAgendamentoForm({
     calendarDays.push({
       date: d,
       isCurrentMonth: false,
-      isPast: d < todayStart,
+      isPast: isDateUnavailable(d),
       isSunday: d.getDay() === 0
     })
   }
@@ -122,13 +140,6 @@ export default function NovoAgendamentoForm({
 
   const handleNextMonth = () => {
     setCurrentMonth(new Date(year, month + 1, 1))
-  }
-
-  const formatDateStr = (d: Date) => {
-    const y = d.getFullYear()
-    const m = String(d.getMonth() + 1).padStart(2, '0')
-    const dateStr = String(d.getDate()).padStart(2, '0')
-    return `${y}-${m}-${dateStr}`
   }
 
   const getDayClasses = (item: typeof calendarDays[0]) => {

@@ -21,6 +21,27 @@ export default async function Page({
     .eq('ativo', true)
     .order('nome')
 
+  // Verificar se o expediente de hoje já encerrou
+  const now = new Date()
+  const todayDayOfWeek = now.getDay()
+
+  const { data: todayAvailability } = await supabase
+    .from('disponibilidades')
+    .select('hora_fim')
+    .eq('dia_semana', todayDayOfWeek)
+    .eq('ativo', true)
+    .single()
+
+  let todayClosed = false
+  if (todayAvailability) {
+    const [endH, endM] = todayAvailability.hora_fim.split(':').map(Number)
+    const endMinutes = endH * 60 + endM
+    const currentMinutes = now.getHours() * 60 + now.getMinutes()
+    todayClosed = currentMinutes >= endMinutes
+  } else {
+    todayClosed = true
+  }
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
@@ -33,6 +54,7 @@ export default async function Page({
       <NovoAgendamentoForm
         servicos={servicos || []}
         initialServiceId={initialServiceId}
+        todayClosed={todayClosed}
       />
     </div>
   )
