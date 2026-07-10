@@ -108,3 +108,65 @@ export async function getSession() {
   const { data } = await supabase.auth.getSession()
   return data.session
 }
+
+export async function updateProfile(
+  _prevState: { error: string; success?: boolean } | undefined,
+  formData: FormData
+) {
+  const supabase = await createClient()
+  const { data: userData } = await supabase.auth.getUser()
+  const user = userData.user
+
+  if (!user) {
+    return { error: 'Usuário não autenticado.' }
+  }
+
+  const nome = formData.get('nome') as string
+  const telefone = formData.get('telefone') as string
+  const cpf = formData.get('cpf') as string
+  const nascimento = formData.get('nascimento') as string
+  const endereco = formData.get('endereco') as string
+
+  if (!nome || !telefone) {
+    return { error: 'Nome e Telefone são obrigatórios.' }
+  }
+
+  const { error: pacienteError } = await supabase
+    .from('pacientes')
+    .update({
+      nome,
+      telefone,
+      cpf: cpf || null,
+      nascimento: nascimento || null,
+      endereco: endereco || null,
+    })
+    .eq('user_id', user.id)
+
+  if (pacienteError) {
+    return { error: `Erro ao atualizar perfil: ${pacienteError.message}` }
+  }
+
+  const role = formData.get('role') as string
+  if (role) {
+    const { data: usuarioData } = await supabase
+      .from('usuarios')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (usuarioData?.role === 'admin') {
+      const targetUserId = (formData.get('target_user_id') as string) || user.id
+      const { error: roleError } = await supabase
+        .from('usuarios')
+        .update({ role })
+        .eq('id', targetUserId)
+
+      if (roleError) {
+        return { error: `Erro ao atualizar perfil de acesso: ${roleError.message}` }
+      }
+    }
+  }
+
+  revalidatePath('/perfil')
+  return { success: true, error: '' }
+}
