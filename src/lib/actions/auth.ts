@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 function isCpf(value: string): boolean {
   return /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/.test(value)
@@ -87,7 +88,8 @@ export async function signup(
   const user = authData.user
 
   if (user) {
-    const { error: userError } = await supabase
+    const supabaseAdmin = createAdminClient()
+    const { error: userError } = await supabaseAdmin
       .from('usuarios')
       .insert({
         id: user.id,
@@ -153,7 +155,9 @@ export async function cadastrarCliente(
     return { error: 'Preencha todos os campos obrigatórios (Nome, E-mail, Senha e Telefone).' }
   }
 
-  const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+  const supabaseAdmin = createAdminClient()
+
+  const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
@@ -166,7 +170,7 @@ export async function cadastrarCliente(
   const user = authData.user
 
   if (user) {
-    const { error: userError } = await supabase
+    const { error: userError } = await supabaseAdmin
       .from('usuarios')
       .insert({
         id: user.id,

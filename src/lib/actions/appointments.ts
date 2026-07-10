@@ -144,6 +144,100 @@ export async function createAppointment(
     return { error: 'Perfil de usuário não encontrado.' }
   }
 
+  // --- Validação: data não pode ser no passado ---
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const [year, month, day] = date.split('-').map(Number)
+  const selectedDate = new Date(Date.UTC(year, month - 1, day))
+
+  if (selectedDate < today) {
+    return { error: 'Não é possível agendar em uma data passada.' }
+  }
+
+  // --- Validação: horário não pode ser retroativo (se for hoje) ---
+  const now = new Date()
+  const isToday = selectedDate.getTime() === today.getTime()
+
+  if (isToday) {
+    const [h, m] = time.split(':').map(Number)
+    const selectedMinutes = h * 60 + m
+    const currentMinutes = now.getHours() * 60 + now.getMinutes()
+
+    if (selectedMinutes <= currentMinutes) {
+      return { error: 'Não é possível agendar em um horário que já passou.' }
+    }
+  }
+
+  // --- Validação: horário dentro do expediente ---
+  const dayOfWeek = selectedDate.getUTCDay()
+
+  const { data: availability } = await supabase
+    .from('disponibilidades')
+    .select('hora_inicio, hora_fim')
+    .eq('dia_semana', dayOfWeek)
+    .eq('ativo', true)
+    .single()
+
+  if (!availability) {
+    return { error: 'Não há disponibilidade de atendimento para este dia da semana.' }
+  }
+
+  const requestedMin = timeToMinutes(time)
+  const service = await supabase
+    .from('servicos')
+    .select('duracao_min')
+    .eq('id', serviceId)
+    .single()
+
+  const serviceDuration = service.data?.duracao_min ?? 60
+  const startMin = timeToMinutes(availability.hora_inicio)
+  const endMin = timeToMinutes(availability.hora_fim)
+
+  if (requestedMin < startMin || requestedMin + serviceDuration > endMin) {
+    return {
+      error: `O horário selecionado está fora do expediente (${availability.hora_inicio.slice(0, 5)} às ${availability.hora_fim.slice(0, 5)}).`,
+    }
+  }
+
+  // --- Validação: verificar bloqueios ---
+  const { data: blocks } = await supabase
+    .from('bloqueios')
+    .select('hora_inicio, hora_fim')
+    .eq('data', date)
+
+  if (blocks) {
+    for (const block of blocks) {
+      if (!block.hora_inicio || !block.hora_fim) {
+        return { error: 'Este dia está bloqueado e não aceita agendamentos.' }
+      }
+      const blockStart = timeToMinutes(block.hora_inicio)
+      const blockEnd = timeToMinutes(block.hora_fim)
+      if (requestedMin < blockEnd && blockStart < requestedMin + serviceDuration) {
+        return { error: 'O horário selecionado conflita com um período bloqueado.' }
+      }
+    }
+  }
+
+  // --- Validação: verificar conflito com agendamentos existentes ---
+  const { data: existingAppointments } = await supabase
+    .from('apontamentos')
+    .select('hora, servicos(duracao_min)')
+    .eq('data', date)
+    .neq('status', 'Cancelado')
+
+  if (existingAppointments) {
+    for (const appt of existingAppointments) {
+      const apptStart = timeToMinutes(appt.hora)
+      const apptDuration = (appt.servicos as unknown as { duracao_min: number })?.duracao_min || 60
+      const apptEnd = apptStart + apptDuration
+
+      if (requestedMin < apptEnd && apptStart < requestedMin + serviceDuration) {
+        return { error: 'O horário selecionado já está ocupado. Por favor, escolha outro horário.' }
+      }
+    }
+  }
+
+  // --- Inserir agendamento ---
   const { error } = await supabase
     .from('apontamentos')
     .insert({

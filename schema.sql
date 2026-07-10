@@ -136,11 +136,28 @@ CREATE POLICY "usuarios_update_own"
   ON public.usuarios FOR UPDATE
   USING (auth.uid() = id);
 
+-- Usuarios: cada usuario pode inserir seu proprio registro (cadastro publico)
+DROP POLICY IF EXISTS "usuarios_insert_own" ON public.usuarios;
+CREATE POLICY "usuarios_insert_own"
+  ON public.usuarios FOR INSERT
+  WITH CHECK (auth.uid() = id);
+
 -- Usuarios: admin pode visualizar todos os registros
 DROP POLICY IF EXISTS "usuarios_select_admin" ON public.usuarios;
 CREATE POLICY "usuarios_select_admin"
   ON public.usuarios FOR SELECT
   USING (
+    EXISTS (
+      SELECT 1 FROM public.usuarios
+      WHERE id = auth.uid() AND role = 'admin'
+    )
+  );
+
+-- Usuarios: admin pode inserir novos registros (cadastro de clientes)
+DROP POLICY IF EXISTS "usuarios_insert_admin" ON public.usuarios;
+CREATE POLICY "usuarios_insert_admin"
+  ON public.usuarios FOR INSERT
+  WITH CHECK (
     EXISTS (
       SELECT 1 FROM public.usuarios
       WHERE id = auth.uid() AND role = 'admin'
