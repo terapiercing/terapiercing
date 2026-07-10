@@ -8,16 +8,16 @@ export default async function AgendamentosPage() {
 
   if (!user) return null
 
-  const { data: paciente } = await supabase
-    .from('pacientes')
+  const { data: usuario } = await supabase
+    .from('usuarios')
     .select('id')
-    .eq('user_id', user.id)
+    .eq('id', user.id)
     .single()
 
   const { data: agendamentos } = await supabase
     .from('apontamentos')
     .select('id, data, hora, status, notas, servicos(nome, preco)')
-    .eq('patient_id', paciente?.id ?? '')
+    .eq('patient_id', usuario?.id ?? '')
     .order('data', { ascending: false })
 
   return (

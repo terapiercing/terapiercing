@@ -5,18 +5,43 @@ import { redirect } from 'next/navigation'
 
 import { createClient } from '@/lib/supabase/server'
 
+function isCpf(value: string): boolean {
+  return /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/.test(value)
+}
+
+function onlyDigits(value: string): string {
+  return value.replace(/\D/g, '')
+}
+
 export async function login(
   _prevState: { error: string } | undefined,
   formData: FormData
 ) {
   const supabase = await createClient()
 
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
+  const identifier = (formData.get('email') as string).trim()
+  const password = formData.get('password') as string
+
+  let email = identifier
+
+  if (isCpf(identifier)) {
+    const cpfDigits = onlyDigits(identifier)
+    const { data: usuario } = await supabase
+      .from('usuarios')
+      .select('email')
+      .eq('cpf', cpfDigits)
+      .single()
+
+    if (!usuario) {
+      return { error: 'CPF não encontrado no sistema.' }
+    }
+    email = usuario.email
   }
 
-  const { error } = await supabase.auth.signInWithPassword(data)
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
 
   if (error) {
     return { error: error.message }
@@ -38,9 +63,12 @@ export async function signup(
   const password = formData.get('password') as string
   const nome = formData.get('nome') as string
   const telefone = formData.get('telefone') as string
-  const cpf = formData.get('cpf') as string
+  const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
   const nascimento = formData.get('nascimento') as string
   const endereco = formData.get('endereco') as string
+  const numero = formData.get('numero') as string
+  const bairro = formData.get('bairro') as string
+  const cidade = formData.get('cidade') as string
 
   if (!email || !password || !nome || !telefone) {
     return { error: 'Preencha todos os campos obrigatórios (Nome, E-mail, Senha e Telefone).' }
@@ -58,35 +86,24 @@ export async function signup(
   const user = authData.user
 
   if (user) {
-    // 1. Inserir na tabela de usuarios
     const { error: userError } = await supabase
       .from('usuarios')
       .insert({
         id: user.id,
         email: user.email!,
-        role: 'client',
-      })
-
-    if (userError) {
-      return { error: `Erro ao criar perfil de usuário: ${userError.message}` }
-    }
-
-    // 2. Inserir na tabela de pacientes
-    const { error: pacienteError } = await supabase
-      .from('pacientes')
-      .insert({
-        user_id: user.id,
         nome,
         telefone,
         cpf: cpf || null,
         nascimento: nascimento || null,
         endereco: endereco || null,
+        numero: numero || null,
+        bairro: bairro || null,
+        cidade: cidade || null,
+        role: 'client',
       })
 
-    if (pacienteError) {
-      // Tentar limpar o usuario criado no public.usuarios caso dê erro no paciente
-      await supabase.from('usuarios').delete().eq('id', user.id)
-      return { error: `Erro ao cadastrar dados do paciente: ${pacienteError.message}` }
+    if (userError) {
+      return { error: `Erro ao criar perfil: ${userError.message}` }
     }
   }
 
@@ -123,50 +140,148 @@ export async function updateProfile(
 
   const nome = formData.get('nome') as string
   const telefone = formData.get('telefone') as string
-  const cpf = formData.get('cpf') as string
+  const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
   const nascimento = formData.get('nascimento') as string
   const endereco = formData.get('endereco') as string
+  const numero = formData.get('numero') as string
+  const bairro = formData.get('bairro') as string
+  const cidade = formData.get('cidade') as string
 
   if (!nome || !telefone) {
     return { error: 'Nome e Telefone são obrigatórios.' }
   }
 
-  const { error: pacienteError } = await supabase
-    .from('pacientes')
-    .update({
-      nome,
-      telefone,
-      cpf: cpf || null,
-      nascimento: nascimento || null,
-      endereco: endereco || null,
-    })
-    .eq('user_id', user.id)
+  const { data: usuarioData } = await supabase
+    .from('usuarios')
+    .select('role')
+    .eq('id', user.id)
+    .single()
 
-  if (pacienteError) {
-    return { error: `Erro ao atualizar perfil: ${pacienteError.message}` }
+  const isAdmin = usuarioData?.role === 'admin'
+
+  const updatePayload: Record<string, string | null> = {
+    nome,
+    telefone,
+    cpf: cpf || null,
+    nascimento: nascimento || null,
+    endereco: endereco || null,
+    numero: numero || null,
+    bairro: bairro || null,
+    cidade: cidade || null,
   }
 
-  const role = formData.get('role') as string
-  if (role) {
-    const { data: usuarioData } = await supabase
-      .from('usuarios')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    if (usuarioData?.role === 'admin') {
-      const targetUserId = (formData.get('target_user_id') as string) || user.id
-      const { error: roleError } = await supabase
-        .from('usuarios')
-        .update({ role })
-        .eq('id', targetUserId)
-
-      if (roleError) {
-        return { error: `Erro ao atualizar perfil de acesso: ${roleError.message}` }
-      }
+  if (isAdmin) {
+    const role = formData.get('role') as string
+    if (role) {
+      updatePayload.role = role
     }
   }
 
+  const { error: updateError } = await supabase
+    .from('usuarios')
+    .update(updatePayload)
+    .eq('id', user.id)
+
+  if (updateError) {
+    return { error: `Erro ao atualizar perfil: ${updateError.message}` }
+  }
+
+  const newEmail = formData.get('new_email') as string
+  if (newEmail && newEmail !== user.email) {
+    const { error: emailError } = await supabase.auth.updateUser({
+      email: newEmail,
+    })
+    if (emailError) {
+      return { error: `Erro ao atualizar email: ${emailError.message}` }
+    }
+
+    await supabase
+      .from('usuarios')
+      .update({ email: newEmail })
+      .eq('id', user.id)
+  }
+
   revalidatePath('/perfil')
+  return { success: true, error: '' }
+}
+
+export async function changePassword(
+  _prevState: { error: string; success?: boolean } | undefined,
+  formData: FormData
+) {
+  const supabase = await createClient()
+  const { data: userData } = await supabase.auth.getUser()
+  const user = userData.user
+
+  if (!user) {
+    return { error: 'Usuário não autenticado.' }
+  }
+
+  const currentPassword = formData.get('current_password') as string
+  const newPassword = formData.get('new_password') as string
+  const confirmPassword = formData.get('confirm_password') as string
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    return { error: 'Preencha todos os campos de senha.' }
+  }
+
+  if (newPassword !== confirmPassword) {
+    return { error: 'A nova senha e a confirmação não conferem.' }
+  }
+
+  if (newPassword.length < 6) {
+    return { error: 'A nova senha deve ter no mínimo 6 caracteres.' }
+  }
+
+  const { error: authError } = await supabase.auth.signInWithPassword({
+    email: user.email!,
+    password: currentPassword,
+  })
+
+  if (authError) {
+    return { error: 'Senha atual incorreta.' }
+  }
+
+  const { error: updateError } = await supabase.auth.updateUser({
+    password: newPassword,
+  })
+
+  if (updateError) {
+    return { error: `Erro ao alterar senha: ${updateError.message}` }
+  }
+
+  return { success: true, error: '' }
+}
+
+export async function forgotPassword(
+  _prevState: { error: string; success?: boolean } | undefined,
+  formData: FormData
+) {
+  const supabase = await createClient()
+
+  const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
+
+  if (!cpf) {
+    return { error: 'Informe seu CPF.' }
+  }
+
+  const { data: usuario } = await supabase
+    .from('usuarios')
+    .select('email')
+    .eq('cpf', cpf)
+    .single()
+
+  if (!usuario) {
+    return { error: 'CPF não encontrado no sistema.' }
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(usuario.email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL?.replace('.supabase.co', '')}/reset-password`,
+  })
+
+  if (error) {
+    return { error: `Erro ao enviar email de recuperação: ${error.message}` }
+  }
+
   return { success: true, error: '' }
 }

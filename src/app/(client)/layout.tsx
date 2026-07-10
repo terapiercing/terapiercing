@@ -15,13 +15,13 @@ export default async function ClientLayout({
     redirect('/login')
   }
 
-  const { data: paciente } = await supabase
-    .from('pacientes')
+  const { data: usuario } = await supabase
+    .from('usuarios')
     .select('nome')
-    .eq('user_id', data.user.id)
+    .eq('id', data.user.id)
     .single()
 
-  const nome = paciente?.nome || data.user.email?.split('@')[0] || 'Cliente'
+  const nome = usuario?.nome || data.user.email?.split('@')[0] || 'Cliente'
 
   return (
     <div className="flex min-h-screen flex-col bg-[#FAF7F5]">

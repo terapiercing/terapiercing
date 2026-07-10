@@ -134,20 +134,20 @@ export async function createAppointment(
     return { error: 'Usuário não autenticado.' }
   }
 
-  const { data: paciente } = await supabase
-    .from('pacientes')
+  const { data: usuario } = await supabase
+    .from('usuarios')
     .select('id')
-    .eq('user_id', user.id)
+    .eq('id', user.id)
     .single()
 
-  if (!paciente) {
-    return { error: 'Perfil de paciente não encontrado.' }
+  if (!usuario) {
+    return { error: 'Perfil de usuário não encontrado.' }
   }
 
   const { error } = await supabase
     .from('apontamentos')
     .insert({
-      patient_id: paciente.id,
+      patient_id: usuario.id,
       service_id: serviceId,
       data: date,
       hora: `${time}:00`,

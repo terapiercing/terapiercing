@@ -8,21 +8,21 @@ export default async function Dashboard() {
 
   if (!user) return null
 
-  const { data: paciente } = await supabase
-    .from('pacientes')
+  const { data: usuario } = await supabase
+    .from('usuarios')
     .select('id, nome')
-    .eq('user_id', user.id)
+    .eq('id', user.id)
     .single()
 
   const { count: agendamentosCount } = await supabase
     .from('apontamentos')
     .select('*', { count: 'exact', head: true })
-    .eq('patient_id', paciente?.id ?? '')
+    .eq('patient_id', usuario?.id ?? '')
 
   const { data: proximoAgendamento } = await supabase
     .from('apontamentos')
     .select('data, hora, servicos(nome)')
-    .eq('patient_id', paciente?.id ?? '')
+    .eq('patient_id', usuario?.id ?? '')
     .gte('data', new Date().toISOString().split('T')[0])
     .order('data', { ascending: true })
     .limit(1)
@@ -32,7 +32,7 @@ export default async function Dashboard() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-semibold text-zinc-800">
-          Olá, {paciente?.nome?.split(' ')[0] || 'Cliente'}!
+          Olá, {usuario?.nome?.split(' ')[0] || 'Cliente'}!
         </h1>
         <p className="mt-1 text-zinc-500">
           Bem-vindo à sua área pessoal na RBClinic.

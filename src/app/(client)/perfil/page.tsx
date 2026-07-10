@@ -11,15 +11,9 @@ export default async function PerfilPage() {
     redirect('/login')
   }
 
-  const { data: paciente } = await supabase
-    .from('pacientes')
-    .select('*')
-    .eq('user_id', user.id)
-    .single()
-
   const { data: usuario } = await supabase
     .from('usuarios')
-    .select('role')
+    .select('*')
     .eq('id', user.id)
     .single()
 
@@ -33,9 +27,8 @@ export default async function PerfilPage() {
       </div>
 
       <PerfilForm
-        paciente={paciente}
         usuario={usuario}
-        userEmail={user.email || ''}
+        userEmail={usuario?.email || user.email || ''}
       />
     </div>
   )

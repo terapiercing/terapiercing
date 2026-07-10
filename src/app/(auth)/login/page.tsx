@@ -8,10 +8,7 @@ import Link from 'next/link'
 function LoginForm() {
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirectTo') || '/dashboard'
-  const [state, formAction, pending] = useActionState(
-    login,
-    undefined
-  )
+  const [state, formAction, pending] = useActionState(login, undefined)
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#FAF7F5] px-4">
@@ -24,7 +21,7 @@ function LoginForm() {
             Olá de volta!
           </h2>
           <p className="mt-2 text-sm text-zinc-500">
-            Entre com seus dados para acessar sua área de cliente
+            Entre com seu email ou CPF e senha
           </p>
         </div>
 
@@ -33,27 +30,21 @@ function LoginForm() {
 
           <div className="space-y-4">
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-zinc-700"
-              >
-                Email
+              <label htmlFor="email" className="block text-sm font-medium text-zinc-700">
+                Email ou CPF
               </label>
               <input
                 id="email"
                 name="email"
-                type="email"
+                type="text"
                 required
                 className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm placeholder-zinc-400 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
-                placeholder="seu@email.com"
+                placeholder="seu@email.com ou 000.000.000-00"
               />
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-zinc-700"
-              >
+              <label htmlFor="password" className="block text-sm font-medium text-zinc-700">
                 Senha
               </label>
               <input
@@ -81,6 +72,15 @@ function LoginForm() {
             {pending ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
+
+        <div className="text-center">
+          <Link
+            href="/esqueci-senha"
+            className="text-sm font-medium text-[#E1A293] hover:underline"
+          >
+            Esqueci minha senha
+          </Link>
+        </div>
 
         <p className="text-center text-sm text-zinc-500">
           Ainda não tem conta?{' '}

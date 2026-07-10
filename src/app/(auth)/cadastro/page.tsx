@@ -1,17 +1,23 @@
 'use client'
 
-import { useActionState, Suspense } from 'react'
+import { useActionState, Suspense, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { signup } from '@/lib/actions/auth'
 import Link from 'next/link'
 
+function formatCpf(value: string): string {
+  const digits = value.replace(/\D/g, '').slice(0, 11)
+  return digits
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+}
+
 function CadastroForm() {
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirectTo') || '/dashboard'
-  const [state, formAction, pending] = useActionState(
-    signup,
-    undefined
-  )
+  const [state, formAction, pending] = useActionState(signup, undefined)
+  const cpfRef = useRef<HTMLInputElement>(null)
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#FAF7F5] py-12 px-4 sm:px-6 lg:px-8">
@@ -33,10 +39,7 @@ function CadastroForm() {
 
           <div className="space-y-4">
             <div>
-              <label
-                htmlFor="nome"
-                className="block text-sm font-medium text-zinc-700"
-              >
+              <label htmlFor="nome" className="block text-sm font-medium text-zinc-700">
                 Nome Completo <span className="text-[#E1A293]">*</span>
               </label>
               <input
@@ -51,10 +54,7 @@ function CadastroForm() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-zinc-700"
-                >
+                <label htmlFor="email" className="block text-sm font-medium text-zinc-700">
                   Email <span className="text-[#E1A293]">*</span>
                 </label>
                 <input
@@ -68,10 +68,7 @@ function CadastroForm() {
               </div>
 
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-zinc-700"
-                >
+                <label htmlFor="password" className="block text-sm font-medium text-zinc-700">
                   Senha <span className="text-[#E1A293]">*</span>
                 </label>
                 <input
@@ -87,10 +84,7 @@ function CadastroForm() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label
-                  htmlFor="telefone"
-                  className="block text-sm font-medium text-zinc-700"
-                >
+                <label htmlFor="telefone" className="block text-sm font-medium text-zinc-700">
                   Telefone <span className="text-[#E1A293]">*</span>
                 </label>
                 <input
@@ -104,43 +98,41 @@ function CadastroForm() {
               </div>
 
               <div>
-                <label
-                  htmlFor="cpf"
-                  className="block text-sm font-medium text-zinc-700"
-                >
+                <label htmlFor="cpf" className="block text-sm font-medium text-zinc-700">
                   CPF
                 </label>
                 <input
                   id="cpf"
                   name="cpf"
                   type="text"
+                  ref={cpfRef}
+                  maxLength={14}
+                  onChange={(e) => {
+                    if (cpfRef.current) {
+                      cpfRef.current.value = formatCpf(e.target.value)
+                    }
+                  }}
                   className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
                   placeholder="000.000.000-00"
                 />
               </div>
             </div>
 
+            <div>
+              <label htmlFor="nascimento" className="block text-sm font-medium text-zinc-700">
+                Data de Nascimento
+              </label>
+              <input
+                id="nascimento"
+                name="nascimento"
+                type="date"
+                className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+              />
+            </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label
-                  htmlFor="nascimento"
-                  className="block text-sm font-medium text-zinc-700"
-                >
-                  Data de Nascimento
-                </label>
-                <input
-                  id="nascimento"
-                  name="nascimento"
-                  type="date"
-                  className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="endereco"
-                  className="block text-sm font-medium text-zinc-700"
-                >
+                <label htmlFor="endereco" className="block text-sm font-medium text-zinc-700">
                   Endereço
                 </label>
                 <input
@@ -148,7 +140,48 @@ function CadastroForm() {
                   name="endereco"
                   type="text"
                   className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
-                  placeholder="Rua, Número, Bairro"
+                  placeholder="Rua, Avenida..."
+                />
+              </div>
+
+              <div>
+                <label htmlFor="numero" className="block text-sm font-medium text-zinc-700">
+                  Número
+                </label>
+                <input
+                  id="numero"
+                  name="numero"
+                  type="text"
+                  className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                  placeholder="Nº"
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="bairro" className="block text-sm font-medium text-zinc-700">
+                  Bairro
+                </label>
+                <input
+                  id="bairro"
+                  name="bairro"
+                  type="text"
+                  className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                  placeholder="Bairro"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="cidade" className="block text-sm font-medium text-zinc-700">
+                  Cidade
+                </label>
+                <input
+                  id="cidade"
+                  name="cidade"
+                  type="text"
+                  className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                  placeholder="Cidade"
                 />
               </div>
             </div>
