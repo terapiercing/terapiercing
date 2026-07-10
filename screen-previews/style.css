@@ -1,0 +1,51 @@
+/* Shared stylesheet for RBClinic screens */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F5;
+  color: #2D2D2D;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; width: 100%; }
+header { border-bottom: 1px solid #e4e4e7; background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); position: sticky; top: 0; z-index: 50; }
+header .container { display: flex; align-items: center; justify-content: space-between; padding-top: 1rem; padding-bottom: 1rem; }
+.logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; letter-spacing: -0.025em; color: #D4AF37; }
+nav { display: flex; gap: 1rem; }
+.btn-outline { display: inline-block; border: 1px solid #d4d4d8; border-radius: 0.5rem; background: white; padding: 0.5rem 1.25rem; font-size: 0.875rem; font-weight: 500; color: #52525b; text-decoration: none; transition: background 0.15s; }
+.btn-outline:hover { background: #fafafa; }
+.btn-primary { display: inline-block; border-radius: 0.5rem; background: #E1A293; padding: 0.5rem 1.25rem; font-size: 0.875rem; font-weight: 500; color: white; text-decoration: none; transition: background 0.15s; }
+.btn-primary:hover { background: #d48d7c; }
+.btn-primary-lg { display: inline-block; border-radius: 0.5rem; background: #E1A293; padding: 0.75rem 2rem; font-size: 0.875rem; font-weight: 600; color: white; text-decoration: none; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: background 0.15s; }
+.btn-primary-lg:hover { background: #d48d7c; }
+.btn-outline-lg { display: inline-block; border: 1px solid #d4d4d8; border-radius: 0.5rem; background: white; padding: 0.75rem 2rem; font-size: 0.875rem; font-weight: 600; color: #52525b; text-decoration: none; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: background 0.15s; }
+.btn-outline-lg:hover { background: #fafafa; }
+main { flex: 1; display: flex; align-items: center; }
+main .container { display: flex; flex-direction: column; align-items: center; gap: 2.5rem; padding-top: 3rem; padding-bottom: 3rem; }
+@media (min-width: 1024px) { main .container { flex-direction: row; text-align: left; align-items: center; } }
+.hero { flex: 1; text-align: center; }
+@media (min-width: 1024px) { .hero { text-align: left; } }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: 3rem; line-height: 1.2; letter-spacing: -0.025em; color: #27272a; }
+@media (min-width: 1024px) { .hero h1 { font-size: 3.75rem; } }
+.hero h1 .gold { color: #D4AF37; }
+.hero h1 .pink { color: #E1A293; }
+.hero p { margin-top: 1rem; max-width: 32rem; font-size: 1.125rem; line-height: 1.75; color: #8a8a8a; }
+@media (min-width: 1024px) { .hero p { margin-left: 0; } }
+.hero .actions { display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; }
+@media (min-width: 1024px) { .hero .actions { justify-content: flex-start; } }
+.services-grid { flex: 1; display: flex; flex-direction: column; width: 100%; max-width: 500px; }
+.services-grid h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.5rem; color: #27272a; text-align: center; }
+@media (min-width: 1024px) { .services-grid h3 { text-align: left; } }
+.services-grid .description { font-size: 0.875rem; color: #a1a1aa; margin-bottom: 1.5rem; text-align: center; }
+@media (min-width: 1024px) { .services-grid .description { text-align: left; } }
+.services-grid .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; }
+.service-card { border: 1px solid #e4e4e7; border-radius: 1rem; background: white; padding: 1.25rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: center; transition: all 0.2s; }
+.service-card:hover { border-color: #E1A293; box-shadow: 0 4px 12px rgba(225, 162, 147, 0.1); transform: scale(1.02); }
+.service-card .label { font-weight: 500; color: #27272a; transition: color 0.15s; }
+.service-card:hover .label { color: #E1A293; }
+.service-card .sub { margin-top: 0.25rem; font-size: 0.875rem; color: #a1a1aa; }
+.service-card .price { margin-top: 0.5rem; font-size: 0.75rem; font-weight: 600; color: #D4AF37; }
+.back-bar { background: #f0eeeb; padding: 0.5rem 0; text-align: center; }
+.back-bar a { color: #8a8a8a; font-size: 0.8rem; text-decoration: none; }
+.back-bar a:hover { color: #E1A293; }

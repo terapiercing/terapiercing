@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RBClinic - Preview das Telas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #FAF7F5;
+      color: #2D2D2D;
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4rem 2rem;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      color: #D4AF37;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: #8a8a8a;
+      margin-bottom: 3rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      width: 100%;
+    }
+    .card {
+      background: white;
+      border: 1px solid #e4e4e7;
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .card:hover {
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .card .icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #2D2D2D;
+      margin-bottom: 0.25rem;
+    }
+    .card p {
+      font-size: 0.875rem;
+      color: #8a8a8a;
+    }
+    .badge {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: #E1A293;
+      color: white;
+    }
+    .badge-admin {
+      background: #D4AF37;
+    }
+  </style>
+</head>
+<body>
+  <h1>RBClinic</h1>
+  <p class="subtitle">Pré-visualização das telas do aplicativo</p>
+
+  <div class="grid">
+    <a href="home.html" class="card">
+      <div class="icon">🏠</div>
+      <h3>Home / Landing</h3>
+      <p>Página inicial com apresentação da clínica</p>
+      <span class="badge">Pública</span>
+    </a>
+    <a href="cadastro.html" class="card">
+      <div class="icon">📝</div>
+      <h3>Cadastro</h3>
+      <p>Tela de registro de novo cliente</p>
+      <span class="badge">Pública</span>
+    </a>
+    <a href="login.html" class="card">
+      <div class="icon">🔐</div>
+      <h3>Login</h3>
+      <p>Tela de autenticação do cliente</p>
+      <span class="badge">Pública</span>
+    </a>
+    <a href="dashboard.html" class="card">
+      <div class="icon">📊</div>
+      <h3>Dashboard</h3>
+      <p>Painel principal do cliente</p>
+      <span class="badge">Autenticada</span>
+    </a>
+    <a href="agendamento-novo.html" class="card">
+      <div class="icon">✨</div>
+      <h3>Novo Agendamento</h3>
+      <p>Escolher procedimento, data e horário</p>
+      <span class="badge">Autenticada</span>
+    </a>
+    <a href="agendamentos.html" class="card">
+      <div class="icon">📅</div>
+      <h3>Agendamentos</h3>
+      <p>Histórico de procedimentos agendados</p>
+      <span class="badge">Autenticada</span>
+    </a>
+    <a href="perfil.html" class="card">
+      <div class="icon">👤</div>
+      <h3>Perfil</h3>
+      <p>Dados pessoais do cliente</p>
+      <span class="badge">Autenticada</span>
+    </a>
+    <a href="admin-configuracoes.html" class="card">
+      <div class="icon">⚙️</div>
+      <h3>Configurações</h3>
+      <p>Gerenciar procedimentos, valores e horários</p>
+      <span class="badge badge-admin">Administrativa</span>
+    </a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RBClinic - Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #FAF7F5;
+      color: #2D2D2D;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      border-bottom: 1px solid #e4e4e7;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    header .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      letter-spacing: -0.025em;
+      color: #D4AF37;
+      text-decoration: none;
+    }
+    nav { display: flex; align-items: center; gap: 1.5rem; }
+    nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #52525b;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    nav a:hover { color: #E1A293; }
+    nav a.active { color: #E1A293; }
+    nav .divider { color: #a1a1aa; font-size: 0.875rem; }
+    nav .user-name { font-size: 0.875rem; color: #8a8a8a; }
+    .btn-logout {
+      border: none;
+      border-radius: 0.5rem;
+      background: #E1A293;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: white;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-logout:hover { background: #d48d7c; }
+
+    /* Main */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 2rem 1.5rem;
+      flex: 1;
+    }
+
+    .greeting h1 {
+      font-size: 1.875rem;
+      font-weight: 600;
+      color: #27272a;
+    }
+    .greeting p {
+      margin-top: 0.25rem;
+      color: #8a8a8a;
+    }
+
+    .cards {
+      display: grid;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    @media (min-width: 640px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .cards { grid-template-columns: repeat(3, 1fr); } }
+
+    .card {
+      border: 1px solid #e4e4e7;
+      border-radius: 1rem;
+      background: white;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .card h3 {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #8a8a8a;
+    }
+    .card .value {
+      margin-top: 0.5rem;
+      font-size: 1.875rem;
+      font-weight: 600;
+      color: #E1A293;
+    }
+    .card .value-sm {
+      margin-top: 0.5rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #27272a;
+    }
+    .card .muted {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: #a1a1aa;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .btn-primary {
+      display: inline-block;
+      border-radius: 0.5rem;
+      background: #E1A293;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: white;
+      text-decoration: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: #d48d7c; }
+    .btn-outline {
+      display: inline-block;
+      border: 1px solid #d4d4d8;
+      border-radius: 0.5rem;
+      background: white;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #52525b;
+      text-decoration: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: background 0.15s;
+    }
+    .btn-outline:hover { background: #fafafa; }
+
+    .back-bar {
+      background: #f0eeeb;
+      padding: 0.5rem 0;
+      text-align: center;
+    }
+    .back-bar a {
+      color: #8a8a8a;
+      font-size: 0.8rem;
+      text-decoration: none;
+    }
+    .back-bar a:hover { color: #E1A293; }
+  </style>
+</head>
+<body>
+  <div class="back-bar">
+    <a href="index.html">&larr; Voltar ao índice</a>
+  </div>
+  <header>
+    <div class="container">
+      <a href="dashboard.html" class="logo">RBClinic</a>
+      <nav>
+        <a href="dashboard.html" class="active">Início</a>
+        <a href="agendamentos.html">Agendamentos</a>
+        <a href="perfil.html">Perfil</a>
+        <span class="divider">|</span>
+        <span class="user-name">Maria</span>
+        <button class="btn-logout">Sair</button>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="greeting">
+      <h1>Olá, Maria!</h1>
+      <p>Bem-vindo à sua área pessoal na RBClinic.</p>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Total de Agendamentos</h3>
+        <p class="value">8</p>
+      </div>
+      <div class="card">
+        <h3>Próximo Agendamento</h3>
+        <p class="value-sm">15/06/2026 às 14:30</p>
+      </div>
+      <div class="card">
+        <h3>Serviços</h3>
+        <p class="muted">Limpeza de Pele, Drenagem Linfática</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a href="agendamentos.html" class="btn-primary">Ver Agendamentos</a>
+      <a href="perfil.html" class="btn-outline">Meu Perfil</a>
+    </div>
+  </main>
+</body>
+</html>

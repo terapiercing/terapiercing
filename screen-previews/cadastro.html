@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RBClinic - Cadastro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #FAF7F5;
+      color: #2D2D2D;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+    }
+    .card {
+      width: 100%;
+      max-width: 32rem;
+      background: white;
+      border: 1px solid #e4e4e7;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .card .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .card .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.25rem;
+      letter-spacing: -0.025em;
+      color: #D4AF37;
+    }
+    .card .header p {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: #8a8a8a;
+    }
+    form { display: flex; flex-direction: column; gap: 1.5rem; }
+    .fields { display: flex; flex-direction: column; gap: 1rem; }
+    .field label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #52525b;
+      margin-bottom: 0.25rem;
+    }
+    .field label span {
+      color: #E1A293;
+    }
+    .field input {
+      width: 100%;
+      border: 1px solid #d4d4d8;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field input:focus {
+      border-color: #E1A293;
+      box-shadow: 0 0 0 2px rgba(225, 162, 147, 0.2);
+    }
+    .field input::placeholder { color: #a1a1aa; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media (min-width: 640px) {
+      .grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .btn-submit {
+      width: 100%;
+      border: none;
+      border-radius: 0.5rem;
+      background: #E1A293;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-submit:hover { background: #d48d7c; }
+    .footer-text {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: #8a8a8a;
+    }
+    .footer-text a {
+      font-weight: 500;
+      color: #E1A293;
+      text-decoration: none;
+    }
+    .footer-text a:hover { color: #d48d7c; }
+    .back-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #f0eeeb;
+      padding: 0.5rem 0;
+      text-align: center;
+      z-index: 100;
+    }
+    .back-bar a {
+      color: #8a8a8a;
+      font-size: 0.8rem;
+      text-decoration: none;
+    }
+    .back-bar a:hover { color: #E1A293; }
+  </style>
+</head>
+<body>
+  <div class="back-bar">
+    <a href="index.html">&larr; Voltar ao índice</a>
+  </div>
+  <div class="card">
+    <div class="header">
+      <h1>RBClinic</h1>
+      <p>Preencha seus dados para começar a agendar seus procedimentos</p>
+    </div>
+    <form onsubmit="event.preventDefault(); window.location.href='dashboard.html'">
+      <div class="fields">
+        <div class="field">
+          <label for="nome">Nome Completo <span>*</span></label>
+          <input id="nome" type="text" placeholder="Seu nome completo" required>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="email">Email <span>*</span></label>
+            <input id="email" type="email" placeholder="seu@email.com" required>
+          </div>
+          <div class="field">
+            <label for="password">Senha <span>*</span></label>
+            <input id="password" type="password" placeholder="Mínimo 6 caracteres" required>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="telefone">Telefone <span>*</span></label>
+            <input id="telefone" type="tel" placeholder="(11) 99999-9999" required>
+          </div>
+          <div class="field">
+            <label for="cpf">CPF</label>
+            <input id="cpf" type="text" placeholder="000.000.000-00">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="nascimento">Data de Nascimento</label>
+            <input id="nascimento" type="date">
+          </div>
+          <div class="field">
+            <label for="endereco">Endereço</label>
+            <input id="endereco" type="text" placeholder="Rua, Número, Bairro">
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn-submit">Cadastrar</button>
+    </form>
+    <p class="footer-text">
+      Já tem uma conta?
+      <a href="login.html">Faça login</a>
+    </p>
+  </div>
+</body>
+</html>

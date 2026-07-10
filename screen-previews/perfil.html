@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RBClinic - Perfil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #FAF7F5;
+      color: #2D2D2D;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      border-bottom: 1px solid #e4e4e7;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    header .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      letter-spacing: -0.025em;
+      color: #D4AF37;
+      text-decoration: none;
+    }
+    nav { display: flex; align-items: center; gap: 1.5rem; }
+    nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #52525b;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    nav a:hover { color: #E1A293; }
+    nav a.active { color: #E1A293; }
+    nav .divider { color: #a1a1aa; font-size: 0.875rem; }
+    nav .user-name { font-size: 0.875rem; color: #8a8a8a; }
+    .btn-logout {
+      border: none;
+      border-radius: 0.5rem;
+      background: #E1A293;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: white;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-logout:hover { background: #d48d7c; }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 2rem 1.5rem;
+      flex: 1;
+    }
+
+    .page-header h1 {
+      font-size: 1.875rem;
+      font-weight: 600;
+      color: #27272a;
+    }
+    .page-header p {
+      margin-top: 0.25rem;
+      color: #8a8a8a;
+    }
+
+    .profile-card {
+      border: 1px solid #e4e4e7;
+      border-radius: 1rem;
+      background: white;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-top: 1.5rem;
+    }
+    .profile-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+    @media (min-width: 640px) { .profile-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .profile-field label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #8a8a8a;
+    }
+    .profile-field p {
+      margin-top: 0.25rem;
+      color: #27272a;
+    }
+
+    .back-bar {
+      background: #f0eeeb;
+      padding: 0.5rem 0;
+      text-align: center;
+    }
+    .back-bar a {
+      color: #8a8a8a;
+      font-size: 0.8rem;
+      text-decoration: none;
+    }
+    .back-bar a:hover { color: #E1A293; }
+  </style>
+</head>
+<body>
+  <div class="back-bar">
+    <a href="index.html">&larr; Voltar ao índice</a>
+  </div>
+  <header>
+    <div class="container">
+      <a href="dashboard.html" class="logo">RBClinic</a>
+      <nav>
+        <a href="dashboard.html">Início</a>
+        <a href="agendamentos.html">Agendamentos</a>
+        <a href="perfil.html" class="active">Perfil</a>
+        <span class="divider">|</span>
+        <span class="user-name">Maria</span>
+        <button class="btn-logout">Sair</button>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="page-header">
+      <h1>Meu Perfil</h1>
+      <p>Suas informações pessoais e de cadastro.</p>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-grid">
+        <div class="profile-field">
+          <label>Nome</label>
+          <p>Maria Silva Oliveira</p>
+        </div>
+        <div class="profile-field">
+          <label>Email</label>
+          <p>maria@example.com</p>
+        </div>
+        <div class="profile-field">
+          <label>Telefone</label>
+          <p>(11) 99999-8888</p>
+        </div>
+        <div class="profile-field">
+          <label>CPF</label>
+          <p>123.456.789-00</p>
+        </div>
+        <div class="profile-field">
+          <label>Data de Nascimento</label>
+          <p>15/03/1990</p>
+        </div>
+        <div class="profile-field">
+          <label>Endereço</label>
+          <p>Rua das Flores, 123 - São Paulo, SP</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

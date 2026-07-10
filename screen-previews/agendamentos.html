@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RBClinic - Agendamentos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #FAF7F5;
+      color: #2D2D2D;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      border-bottom: 1px solid #e4e4e7;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    header .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      letter-spacing: -0.025em;
+      color: #D4AF37;
+      text-decoration: none;
+    }
+    nav { display: flex; align-items: center; gap: 1.5rem; }
+    nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #52525b;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    nav a:hover { color: #E1A293; }
+    nav a.active { color: #E1A293; }
+    nav .divider { color: #a1a1aa; font-size: 0.875rem; }
+    nav .user-name { font-size: 0.875rem; color: #8a8a8a; }
+    .btn-logout {
+      border: none;
+      border-radius: 0.5rem;
+      background: #E1A293;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: white;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-logout:hover { background: #d48d7c; }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 2rem 1.5rem;
+      flex: 1;
+    }
+
+    .page-header h1 {
+      font-size: 1.875rem;
+      font-weight: 600;
+      color: #27272a;
+    }
+    .page-header p {
+      margin-top: 0.25rem;
+      color: #8a8a8a;
+    }
+
+    /* --- Booking section --- */
+    .booking-section {
+      display: grid;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .booking-section { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Calendar */
+    .calendar-card {
+      border: 1px solid #e4e4e7;
+      border-radius: 1rem;
+      background: white;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .calendar-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #27272a;
+    }
+    .calendar-nav {
+      display: flex;
+      gap: 0.25rem;
+    }
+    .calendar-nav button {
+      border: 1px solid #e4e4e7;
+      border-radius: 0.375rem;
+      background: white;
+      width: 2rem;
+      height: 2rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #52525b;
+      transition: background 0.15s;
+    }
+    .calendar-nav button:hover { background: #f4f4f5; }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #a1a1aa;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      text-align: center;
+    }
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      color: #52525b;
+    }
+    .calendar-day:hover { background: #f4f4f5; }
+    .calendar-day.other-month { color: #d4d4d8; }
+    .calendar-day.today {
+      background: #E1A293;
+      color: white;
+      font-weight: 600;
+    }
+    .calendar-day.selected {
+      background: #D4AF37;
+      color: white;
+      font-weight: 600;
+    }
+    .calendar-day.sunday { color: #d4d4d8; cursor: not-allowed; }
+
+    /* Time slots */
+    .slots-card {
+      border: 1px solid #e4e4e7;
+      border-radius: 1rem;
+      background: white;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .slots-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .slots-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #27272a;
+    }
+    .slots-header .date-label {
+      font-size: 0.875rem;
+      color: #E1A293;
+      font-weight: 500;
+    }
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 0.5rem;
+    }
+    .slot {
+      border: 1px solid #e4e4e7;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      text-align: center;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .slot.available {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+      color: #15803d;
+      cursor: pointer;
+    }
+    .slot.available:hover {
+      background: #dcfce7;
+      border-color: #86efac;
+    }
+    .slot.occupied {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #b91c1c;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .slot.past {
+      background: #f4f4f5;
+      border-color: #e4e4e7;
+      color: #a1a1aa;
+      cursor: not-allowed;
+    }
+    .slot.selected-slot {
+      background: #E1A293;
+      border-color: #E1A293;
+      color: white;
+    }
+
+    .slots-legend {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .slots-legend span {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.75rem;
+      color: #8a8a8a;
+    }
+    .legend-dot {
+      width: 0.625rem;
+      height: 0.625rem;
+      border-radius: 999px;
+      display: inline-block;
+    }
+    .legend-dot.available-dot { background: #bbf7d0; border: 1px solid #86efac; }
+    .legend-dot.occupied-dot { background: #fecaca; border: 1px solid #fca5a5; }
+    .legend-dot.past-dot { background: #e4e4e7; }
+
+    /* Confirm button */
+    .booking-confirm {
+      margin-top: 1rem;
+      text-align: right;
+    }
+    .btn-confirm {
+      border: none;
+      border-radius: 0.5rem;
+      background: #E1A293;
+      padding: 0.75rem 2rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-confirm:hover { background: #d48d7c; }
+    .btn-confirm:disabled {
+      background: #d4d4d8;
+      cursor: not-allowed;
+    }
+
+    /* Divider */
+    .section-divider {
+      border: none;
+      border-top: 1px solid #e4e4e7;
+      margin: 2rem 0;
+    }
+
+    /* History */
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.25rem;
+    }
+    .history-header h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #27272a;
+    }
+    .appointments {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .appointment-card {
+      border: 1px solid #e4e4e7;
+      border-radius: 1rem;
+      background: white;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .appointment-card .info { display: flex; flex-direction: column; gap: 0.25rem; }
+    .appointment-card .info .service { font-weight: 600; color: #27272a; }
+    .appointment-card .info .datetime { font-size: 0.875rem; color: #8a8a8a; }
+    .appointment-card .info .notes { font-size: 0.875rem; color: #a1a1aa; }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .status-pendente { background: #fef9c3; color: #a16207; }
+    .status-confirmado { background: #dbeafe; color: #1d4ed8; }
+    .status-concluido { background: #dcfce7; color: #15803d; }
+    .status-cancelado { background: #fee2e2; color: #b91c1c; }
+
+    .back-bar {
+      background: #f0eeeb;
+      padding: 0.5rem 0;
+      text-align: center;
+    }
+    .back-bar a {
+      color: #8a8a8a;
+      font-size: 0.8rem;
+      text-decoration: none;
+    }
+    .back-bar a:hover { color: #E1A293; }
+
+    /* Select service */
+    .service-select {
+      margin-top: 1rem;
+    }
+    .service-select label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #52525b;
+      margin-bottom: 0.375rem;
+    }
+    .service-select select {
+      width: 100%;
+      border: 1px solid #d4d4d8;
+      border-radius: 0.5rem;
+      padding: 0.625rem 0.75rem;
+      font-size: 0.875rem;
+      font-family: inherit;
+      color: #27272a;
+      background: white;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .service-select select:focus {
+      border-color: #E1A293;
+      box-shadow: 0 0 0 2px rgba(225, 162, 147, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="back-bar">
+    <a href="index.html">&larr; Voltar ao índice</a>
+  </div>
+  <header>
+    <div class="container">
+      <a href="dashboard.html" class="logo">RBClinic</a>
+      <nav>
+        <a href="dashboard.html">Início</a>
+        <a href="agendamentos.html" class="active">Agendamentos</a>
+        <a href="perfil.html">Perfil</a>
+        <span class="divider">|</span>
+        <span class="user-name">Maria</span>
+        <button class="btn-logout">Sair</button>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h1>Meus Agendamentos</h1>
+        <p>Histórico completo de todos os seus agendamentos.</p>
+      </div>
+      <div>
+        <button class="btn-logout" onclick="window.location.href='agendamento-novo.html'">Novo Agendamento</button>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="history-header">
+      <h2>Histórico de Agendamentos</h2>
+    </div>
+
+    <div class="appointments">
+      <div class="appointment-card">
+        <div class="info">
+          <p class="service">Limpeza de Pele</p>
+          <p class="datetime">15/06/2026 às 14:30</p>
+        </div>
+        <span class="status-badge status-confirmado">Confirmado</span>
+      </div>
+      <div class="appointment-card">
+        <div class="info">
+          <p class="service">Toxina Botulínica</p>
+          <p class="datetime">02/06/2026 às 10:00</p>
+          <p class="notes">Retorno para avaliação</p>
+        </div>
+        <span class="status-badge status-concluido">Concluído</span>
+      </div>
+      <div class="appointment-card">
+        <div class="info">
+          <p class="service">Preenchimento</p>
+          <p class="datetime">20/05/2026 às 09:15</p>
+        </div>
+        <span class="status-badge status-cancelado">Cancelado</span>
+      </div>
+      <div class="appointment-card">
+        <div class="info">
+          <p class="service">Drenagem Linfática</p>
+          <p class="datetime">10/05/2026 às 16:00</p>
+        </div>
+        <span class="status-badge status-pendente">Pendente</span>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

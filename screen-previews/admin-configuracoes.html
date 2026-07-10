@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RBClinic - Configurações da Clínica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #FAF7F5;
+      color: #2D2D2D;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; width: 100%; }
+
+    /* Header */
+    header {
+      border-bottom: 1px solid #e4e4e7;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      letter-spacing: -0.025em;
+      color: #D4AF37;
+      text-decoration: none;
+    }
+    nav { display: flex; align-items: center; gap: 1.5rem; }
+    nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #52525b;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    nav a:hover { color: #E1A293; }
+    nav a.active { color: #E1A293; }
+    .btn-logout {
+      background: #E1A293;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-logout:hover { background: #d48d7c; }
+    .user-name { font-size: 0.875rem; color: #71717a; }
+    .divider { color: #d4d4d8; font-size: 0.875rem; }
+
+    /* Main Content */
+    main { flex: 1; padding: 2rem 0; }
+    .page-header { margin-bottom: 2rem; }
+    .page-header h1 {
+      font-size: 1.875rem;
+      font-weight: 600;
+      color: #27272a;
+    }
+    .page-header p {
+      font-size: 0.875rem;
+      color: #71717a;
+      margin-top: 0.25rem;
+    }
+
+    .grid-layout {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 1024px) {
+      .grid-layout {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e4e4e7;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #27272a;
+    }
+
+    /* List styling */
+    .service-item {
+      display: flex;
+      justify-content: justify;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #f4f4f5;
+    }
+    .service-item:last-child { border-bottom: none; }
+    .service-info { flex: 1; }
+    .service-title-bar { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .service-name { font-weight: 600; color: #27272a; }
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .badge-form { background: #eff6ff; color: #2563eb; }
+    .badge-inactive { background: #f4f4f5; color: #71717a; }
+    .service-desc { font-size: 0.875rem; color: #71717a; margin-top: 0.25rem; }
+    .service-meta { font-size: 0.75rem; color: #a1a1aa; margin-top: 0.25rem; }
+    .btn-edit {
+      font-size: 0.875rem;
+      color: #E1A293;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-edit:hover { text-decoration: underline; }
+
+    /* Working Hours Styling */
+    .hours-list { display: flex; flex-direction: column; gap: 1rem; }
+    .day-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #f4f4f5;
+    }
+    .day-row:last-child { border-bottom: none; }
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .day-name { font-size: 0.875rem; font-weight: 600; color: #3f3f46; }
+    .day-inputs { display: flex; gap: 0.5rem; align-items: center; }
+    .day-inputs input[type="time"] {
+      border: 1px solid #d4d4d8;
+      border-radius: 0.5rem;
+      padding: 0.4rem 0.5rem;
+      font-size: 0.75rem;
+      outline: none;
+    }
+
+    /* Modal Form */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      max-width: 32rem;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .modal-title { font-size: 1.25rem; font-weight: 600; color: #27272a; }
+    .form-field { display: flex; flex-direction: column; gap: 0.25rem; }
+    .form-field label { font-size: 0.875rem; font-weight: 500; color: #3f3f46; }
+    .form-field input[type="text"], .form-field input[type="number"], .form-field select, .form-field textarea {
+      width: 100%;
+      border: 1px solid #d4d4d8;
+      border-radius: 0.5rem;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.875rem;
+      outline: none;
+    }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: #E1A293; }
+    .checkbox-field { display: flex; align-items: center; gap: 0.5rem; }
+    .checkbox-field input[type="checkbox"] {
+      width: 1rem; height: 1rem; accent-color: #E1A293;
+    }
+    .checkbox-field label { font-size: 0.875rem; font-weight: 500; color: #3f3f46; }
+
+    .modal-actions { display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; }
+    .btn-cancel {
+      border: 1px solid #d4d4d8;
+      background: white;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #52525b;
+      cursor: pointer;
+    }
+    .btn-cancel:hover { background: #fafafa; }
+    .btn-save {
+      border: none;
+      background: #E1A293;
+      color: white;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-save:hover { background: #d48d7c; }
+
+    /* Back link */
+    .back-bar {
+      background: #f0eeeb;
+      padding: 0.5rem 0;
+      text-align: center;
+    }
+    .back-bar a {
+      color: #8a8a8a;
+      font-size: 0.8rem;
+      text-decoration: none;
+    }
+    .back-bar a:hover { color: #E1A293; }
+  </style>
+</head>
+<body>
+  <div class="back-bar">
+    <a href="index.html">&larr; Voltar ao índice</a>
+  </div>
+  <header>
+    <div class="container">
+      <a href="dashboard.html" class="logo">RBClinic</a>
+      <nav>
+        <a href="dashboard.html">Início</a>
+        <a href="agendamentos.html">Agendamentos</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="#" class="active">Configurações</a>
+        <span class="divider">|</span>
+        <span class="user-name">Administrador</span>
+        <button class="btn-logout" onclick="window.location.href='home.html'">Sair</button>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <h1>Configurações da Clínica</h1>
+        <p>Gerencie o catálogo de procedimentos da clínica e os horários de funcionamento.</p>
+      </div>
+
+      <div class="grid-layout">
+        <!-- Services Section -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Serviços e Procedimentos</h2>
+            <button class="btn-save" onclick="openModal()">Novo Serviço</button>
+          </div>
+          <div id="services-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Modelos de Formulário</h2>
+        <button class="btn-save" onclick="openFormModal()">Novo Formulário</button>
+      </div>
+      <div id="forms-list">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+        <!-- Hours Section -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Horário de Funcionamento</h2>
+          </div>
+          <form onsubmit="saveHours(event)" class="hours-list">
+            <div class="day-row">
+              <div class="day-header">
+                <span class="day-name">Segunda-feira</span>
+                <input type="checkbox" id="seg-active" checked>
+              </div>
+              <div class="day-inputs" id="seg-inputs">
+                <input type="time" id="seg-start" value="08:00">
+                <span style="font-size: 0.75rem; color: #a1a1aa;">às</span>
+                <input type="time" id="seg-end" value="18:00">
+              </div>
+            </div>
+            <div class="day-row">
+              <div class="day-header">
+                <span class="day-name">Terça-feira</span>
+                <input type="checkbox" id="ter-active" checked>
+              </div>
+              <div class="day-inputs" id="ter-inputs">
+                <input type="time" id="ter-start" value="08:00">
+                <span style="font-size: 0.75rem; color: #a1a1aa;">às</span>
+                <input type="time" id="ter-end" value="18:00">
+              </div>
+            </div>
+            <div class="day-row">
+              <div class="day-header">
+                <span class="day-name">Quarta-feira</span>
+                <input type="checkbox" id="qua-active" checked>
+              </div>
+              <div class="day-inputs" id="qua-inputs">
+                <input type="time" id="qua-start" value="08:00">
+                <span style="font-size: 0.75rem; color: #a1a1aa;">às</span>
+                <input type="time" id="qua-end" value="18:00">
+              </div>
+            </div>
+            <div class="day-row">
+              <div class="day-header">
+                <span class="day-name">Quinta-feira</span>
+                <input type="checkbox" id="qui-active" checked>
+              </div>
+              <div class="day-inputs" id="qui-inputs">
+                <input type="time" id="qui-start" value="08:00">
+                <span style="font-size: 0.75rem; color: #a1a1aa;">às</span>
+                <input type="time" id="qui-end" value="18:00">
+              </div>
+            </div>
+            <div class="day-row">
+              <div class="day-header">
+                <span class="day-name">Sexta-feira</span>
+                <input type="checkbox" id="sex-active" checked>
+              </div>
+              <div class="day-inputs" id="sex-inputs">
+                <input type="time" id="sex-start" value="08:00">
+                <span style="font-size: 0.75rem; color: #a1a1aa;">às</span>
+                <input type="time" id="sex-end" value="18:00">
+              </div>
+            </div>
+            <div class="day-row">
+              <div class="day-header">
+                <span class="day-name">Sábado</span>
+                <input type="checkbox" id="sab-active" checked>
+              </div>
+              <div class="day-inputs" id="sab-inputs">
+                <input type="time" id="sab-start" value="08:00">
+                <span style="font-size: 0.75rem; color: #a1a1aa;">às</span>
+                <input type="time" id="sab-end" value="13:00">
+              </div>
+            </div>
+            <div class="day-row">
+              <div class="day-header">
+                <span class="day-name">Domingo</span>
+                <input type="checkbox" id="dom-active">
+              </div>
+              <div class="day-inputs" id="dom-inputs" style="display: none;">
+                <input type="time" id="dom-start" value="08:00">
+                <span style="font-size: 0.75rem; color: #a1a1aa;">às</span>
+                <input type="time" id="dom-end" value="18:00">
+              </div>
+            </div>
+
+            <button type="submit" class="btn-save" style="width: 100%; padding: 0.75rem;">Atualizar Horários</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal-content">
+      <h3 class="modal-title" id="modal-title-text">Cadastrar Novo Serviço</h3>
+      
+      <form id="service-form" onsubmit="saveService(event)">
+        <input type="hidden" id="service-id">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-field">
+            <label for="form-nome">Nome *</label>
+            <input type="text" id="form-nome" required placeholder="Ex: Limpeza de Pele">
+          </div>
+          <div class="form-field">
+            <label for="form-preco">Preço (R$) *</label>
+            <input type="number" id="form-preco" step="0.01" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: center;">
+          <div class="form-field">
+            <label for="form-duracao">Duração (minutos) *</label>
+            <input type="number" id="form-duracao" required value="30">
+          </div>
+          <div class="checkbox-field" style="margin-top: 1rem;">
+            <input type="checkbox" id="form-ativo" checked>
+            <label for="form-ativo">Serviço Ativo</label>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="form-descricao">Descrição</label>
+          <textarea id="form-descricao" rows="2" placeholder="Curta descrição do procedimento..."></textarea>
+        </div>
+
+        <!-- Form rules -->
+        <div style="background: #faf7f5; border: 1px solid #f0eeeb; border-radius: 1rem; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+          <div class="checkbox-field">
+            <input type="checkbox" id="form-exige" onchange="toggleRecurrence()">
+            <label for="form-exige">Exige preenchimento de Formulário Prévio?</label>
+          </div>
+          
+          <div class="form-field" id="recurrence-container" style="display: none;">
+            <label for="form-recorrencia" style="font-size: 0.75rem; color: #71717a;">Recorrência do Preenchimento</label>
+            <select id="form-recorrencia">
+              <option value="primeira_vez">Apenas na primeira vez que o cliente for fazer o atendimento</option>
+              <option value="sempre">Todas as vezes (a cada novo agendamento)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-save">Salvar Serviço</button>
+        </div>
+      </form>
+    </div>
+  </div>
+    <!-- Form Template Modal -->
+    <div class="modal-overlay" id="form-modal" style="display:none;">
+      <div class="modal-content">
+        <h3 class="modal-title" id="form-modal-title">Novo Modelo de Formulário</h3>
+        <form id="form-template-form" onsubmit="saveFormTemplate(event)">
+          <div class="form-field">
+            <label for="template-name">Nome do Modelo *</label>
+            <input type="text" id="template-name" required placeholder="Ex: Avaliação Dermatológica">
+          </div>
+          <div class="form-field">
+            <label for="template-json">Definição JSON *</label>
+            <textarea id="template-json" rows="4" required placeholder='[{"label":"Nome","type":"text"}]'></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-cancel" onclick="closeFormModal()">Cancelar</button>
+            <button type="submit" class="btn-save">Salvar Modelo</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  <script>
+    // Initial mock services
+    let mockServices = [
+      { id: '1', nome: 'Limpeza de Pele Profissional', descricao: 'Limpeza profunda com higienização e extração de comedões.', preco: 150, duracao_min: 80, ativo: true, exige_formulario: true, formulario_recorrencia: 'primeira_vez' },
+      { id: '2', nome: 'Toxina Botulínica (Botox)', descricao: 'Aplicação de toxina botulínica para suavizar marcas.', preco: 950, duracao_min: 45, ativo: true, exige_formulario: true, formulario_recorrencia: 'sempre' },
+      { id: '3', nome: 'Preenchimento Labial', descricao: 'Procedimento com ácido hialurônico para volumização dos lábios.', preco: 1200, duracao_min: 60, ativo: true, exige_formulario: false, formulario_recorrencia: 'primeira_vez' },
+      { id: '4', nome: 'Peeling Químico Clareador', descricao: 'Aplicação de ácidos específicos para renovação celular.', preco: 250, duracao_min: 50, ativo: true, exige_formulario: false, formulario_recorrencia: 'primeira_vez' },
+    ];
+
+    // Load data from localStorage if exists
+    if (localStorage.getItem('rbclinic_services')) {
+      mockServices = JSON.parse(localStorage.getItem('rbclinic_services'));
+    }
+
+    function saveToStorage() {
+      localStorage.setItem('rbclinic_services', JSON.stringify(mockServices));
+    }
+
+    function renderServices() {
+      const container = document.getElementById('services-list');
+      container.innerHTML = '';
+
+      mockServices.forEach(s => {
+        const item = document.createElement('div');
+        item.className = 'service-item';
+        
+        const badgeFormHtml = s.exige_formulario 
+          ? `<span class="badge badge-form">Ficha: ${s.formulario_recorrencia === 'sempre' ? 'Sempre' : '1ª Vez'}</span>`
+          : '';
+          
+        const badgeAtivoHtml = !s.ativo
+          ? `<span class="badge badge-inactive">Inativo</span>`
+          : '';
+
+        item.innerHTML = `
+          <div class="service-info">
+            <div class="service-title-bar">
+              <span class="service-name">${s.nome}</span>
+              ${badgeFormHtml}
+              ${badgeAtivoHtml}
+            </div>
+            <p class="service-desc">${s.descricao || 'Sem descrição.'}</p>
+            <div class="service-meta">
+              Duração: ${s.duracao_min} min | Valor: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(s.preco)}
+            </div>
+          </div>
+          <span class="btn-edit" onclick="editService('${s.id}')">Editar</span>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function openModal() {
+      document.getElementById('modal-title-text').innerText = 'Cadastrar Novo Serviço';
+      document.getElementById('service-id').value = '';
+      document.getElementById('form-nome').value = '';
+      document.getElementById('form-preco').value = 0;
+      document.getElementById('form-duracao').value = 30;
+      document.getElementById('form-ativo').checked = true;
+      document.getElementById('form-descricao').value = '';
+      document.getElementById('form-exige').checked = false;
+      document.getElementById('recurrence-container').style.display = 'none';
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    function toggleRecurrence() {
+      const exige = document.getElementById('form-exige').checked;
+      document.getElementById('recurrence-container').style.display = exige ? 'flex' : 'none';
+    }
+
+    function editService(id) {
+      const s = mockServices.find(srv => srv.id === id);
+      if (!s) return;
+
+      document.getElementById('modal-title-text').innerText = 'Editar Serviço';
+      document.getElementById('service-id').value = s.id;
+      document.getElementById('form-nome').value = s.nome;
+      document.getElementById('form-preco').value = s.preco;
+      document.getElementById('form-duracao').value = s.duracao_min;
+      document.getElementById('form-ativo').checked = s.ativo;
+      document.getElementById('form-descricao').value = s.descricao || '';
+      document.getElementById('form-exige').checked = s.exige_formulario;
+      document.getElementById('form-recorrencia').value = s.formulario_recorrencia;
+      
+      toggleRecurrence();
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function saveService(e) {
+      e.preventDefault();
+      
+      const id = document.getElementById('service-id').value;
+      const nome = document.getElementById('form-nome').value;
+      const preco = parseFloat(document.getElementById('form-preco').value);
+      const duracao_min = parseInt(document.getElementById('form-duracao').value);
+      const ativo = document.getElementById('form-ativo').checked;
+      const descricao = document.getElementById('form-descricao').value;
+      const exige_formulario = document.getElementById('form-exige').checked;
+      const formulario_recorrencia = document.getElementById('form-recorrencia').value;
+
+      if (id) {
+        // Edit existing
+        const index = mockServices.findIndex(srv => srv.id === id);
+        if (index !== -1) {
+          mockServices[index] = {
+            id, nome, preco, duracao_min, ativo, descricao, exige_formulario, formulario_recorrencia
+          };
+        }
+      } else {
+        // Create new
+        const newId = String(mockServices.length + 1);
+        mockServices.push({
+          id: newId, nome, preco, duracao_min, ativo, descricao, exige_formulario, formulario_recorrencia
+        });
+      }
+
+      saveToStorage();
+      renderServices();
+      closeModal();
+    }
+
+    function saveHours(e) {
+      e.preventDefault();
+      alert('Horários de funcionamento salvos com sucesso!');
+    }
+
+    // Toggle input visibility based on checkbox status
+
+document.querySelectorAll('.day-row input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener('change', (e) => {
+    const row = e.target.closest('.day-row');
+    const inputs = row.querySelector('.day-inputs');
+    if (inputs) {
+      inputs.style.display = e.target.checked ? 'flex' : 'none';
+    }
+  });
+});
+
+// Form Templates handling
+let formTemplates = JSON.parse(localStorage.getItem('rbclinic_form_templates') || '[]');
+
+function renderFormTemplates() {
+  const container = document.getElementById('forms-list');
+  container.innerHTML = '';
+  formTemplates.forEach((t, idx) => {
+    const item = document.createElement('div');
+    item.className = 'form-template-item';
+    item.innerHTML = `
+      <span class="template-name">${t.name}</span>
+      <button class="btn-delete" onclick="deleteFormTemplate(${idx})">Excluir</button>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function openFormModal() {
+  document.getElementById('form-modal-title').innerText = 'Novo Modelo de Formulário';
+  document.getElementById('template-name').value = '';
+  document.getElementById('template-json').value = '';
+  document.getElementById('form-modal').style.display = 'flex';
+}
+
+function closeFormModal() {
+  document.getElementById('form-modal').style.display = 'none';
+}
+
+function saveFormTemplate(e) {
+  e.preventDefault();
+  const name = document.getElementById('template-name').value.trim();
+  const json = document.getElementById('template-json').value.trim();
+  if (!name || !json) {
+    alert('Preencha nome e definição JSON.');
+    return;
+  }
+  try {
+    JSON.parse(json);
+  } catch (err) {
+    alert('JSON inválido.');
+    return;
+  }
+  formTemplates.push({ name, definition: json });
+  localStorage.setItem('rbclinic_form_templates', JSON.stringify(formTemplates));
+  renderFormTemplates();
+  closeFormModal();
+}
+
+function deleteFormTemplate(index) {
+  formTemplates.splice(index, 1);
+  localStorage.setItem('rbclinic_form_templates', JSON.stringify(formTemplates));
+  renderFormTemplates();
+}
+
+// Initial render
+window.onload = () => {
+  renderServices();
+  renderFormTemplates();
+};
+  </script>
+</body>
+</html>
