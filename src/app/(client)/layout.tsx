@@ -17,11 +17,12 @@ export default async function ClientLayout({
 
   const { data: usuario } = await supabase
     .from('usuarios')
-    .select('nome')
+    .select('nome, role')
     .eq('id', data.user.id)
     .single()
 
   const nome = usuario?.nome || data.user.email?.split('@')[0] || 'Cliente'
+  const isAdmin = usuario?.role === 'admin'
 
   return (
     <div className="flex min-h-screen flex-col bg-[#FAF7F5]">
@@ -53,6 +54,14 @@ export default async function ClientLayout({
             >
               Perfil
             </Link>
+            {isAdmin && (
+              <Link
+                href="/admin/configuracoes"
+                className="text-sm font-medium text-zinc-600 transition-colors hover:text-[#E1A293]"
+              >
+                Configurações
+              </Link>
+            )}
 
             <span className="text-sm text-zinc-400">|</span>
             <span className="text-sm text-zinc-500">{nome}</span>
