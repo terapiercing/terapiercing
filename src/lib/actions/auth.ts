@@ -47,24 +47,7 @@ export async function login(
     return { error: error.message }
   }
 
-  const { data: { user } } = await supabase.auth.getUser()
-  let redirectTo = formData.get('redirectTo') as string
-
-  if (user) {
-    const { data: usuario } = await supabase
-      .from('usuarios')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    if (usuario?.role === 'admin' && (!redirectTo || redirectTo === '/dashboard')) {
-      redirectTo = '/admin/configuracoes'
-    }
-  }
-
-  if (!redirectTo) {
-    redirectTo = '/dashboard'
-  }
+  const redirectTo = (formData.get('redirectTo') as string) || '/dashboard'
 
   revalidatePath('/', 'layout')
   redirect(redirectTo)
