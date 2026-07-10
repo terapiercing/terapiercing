@@ -1,98 +1,57 @@
 import { createClient } from '@/lib/supabase/server'
-import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import AgendamentosList from './AgendamentosList'
 
 export default async function AgendamentosPage() {
   const supabase = await createClient()
   const { data: userData } = await supabase.auth.getUser()
   const user = userData.user
 
-  if (!user) return null
+  if (!user) redirect('/login')
 
   const { data: usuario } = await supabase
     .from('usuarios')
-    .select('id')
+    .select('id, role, nome')
     .eq('id', user.id)
     .single()
 
-  const { data: agendamentos } = await supabase
+  if (!usuario) redirect('/login')
+
+  const isAdmin = usuario.role === 'admin'
+
+  // Buscar lista de serviços para o filtro
+  const { data: servicos } = await supabase
+    .from('servicos')
+    .select('id, nome')
+    .eq('ativo', true)
+    .order('nome')
+
+  // Buscar agendamentos
+  // Admin vê todos, cliente vê apenas os seus
+  let query = supabase
     .from('apontamentos')
-    .select('id, data, hora, status, notas, servicos(nome, preco)')
-    .eq('patient_id', usuario?.id ?? '')
-    .order('data', { ascending: false })
+    .select('id, data, hora, status, notas, patient_id, servicos(nome, preco), usuarios(nome, email)')
+
+  if (!isAdmin) {
+    query = query.eq('patient_id', usuario.id)
+  }
+
+  const { data: agendamentos } = await query.order('data', { ascending: false })
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-semibold text-zinc-800">
-            Meus Agendamentos
-          </h1>
-          <p className="mt-1 text-zinc-500">
-            Histórico completo de todos os seus agendamentos.
-          </p>
-        </div>
-        <div>
-          <Link
-            href="/agendamentos/novo"
-            className="inline-flex justify-center items-center rounded-lg bg-[#E1A293] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#d48d7c]"
-          >
-            Novo Agendamento
-          </Link>
-        </div>
-      </div>
-
-      {agendamentos && agendamentos.length > 0 ? (
-        <div className="space-y-4">
-          {agendamentos.map((agendamento) => {
-            const servico =
-              (agendamento.servicos as unknown as {
-                nome: string
-                preco: number
-              } | null)
-            const statusColor: Record<string, string> = {
-              Pendente: 'bg-yellow-100 text-yellow-700',
-              Confirmado: 'bg-blue-100 text-blue-700',
-              Concluido: 'bg-green-100 text-green-700',
-              Cancelado: 'bg-red-100 text-red-700',
-            }
-
-            return (
-              <div
-                key={agendamento.id}
-                className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <p className="font-semibold text-zinc-800">
-                      {servico?.nome || 'Serviço'}
-                    </p>
-                    <p className="text-sm text-zinc-500">
-                      {new Date(agendamento.data).toLocaleDateString('pt-BR')}{' '}
-                      às {agendamento.hora.slice(0, 5)}
-                    </p>
-                    {agendamento.notas && (
-                      <p className="text-sm text-zinc-400">
-                        {agendamento.notas}
-                      </p>
-                    )}
-                  </div>
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
-                      statusColor[agendamento.status] || 'bg-zinc-100 text-zinc-600'
-                    }`}
-                  >
-                    {agendamento.status}
-                  </span>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      ) : (
-        <div className="rounded-2xl border border-zinc-200 bg-white p-12 text-center shadow-sm">
-          <p className="text-zinc-400">Nenhum agendamento encontrado.</p>
-        </div>
-      )}
-    </div>
+    <AgendamentosList
+      agendamentos={(agendamentos || []) as unknown as Array<{
+        id: string
+        data: string
+        hora: string
+        status: string
+        notas: string | null
+        patient_id: string
+        servicos: { nome: string; preco: number } | null
+        usuarios: { nome: string; email: string } | null
+      }>}
+      servicos={(servicos || []) as Array<{ id: string; nome: string }>}
+      isAdmin={isAdmin}
+    />
   )
 }

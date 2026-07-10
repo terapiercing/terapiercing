@@ -190,6 +190,17 @@ CREATE POLICY "apontamentos_insert_own"
   ON public.apontamentos FOR INSERT
   WITH CHECK (auth.uid() = patient_id);
 
+-- Apontamentos: admin pode visualizar todos os registros
+DROP POLICY IF EXISTS "apontamentos_select_admin" ON public.apontamentos;
+CREATE POLICY "apontamentos_select_admin"
+  ON public.apontamentos FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.usuarios
+      WHERE id = auth.uid() AND role = 'admin'
+    )
+  );
+
 -- Fotos
 ALTER TABLE public.fotos ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "fotos_select_own" ON public.fotos;
