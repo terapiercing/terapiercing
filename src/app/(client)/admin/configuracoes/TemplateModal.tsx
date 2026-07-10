@@ -1,7 +1,7 @@
 /* src/app/(client)/admin/configuracoes/TemplateModal.tsx */
 'use client';
 
-import { useState } from 'react';
+import { useState, useActionState } from 'react';
 import { createTemplate, updateTemplate, deleteTemplate } from '@/lib/actions/admin';
 
 export default function TemplateModal({

@@ -35,6 +35,29 @@ export async function upsertServico(
     ...(templateId ? { formulario_template_id: templateId } : {}),
   };
 
+  let error;
+  if (id) {
+    const { error: err } = await supabase
+      .from('servicos')
+      .update(payload)
+      .eq('id', id)
+    error = err
+  } else {
+    const { error: err } = await supabase
+      .from('servicos')
+      .insert(payload)
+    error = err
+  }
+
+  if (error) {
+    return { error: `Erro ao salvar serviço: ${error.message}` }
+  }
+
+  revalidatePath('/admin/configuracoes')
+  revalidatePath('/')
+  return { success: true, error: '' }
+}
+
 // New server actions for form templates
 export async function listTemplates() {
   const supabase = await createClient();
@@ -73,29 +96,6 @@ export async function deleteTemplate(_prevState: any, formData: FormData) {
   if (error) return { error: error.message };
   revalidatePath('/admin/configuracoes');
   return { success: true };
-}
-
-  let error;
-  if (id) {
-    const { error: err } = await supabase
-      .from('servicos')
-      .update(payload)
-      .eq('id', id)
-    error = err
-  } else {
-    const { error: err } = await supabase
-      .from('servicos')
-      .insert(payload)
-    error = err
-  }
-
-  if (error) {
-    return { error: `Erro ao salvar serviço: ${error.message}` }
-  }
-
-  revalidatePath('/admin/configuracoes')
-  revalidatePath('/')
-  return { success: true, error: '' }
 }
 
 export async function updateDisponibilidades(
