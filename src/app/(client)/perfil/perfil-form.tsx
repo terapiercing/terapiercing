@@ -6,6 +6,7 @@ import { updateProfile, changePassword } from '@/lib/actions/auth'
 interface Usuario {
   id: string
   nome: string
+  usuario: string | null
   email: string
   cpf: string | null
   nascimento: string | null
@@ -54,6 +55,18 @@ export default function PerfilForm({
                 name="nome"
                 defaultValue={usuario?.nome || ''}
                 required
+                className="mt-1 block w-full rounded-lg border border-zinc-300 bg-zinc-50 px-3 py-2 text-zinc-800 focus:border-[#E1A293] focus:outline-none focus:ring-1 focus:ring-[#E1A293]"
+              />
+            </div>
+            <div>
+              <label htmlFor="usuario" className="block text-sm font-medium text-zinc-500">
+                Usuário
+              </label>
+              <input
+                type="text"
+                id="usuario"
+                name="usuario"
+                defaultValue={usuario?.usuario || ''}
                 className="mt-1 block w-full rounded-lg border border-zinc-300 bg-zinc-50 px-3 py-2 text-zinc-800 focus:border-[#E1A293] focus:outline-none focus:ring-1 focus:ring-[#E1A293]"
               />
             </div>

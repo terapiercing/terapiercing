@@ -62,6 +62,7 @@ export async function signup(
   const email = formData.get('email') as string
   const password = formData.get('password') as string
   const nome = formData.get('nome') as string
+  const usuario = formData.get('usuario') as string
   const telefone = formData.get('telefone') as string
   const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
   const nascimento = formData.get('nascimento') as string
@@ -92,6 +93,7 @@ export async function signup(
         id: user.id,
         email: user.email!,
         nome,
+        usuario: usuario || null,
         telefone,
         cpf: cpf || null,
         nascimento: nascimento || null,
@@ -139,6 +141,7 @@ export async function updateProfile(
   }
 
   const nome = formData.get('nome') as string
+  const usuario = formData.get('usuario') as string
   const telefone = formData.get('telefone') as string
   const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
   const nascimento = formData.get('nascimento') as string
@@ -161,6 +164,7 @@ export async function updateProfile(
 
   const updatePayload: Record<string, string | null> = {
     nome,
+    usuario: usuario || null,
     telefone,
     cpf: cpf || null,
     nascimento: nascimento || null,

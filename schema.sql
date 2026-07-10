@@ -7,6 +7,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS public.usuarios (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     nome TEXT NOT NULL,
+    usuario TEXT UNIQUE,
     email TEXT NOT NULL UNIQUE,
     cpf TEXT UNIQUE,
     nascimento DATE,
@@ -125,76 +126,91 @@ ON CONFLICT DO NOTHING;
 ALTER TABLE public.usuarios ENABLE ROW LEVEL SECURITY;
 
 -- Usuarios: cada usuario so ve e edita seu proprio registro
+DROP POLICY IF EXISTS "usuarios_select_own" ON public.usuarios;
 CREATE POLICY "usuarios_select_own"
   ON public.usuarios FOR SELECT
   USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS "usuarios_update_own" ON public.usuarios;
 CREATE POLICY "usuarios_update_own"
   ON public.usuarios FOR UPDATE
   USING (auth.uid() = id);
 
 -- Anamneses
 ALTER TABLE public.anamneses ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "anamneses_select_own" ON public.anamneses;
 CREATE POLICY "anamneses_select_own"
   ON public.anamneses FOR SELECT
   USING (auth.uid() = patient_id);
+DROP POLICY IF EXISTS "anamneses_insert_own" ON public.anamneses;
 CREATE POLICY "anamneses_insert_own"
   ON public.anamneses FOR INSERT
   WITH CHECK (auth.uid() = patient_id);
+DROP POLICY IF EXISTS "anamneses_update_own" ON public.anamneses;
 CREATE POLICY "anamneses_update_own"
   ON public.anamneses FOR UPDATE
   USING (auth.uid() = patient_id);
 
 -- Apontamentos
 ALTER TABLE public.apontamentos ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "apontamentos_select_own" ON public.apontamentos;
 CREATE POLICY "apontamentos_select_own"
   ON public.apontamentos FOR SELECT
   USING (auth.uid() = patient_id);
+DROP POLICY IF EXISTS "apontamentos_insert_own" ON public.apontamentos;
 CREATE POLICY "apontamentos_insert_own"
   ON public.apontamentos FOR INSERT
   WITH CHECK (auth.uid() = patient_id);
 
 -- Fotos
 ALTER TABLE public.fotos ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "fotos_select_own" ON public.fotos;
 CREATE POLICY "fotos_select_own"
   ON public.fotos FOR SELECT
   USING (auth.uid() = patient_id);
+DROP POLICY IF EXISTS "fotos_insert_own" ON public.fotos;
 CREATE POLICY "fotos_insert_own"
   ON public.fotos FOR INSERT
   WITH CHECK (auth.uid() = patient_id);
 
 -- Log notificacoes
 ALTER TABLE public.log_notificacoes ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "log_notificacoes_select_own" ON public.log_notificacoes;
 CREATE POLICY "log_notificacoes_select_own"
   ON public.log_notificacoes FOR SELECT
   USING (auth.uid() = patient_id);
 
 -- Servicos: todos autenticados podem ver
 ALTER TABLE public.servicos ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "servicos_select_auth" ON public.servicos;
 CREATE POLICY "servicos_select_auth"
   ON public.servicos FOR SELECT
   USING (auth.role() = 'authenticated');
 
 -- Disponibilidades: todos autenticados podem ver
 ALTER TABLE public.disponibilidades ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "disponibilidades_select_auth" ON public.disponibilidades;
 CREATE POLICY "disponibilidades_select_auth"
   ON public.disponibilidades FOR SELECT
   USING (auth.role() = 'authenticated');
 
 -- Bloqueios: todos autenticados podem ver
 ALTER TABLE public.bloqueios ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "bloqueios_select_auth" ON public.bloqueios;
 CREATE POLICY "bloqueios_select_auth"
   ON public.bloqueios FOR SELECT
   USING (auth.role() = 'authenticated');
 
 -- Configuracao temas: todos autenticados podem ver
 ALTER TABLE public.configuracao_temas ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "temas_select_auth" ON public.configuracao_temas;
 CREATE POLICY "temas_select_auth"
   ON public.configuracao_temas FOR SELECT
   USING (auth.role() = 'authenticated');
 
 -- Formulario templates: todos autenticados podem ver
 ALTER TABLE public.formulario_templates ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "templates_select_auth" ON public.formulario_templates;
 CREATE POLICY "templates_select_auth"
   ON public.formulario_templates FOR SELECT
   USING (auth.role() = 'authenticated');
