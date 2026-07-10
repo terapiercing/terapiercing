@@ -24,6 +24,14 @@ const adminModules = [
     color: '#7C6FA0',
   },
   {
+    href: '/clientes/novo',
+    icon: '👥',
+    title: 'Novo Cliente',
+    description: 'Cadastrar um novo cliente no sistema',
+    color: '#4CAF50',
+    badge: 'Admin',
+  },
+  {
     href: '/admin/configuracoes',
     icon: '⚙️',
     title: 'Configurações',

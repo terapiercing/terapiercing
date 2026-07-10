@@ -136,6 +136,17 @@ CREATE POLICY "usuarios_update_own"
   ON public.usuarios FOR UPDATE
   USING (auth.uid() = id);
 
+-- Usuarios: admin pode visualizar todos os registros
+DROP POLICY IF EXISTS "usuarios_select_admin" ON public.usuarios;
+CREATE POLICY "usuarios_select_admin"
+  ON public.usuarios FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.usuarios
+      WHERE id = auth.uid() AND role = 'admin'
+    )
+  );
+
 -- Anamneses
 ALTER TABLE public.anamneses ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "anamneses_select_own" ON public.anamneses;

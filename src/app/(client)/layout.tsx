@@ -55,12 +55,20 @@ export default async function ClientLayout({
               Perfil
             </Link>
             {isAdmin && (
-              <Link
-                href="/admin/configuracoes"
-                className="text-sm font-medium text-zinc-600 transition-colors hover:text-[#E1A293]"
-              >
-                Configurações
-              </Link>
+              <>
+                <Link
+                  href="/clientes/novo"
+                  className="text-sm font-medium text-zinc-600 transition-colors hover:text-[#E1A293]"
+                >
+                  Clientes
+                </Link>
+                <Link
+                  href="/admin/configuracoes"
+                  className="text-sm font-medium text-zinc-600 transition-colors hover:text-[#E1A293]"
+                >
+                  Configurações
+                </Link>
+              </>
             )}
 
             <span className="text-sm text-zinc-400">|</span>
