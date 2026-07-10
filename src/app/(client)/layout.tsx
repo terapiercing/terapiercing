@@ -29,7 +29,7 @@ export default async function ClientLayout({
       <header className="border-b border-zinc-200 bg-white shadow-sm">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
     <Link
-          href="/dashboard"
+          href={isAdmin ? "/admin/configuracoes" : "/dashboard"}
           className="font-serif text-2xl tracking-tight text-[#D4AF37]"
         >
           RBClinic
@@ -37,7 +37,7 @@ export default async function ClientLayout({
 
           <nav className="flex items-center gap-6">
             <Link
-              href="/dashboard"
+              href={isAdmin ? "/admin/configuracoes" : "/dashboard"}
               className="text-sm font-medium text-zinc-600 transition-colors hover:text-[#E1A293]"
             >
               Início

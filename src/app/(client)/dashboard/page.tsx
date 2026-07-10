@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 export default async function Dashboard() {
   const supabase = await createClient()
@@ -10,9 +11,13 @@ export default async function Dashboard() {
 
   const { data: usuario } = await supabase
     .from('usuarios')
-    .select('id, nome')
+    .select('id, nome, role')
     .eq('id', user.id)
     .single()
+
+  if (usuario?.role === 'admin') {
+    redirect('/admin/configuracoes')
+  }
 
   const { count: agendamentosCount } = await supabase
     .from('apontamentos')
