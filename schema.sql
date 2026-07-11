@@ -20,10 +20,13 @@ CREATE TABLE IF NOT EXISTS public.usuarios (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
--- 3. Tabela de Fichas de Anamnese
+-- 3. Tabela de Fichas de Anamnese (preenchimento por agendamento)
 CREATE TABLE IF NOT EXISTS public.anamneses (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    patient_id UUID REFERENCES public.usuarios(id) ON DELETE CASCADE UNIQUE,
+    patient_id UUID REFERENCES public.usuarios(id) ON DELETE CASCADE NOT NULL,
+    servico_id UUID REFERENCES public.servicos(id) ON DELETE SET NULL,
+    formulario_template_id UUID REFERENCES public.formulario_templates(id) ON DELETE SET NULL,
+    apontamento_id UUID REFERENCES public.apontamentos(id) ON DELETE SET NULL,
     campos_json JSONB NOT NULL,
     aceite_digital BOOLEAN DEFAULT FALSE NOT NULL,
     aceito_em TIMESTAMP WITH TIME ZONE,

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useActionState, useTransition } from 'react'
-import { upsertServico, updateDisponibilidades, listTemplates } from '@/lib/actions/admin'
+import { upsertServico, updateDisponibilidades } from '@/lib/actions/admin'
 import TemplateModal from './TemplateModal'
 
 interface Servico {
@@ -27,6 +27,8 @@ interface Disponibilidade {
 interface Template {
   id: string
   nome: string
+  descricao: string
+  perguntas_json: string
 }
 
 const DIAS_SEMANA = [
@@ -46,7 +48,7 @@ export default function ConfiguracoesForm({
   initialServicos: Servico[]
   initialDisponibilidades: Disponibilidade[]
 }) {
-  const [servicos, setServicos] = useState<Servico[]>(initialServicos)
+  const [servicos] = useState<Servico[]>(initialServicos)
   const [disponibilidades, setDisponibilidades] = useState<Disponibilidade[]>(() => {
     const list = [...initialDisponibilidades]
     for (let i = 0; i <= 6; i++) {
@@ -56,7 +58,7 @@ export default function ConfiguracoesForm({
           dia_semana: i,
           hora_inicio: '08:00',
           hora_fim: '18:00',
-          ativo: i !== 0 // Sunday closed by default
+          ativo: i !== 0
         })
       }
     }
@@ -68,32 +70,26 @@ export default function ConfiguracoesForm({
   const [exigeForm, setExigeForm] = useState(false)
   const [templates, setTemplates] = useState<Template[]>([])
   const [isTemplateModalOpen, setTemplateModalOpen] = useState(false)
+  const [editingTemplate, setEditingTemplate] = useState<Template | null>(null)
 
-  // Load form templates
   useEffect(() => {
-    const fetchTemplates = async () => {
-      try {
-        const res = await fetch('/api/templates')
-        if (res.ok) {
-          const data = await res.json()
-          setTemplates(data)
-        }
-      } catch (e) {
-        console.error('Failed to load templates', e)
-      }
-    }
-    fetchTemplates()
+    const ctrl = new AbortController()
+    fetch('/api/templates', { signal: ctrl.signal })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => { if (!ctrl.signal.aborted) setTemplates(data) })
+      .catch(() => {})
+    return () => ctrl.abort()
   }, [])
 
   const [stateServico, actionServico, pendingServico] = useActionState(
-    async (prevState: any, formData: FormData) => {
+    async (prevState: { error: string; success?: boolean } | undefined, formData: FormData) => {
       const res = await upsertServico(prevState, formData)
       if (res.success) {
         window.location.reload()
       }
       return res
     },
-    undefined
+    undefined as { error: string; success?: boolean } | undefined
   )
 
   const [isPendingDisp, startTransition] = useTransition()
@@ -122,6 +118,25 @@ export default function ConfiguracoesForm({
     setShowServicoForm(true)
   }
 
+  const handleNovoTemplate = () => {
+    setEditingTemplate(null)
+    setTemplateModalOpen(true)
+  }
+
+  const handleEditTemplate = (t: Template) => {
+    setEditingTemplate(t)
+    setTemplateModalOpen(true)
+  }
+
+  const handleTemplateModalClose = () => {
+    setTemplateModalOpen(false)
+    setEditingTemplate(null)
+    fetch('/api/templates')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => setTemplates(data))
+      .catch(() => {})
+  }
+
   const handleSaveDisponibilidades = async (e: React.FormEvent) => {
     e.preventDefault()
     setDispError('')
@@ -136,16 +151,27 @@ export default function ConfiguracoesForm({
     })
   }
 
-  const handleDispChange = (index: number, field: keyof Disponibilidade, value: any) => {
+  const handleDispChange = (index: number, field: keyof Disponibilidade, value: boolean | string) => {
     const updated = [...disponibilidades]
     updated[index] = { ...updated[index], [field]: value }
     setDisponibilidades(updated)
   }
 
+  function countPerguntas(json?: string): number {
+    if (!json) return 0
+    try {
+      const arr = JSON.parse(json)
+      return Array.isArray(arr) ? arr.length : 0
+    } catch {
+      return 0
+    }
+  }
+
   return (
     <div className="grid gap-8 lg:grid-cols-3">
-      {/* Services Management */}
+      {/* Services + Templates */}
       <div className="lg:col-span-2 space-y-6">
+        {/* Serviços */}
         <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-zinc-800 font-serif">Serviços e Procedimentos</h2>
@@ -156,12 +182,6 @@ export default function ConfiguracoesForm({
               >
                 Novo Serviço
               </button>
-              <button
-                onClick={() => setTemplateModalOpen(true)}
-                className="rounded-lg bg-[#E1A293] px-3 py-2 text-xs font-medium text-white hover:bg-[#d48d7c]"
-              >
-                Novo Modelo de Formulário
-              </button>
             </div>
           </div>
 
@@ -169,7 +189,7 @@ export default function ConfiguracoesForm({
             {servicos.map(s => (
               <div key={s.id} className="py-4 flex justify-between items-start gap-4">
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-semibold text-zinc-800">{s.nome}</span>
                     {!s.ativo && (
                       <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-semibold text-zinc-500">Inativo</span>
@@ -192,7 +212,7 @@ export default function ConfiguracoesForm({
                 </div>
                 <button
                   onClick={() => handleEditServico(s)}
-                  className="text-sm font-medium text-[#E1A293] hover:underline"
+                  className="text-sm font-medium text-[#E1A293] hover:underline shrink-0"
                 >
                   Editar
                 </button>
@@ -201,7 +221,50 @@ export default function ConfiguracoesForm({
           </div>
         </div>
 
-        {/* Modal / Form to Edit/Create Service */}
+        {/* Modelos de Formulário */}
+        <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-semibold text-zinc-800 font-serif">Modelos de Formulário</h2>
+              <p className="text-xs text-zinc-400 mt-1">Formulários de anamnese vinculados aos serviços.</p>
+            </div>
+            <button
+              onClick={handleNovoTemplate}
+              className="rounded-lg bg-[#E1A293] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#d48d7c]"
+            >
+              Novo Modelo
+            </button>
+          </div>
+
+          {templates.length === 0 ? (
+            <div className="rounded-xl border-2 border-dashed border-zinc-200 p-8 text-center">
+              <p className="text-sm text-zinc-400">
+                Nenhum modelo cadastrado. Clique em &quot;Novo Modelo&quot; para criar o primeiro.
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-zinc-100">
+              {templates.map(t => (
+                <div key={t.id} className="py-3 flex justify-between items-center gap-4">
+                  <div className="min-w-0">
+                    <p className="font-semibold text-zinc-800 text-sm">{t.nome}</p>
+                    <p className="text-xs text-zinc-400 truncate">
+                      {t.descricao || 'Sem descrição'} · {countPerguntas(t.perguntas_json)} pergunta{countPerguntas(t.perguntas_json) !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleEditTemplate(t)}
+                    className="text-sm font-medium text-[#E1A293] hover:underline shrink-0"
+                  >
+                    Editar
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Service Form */}
         {showServicoForm && editingServico && (
           <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm space-y-4">
             <h3 className="text-lg font-semibold text-zinc-800">
@@ -273,7 +336,7 @@ export default function ConfiguracoesForm({
                 />
               </div>
 
-              {/* Form requirement rule */}
+              {/* Form requirement */}
               <div className="border border-zinc-100 rounded-2xl p-4 bg-zinc-50 space-y-3">
                 <div className="flex items-center gap-2">
                   <input
@@ -347,7 +410,7 @@ export default function ConfiguracoesForm({
         )}
       </div>
 
-      {/* Working Hours Management */}
+      {/* Working Hours */}
       <div className="space-y-6">
         <form onSubmit={handleSaveDisponibilidades} className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm space-y-6">
           <div>
@@ -412,7 +475,12 @@ export default function ConfiguracoesForm({
       </div>
 
       {/* Template Modal */}
-      <TemplateModal isOpen={isTemplateModalOpen} onClose={() => setTemplateModalOpen(false)} />
+      <TemplateModal
+        key={editingTemplate?.id || 'new'}
+        isOpen={isTemplateModalOpen}
+        onClose={handleTemplateModalClose}
+        editingTemplate={editingTemplate}
+      />
     </div>
   )
 }

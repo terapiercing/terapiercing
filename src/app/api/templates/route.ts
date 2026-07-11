@@ -6,7 +6,7 @@ export async function GET() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('formulario_templates')
-    .select('id, nome, descricao');
+    .select('id, nome, descricao, perguntas_json');
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
