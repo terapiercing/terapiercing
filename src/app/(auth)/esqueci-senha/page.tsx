@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, Suspense, useRef, useState, useTransition } from 'react'
+import { useActionState, Suspense, useRef, useState } from 'react'
 import { verifyResetIdentity, resetPasswordDirect } from '@/lib/actions/auth'
 import Link from 'next/link'
 
@@ -15,30 +15,19 @@ function formatCpf(value: string): string {
 function EsqueciSenhaForm() {
   const [step, setStep] = useState<'verify' | 'reset'>('verify')
   const [userId, setUserId] = useState('')
-  const [verifyError, setVerifyError] = useState<string>('')
-  const [isPending, startTransition] = useTransition()
+  const [verifyState, verifyFormAction, verifyPending] = useActionState(
+    async (prev: { error: string; verified?: boolean; userId?: string } | undefined, formData: FormData) => {
+      const result = await verifyResetIdentity(prev, formData)
+      if (result.verified && result.userId) {
+        setUserId(result.userId)
+        setStep('reset')
+      }
+      return result
+    },
+    undefined
+  )
   const [resetState, resetFormAction, resetPending] = useActionState(resetPasswordDirect, undefined)
   const cpfRef = useRef<HTMLInputElement>(null)
-  const formRef = useRef<HTMLFormElement>(null)
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    setVerifyError('')
-    startTransition(async () => {
-      try {
-        const result = await verifyResetIdentity(undefined, formData)
-        if (result.verified && result.userId) {
-          setUserId(result.userId)
-          setStep('reset')
-        } else {
-          setVerifyError(result.error)
-        }
-      } catch {
-        setVerifyError('Erro ao verificar identidade. Tente novamente.')
-      }
-    })
-  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#FAF7F5] px-4">
@@ -58,7 +47,7 @@ function EsqueciSenhaForm() {
         </div>
 
         {step === 'verify' ? (
-          <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+          <form action={verifyFormAction} className="space-y-6">
             <div className="space-y-4">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-zinc-700">
@@ -96,18 +85,18 @@ function EsqueciSenhaForm() {
               </div>
             </div>
 
-            {verifyError && (
+            {verifyState?.error && (
               <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600 border border-red-200">
-                {verifyError}
+                {verifyState.error}
               </div>
             )}
 
             <button
               type="submit"
-              disabled={isPending}
+              disabled={verifyPending}
               className="w-full rounded-lg bg-[#E1A293] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#d48d7c] focus:ring-2 focus:ring-[#E1A293]/50 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isPending ? 'Verificando...' : 'Verificar Identidade'}
+              {verifyPending ? 'Verificando...' : 'Verificar Identidade'}
             </button>
           </form>
         ) : (

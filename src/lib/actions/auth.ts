@@ -408,13 +408,19 @@ export async function verifyResetIdentity(
       .eq('cpf', cpf)
       .single()
 
-    if (queryError || !usuario) {
+    if (queryError) {
+      console.error('[verifyResetIdentity] Query error:', queryError)
+      return { error: 'Erro ao buscar dados. Tente novamente.' }
+    }
+
+    if (!usuario) {
       return { error: 'E-mail e CPF não conferem no sistema.' }
     }
 
     return { error: '', verified: true, userId: usuario.id }
-  } catch {
-    return { error: 'Erro ao verificar identidade. Tente novamente.' }
+  } catch (e) {
+    console.error('[verifyResetIdentity] Exception:', e)
+    return { error: 'Erro interno. Verifique os dados e tente novamente.' }
   }
 }
 
