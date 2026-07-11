@@ -272,3 +272,133 @@ export async function createAppointment(
   revalidatePath('/agendamentos')
   redirect('/agendamentos')
 }
+
+// ============================
+// Admin: gerenciar agendamentos
+// ============================
+
+export type AppointmentStatus = 'Pendente' | 'Confirmado' | 'Concluido' | 'Cancelado'
+
+export async function updateAppointmentStatus(
+  appointmentId: string,
+  status: AppointmentStatus
+): Promise<{ error?: string }> {
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('apontamentos')
+    .update({ status })
+    .eq('id', appointmentId)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/agendamentos')
+  revalidatePath('/agendamentos/novo')
+  return {}
+}
+
+export async function deleteAppointment(
+  appointmentId: string
+): Promise<{ error?: string }> {
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('apontamentos')
+    .delete()
+    .eq('id', appointmentId)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/agendamentos')
+  revalidatePath('/agendamentos/novo')
+  return {}
+}
+
+export async function getTodayAppointments() {
+  const supabase = await createClient()
+  const today = new Date().toISOString().split('T')[0]
+
+  const { data, error } = await supabase
+    .from('apontamentos')
+    .select('id, data, hora, status, notas, patient_id, servicos(id, nome, duracao_min, preco), usuarios(nome, email, telefone)')
+    .eq('data', today)
+    .order('hora', { ascending: true })
+
+  if (error) throw error
+  return data || []
+}
+
+// ============================
+// Admin: gerenciar bloqueios
+// ============================
+
+export async function createBloqueio(formData: FormData): Promise<{ error?: string }> {
+  const supabase = await createClient()
+
+  const data = formData.get('data') as string
+  const horaInicio = formData.get('hora_inicio') as string
+  const horaFim = formData.get('hora_fim') as string
+  const motivo = formData.get('motivo') as string
+  const bloqueioType = formData.get('bloqueio_type') as string
+
+  if (!data) return { error: 'Selecione uma data.' }
+
+  const payload: {
+    data: string
+    hora_inicio: string | null
+    hora_fim: string | null
+    motivo: string | null
+  } = {
+    data,
+    hora_inicio: null,
+    hora_fim: null,
+    motivo: motivo || null,
+  }
+
+  if (bloqueioType === 'horario') {
+    if (!horaInicio || !horaFim) {
+      return { error: 'Preencha os horários de início e fim.' }
+    }
+    if (horaInicio >= horaFim) {
+      return { error: 'O horário de início deve ser anterior ao horário de fim.' }
+    }
+    payload.hora_inicio = horaInicio
+    payload.hora_fim = horaFim
+  }
+
+  const { error } = await supabase.from('bloqueios').insert(payload)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/agendamentos/novo')
+  return {}
+}
+
+export async function deleteBloqueio(
+  bloqueioId: string
+): Promise<{ error?: string }> {
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('bloqueios')
+    .delete()
+    .eq('id', bloqueioId)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/agendamentos/novo')
+  return {}
+}
+
+export async function getBloqueiosByDate(dateStr: string) {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('bloqueios')
+    .select('id, data, hora_inicio, hora_fim, motivo')
+    .eq('data', dateStr)
+    .order('hora_inicio', { ascending: true })
+
+  if (error) throw error
+  return data || []
+}
