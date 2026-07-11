@@ -409,3 +409,65 @@ export async function toggleUserRole(
   revalidatePath('/clientes')
   return { success: true, error: '' }
 }
+
+export async function updateUsuario(
+  _prevState: { error: string; success?: boolean } | undefined,
+  formData: FormData
+) {
+  const supabase = await createClient()
+  const { data: userData } = await supabase.auth.getUser()
+  const caller = userData.user
+
+  if (!caller) {
+    return { error: 'Usuário não autenticado.' }
+  }
+
+  const { data: callerProfile } = await supabase
+    .from('usuarios')
+    .select('role')
+    .eq('id', caller.id)
+    .single()
+
+  if (callerProfile?.role !== 'admin') {
+    return { error: 'Apenas administradores podem editar outros usuários.' }
+  }
+
+  const userId = formData.get('userId') as string
+  const nome = formData.get('nome') as string
+  const usuario = formData.get('usuario') as string
+  const telefone = formData.get('telefone') as string
+  const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
+  const nascimento = formData.get('nascimento') as string
+  const endereco = formData.get('endereco') as string
+  const numero = formData.get('numero') as string
+  const bairro = formData.get('bairro') as string
+  const cidade = formData.get('cidade') as string
+  const role = formData.get('role') as string
+
+  if (!userId || !nome || !telefone) {
+    return { error: 'Nome e Telefone são obrigatórios.' }
+  }
+
+  const { error } = await supabase
+    .from('usuarios')
+    .update({
+      nome,
+      usuario: usuario || null,
+      telefone,
+      cpf: cpf || null,
+      nascimento: nascimento || null,
+      endereco: endereco || null,
+      numero: numero || null,
+      bairro: bairro || null,
+      cidade: cidade || null,
+      role: role || 'client',
+    })
+    .eq('id', userId)
+
+  if (error) {
+    return { error: `Erro ao atualizar: ${error.message}` }
+  }
+
+  revalidatePath('/clientes')
+  return { success: true, error: '' }
+}
