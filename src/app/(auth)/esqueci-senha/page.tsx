@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useRef, useState, useTransition } from 'react'
+import { useActionState, Suspense, useRef, useState, useTransition } from 'react'
 import { verifyResetIdentity, resetPasswordDirect } from '@/lib/actions/auth'
 import Link from 'next/link'
 
@@ -12,7 +12,7 @@ function formatCpf(value: string): string {
     .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
 }
 
-export default function EsqueciSenhaPage() {
+function EsqueciSenhaForm() {
   const [step, setStep] = useState<'verify' | 'reset'>('verify')
   const [userId, setUserId] = useState('')
   const [verifyError, setVerifyError] = useState<string>('')
@@ -26,12 +26,16 @@ export default function EsqueciSenhaPage() {
     const formData = new FormData(e.currentTarget)
     setVerifyError('')
     startTransition(async () => {
-      const result = await verifyResetIdentity(undefined, formData)
-      if (result.verified && result.userId) {
-        setUserId(result.userId)
-        setStep('reset')
-      } else {
-        setVerifyError(result.error)
+      try {
+        const result = await verifyResetIdentity(undefined, formData)
+        if (result.verified && result.userId) {
+          setUserId(result.userId)
+          setStep('reset')
+        } else {
+          setVerifyError(result.error)
+        }
+      } catch {
+        setVerifyError('Erro ao verificar identidade. Tente novamente.')
       }
     })
   }
@@ -177,5 +181,13 @@ export default function EsqueciSenhaPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function EsqueciSenhaPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-[#FAF7F5] px-4 text-zinc-500 font-medium">Carregando...</div>}>
+      <EsqueciSenhaForm />
+    </Suspense>
   )
 }

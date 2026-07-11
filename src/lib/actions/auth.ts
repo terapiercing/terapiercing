@@ -391,62 +391,70 @@ export async function verifyResetIdentity(
   _prevState: { error: string; verified?: boolean; userId?: string } | undefined,
   formData: FormData
 ) {
-  const supabaseAdmin = createAdminClient()
+  try {
+    const supabaseAdmin = createAdminClient()
 
-  const email = (formData.get('email') as string).trim()
-  const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
+    const email = (formData.get('email') as string || '').trim()
+    const cpf = (formData.get('cpf') as string || '').replace(/\D/g, '')
 
-  if (!email || !cpf) {
-    return { error: 'Informe seu e-mail e CPF.' }
+    if (!email || !cpf) {
+      return { error: 'Informe seu e-mail e CPF.' }
+    }
+
+    const { data: usuario, error: queryError } = await supabaseAdmin
+      .from('usuarios')
+      .select('id')
+      .eq('email', email)
+      .eq('cpf', cpf)
+      .single()
+
+    if (queryError || !usuario) {
+      return { error: 'E-mail e CPF não conferem no sistema.' }
+    }
+
+    return { error: '', verified: true, userId: usuario.id }
+  } catch {
+    return { error: 'Erro ao verificar identidade. Tente novamente.' }
   }
-
-  const { data: usuario } = await supabaseAdmin
-    .from('usuarios')
-    .select('id')
-    .eq('email', email)
-    .eq('cpf', cpf)
-    .single()
-
-  if (!usuario) {
-    return { error: 'E-mail e CPF não conferem no sistema.' }
-  }
-
-  return { error: '', verified: true, userId: usuario.id }
 }
 
 export async function resetPasswordDirect(
   _prevState: { error: string; success?: boolean } | undefined,
   formData: FormData
 ) {
-  const supabase = await createClient()
+  try {
+    const supabase = await createClient()
 
-  const userId = formData.get('userId') as string
-  const newPassword = formData.get('new_password') as string
-  const confirmPassword = formData.get('confirm_password') as string
+    const userId = formData.get('userId') as string
+    const newPassword = formData.get('new_password') as string
+    const confirmPassword = formData.get('confirm_password') as string
 
-  if (!userId || !newPassword || !confirmPassword) {
-    return { error: 'Preencha todos os campos.' }
+    if (!userId || !newPassword || !confirmPassword) {
+      return { error: 'Preencha todos os campos.' }
+    }
+
+    if (newPassword !== confirmPassword) {
+      return { error: 'A nova senha e a confirmação não conferem.' }
+    }
+
+    if (newPassword.length < 6) {
+      return { error: 'A nova senha deve ter no mínimo 6 caracteres.' }
+    }
+
+    const supabaseAdmin = createAdminClient()
+
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+      password: newPassword,
+    })
+
+    if (error) {
+      return { error: `Erro ao redefinir senha: ${error.message}` }
+    }
+
+    return { success: true, error: '' }
+  } catch {
+    return { error: 'Erro ao redefinir senha. Tente novamente.' }
   }
-
-  if (newPassword !== confirmPassword) {
-    return { error: 'A nova senha e a confirmação não conferem.' }
-  }
-
-  if (newPassword.length < 6) {
-    return { error: 'A nova senha deve ter no mínimo 6 caracteres.' }
-  }
-
-  const supabaseAdmin = createAdminClient()
-
-  const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
-    password: newPassword,
-  })
-
-  if (error) {
-    return { error: `Erro ao redefinir senha: ${error.message}` }
-  }
-
-  return { success: true, error: '' }
 }
 
 export async function toggleUserRole(
