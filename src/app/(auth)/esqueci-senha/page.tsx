@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useTransition, useRef, useState } from 'react'
+import { useActionState, useRef, useState, useTransition } from 'react'
 import { verifyResetIdentity, resetPasswordDirect } from '@/lib/actions/auth'
 import Link from 'next/link'
 
@@ -19,8 +19,11 @@ export default function EsqueciSenhaPage() {
   const [isPending, startTransition] = useTransition()
   const [resetState, resetFormAction, resetPending] = useActionState(resetPasswordDirect, undefined)
   const cpfRef = useRef<HTMLInputElement>(null)
+  const formRef = useRef<HTMLFormElement>(null)
 
-  const handleVerify = (formData: FormData) => {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
     setVerifyError('')
     startTransition(async () => {
       const result = await verifyResetIdentity(undefined, formData)
@@ -51,7 +54,7 @@ export default function EsqueciSenhaPage() {
         </div>
 
         {step === 'verify' ? (
-          <form action={handleVerify} className="space-y-6">
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-zinc-700">
