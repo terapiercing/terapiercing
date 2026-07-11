@@ -35,7 +35,7 @@ export default async function ClientLayout({
           RBClinic
         </Link>
 
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-5">
             <Link
               href="/dashboard"
               className="text-sm font-medium text-zinc-600 transition-colors hover:text-[#E1A293]"
@@ -43,10 +43,16 @@ export default async function ClientLayout({
               Início
             </Link>
             <Link
-              href="/agendamentos"
+              href="/agendamentos/novo"
               className="text-sm font-medium text-zinc-600 transition-colors hover:text-[#E1A293]"
             >
               Agendamentos
+            </Link>
+            <Link
+              href="/agendamentos"
+              className="text-sm font-medium text-zinc-600 transition-colors hover:text-[#E1A293]"
+            >
+              Histórico
             </Link>
             <Link
               href="/perfil"
@@ -57,10 +63,10 @@ export default async function ClientLayout({
             {isAdmin && (
               <>
                 <Link
-                  href="/clientes"
+                  href="/clientes/novo"
                   className="text-sm font-medium text-zinc-600 transition-colors hover:text-[#E1A293]"
                 >
-                  Clientes
+                  Novo Cliente
                 </Link>
                 <Link
                   href="/admin/configuracoes"
