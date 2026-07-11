@@ -57,7 +57,7 @@ export default async function ClientLayout({
             {isAdmin && (
               <>
                 <Link
-                  href="/clientes/novo"
+                  href="/clientes"
                   className="text-sm font-medium text-zinc-600 transition-colors hover:text-[#E1A293]"
                 >
                   Clientes

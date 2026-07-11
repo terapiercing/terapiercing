@@ -153,6 +153,17 @@ CREATE POLICY "usuarios_select_admin"
     )
   );
 
+-- Usuarios: admin pode atualizar registros de outros usuarios
+DROP POLICY IF EXISTS "usuarios_update_admin" ON public.usuarios;
+CREATE POLICY "usuarios_update_admin"
+  ON public.usuarios FOR UPDATE
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.usuarios
+      WHERE id = auth.uid() AND role = 'admin'
+    )
+  );
+
 -- Usuarios: admin pode inserir novos registros (cadastro de clientes)
 DROP POLICY IF EXISTS "usuarios_insert_admin" ON public.usuarios;
 CREATE POLICY "usuarios_insert_admin"

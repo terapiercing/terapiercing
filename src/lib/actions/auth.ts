@@ -370,3 +370,42 @@ export async function forgotPassword(
 
   return { success: true, error: '' }
 }
+
+export async function toggleUserRole(
+  userId: string,
+  newRole: 'admin' | 'client'
+) {
+  const supabase = await createClient()
+  const { data: userData } = await supabase.auth.getUser()
+  const caller = userData.user
+
+  if (!caller) {
+    return { error: 'Usuário não autenticado.' }
+  }
+
+  const { data: callerProfile } = await supabase
+    .from('usuarios')
+    .select('role')
+    .eq('id', caller.id)
+    .single()
+
+  if (callerProfile?.role !== 'admin') {
+    return { error: 'Apenas administradores podem alterar roles.' }
+  }
+
+  if (userId === caller.id) {
+    return { error: 'Você não pode alterar sua própria role.' }
+  }
+
+  const { error: updateError } = await supabase
+    .from('usuarios')
+    .update({ role: newRole })
+    .eq('id', userId)
+
+  if (updateError) {
+    return { error: `Erro ao alterar role: ${updateError.message}` }
+  }
+
+  revalidatePath('/clientes')
+  return { success: true, error: '' }
+}
