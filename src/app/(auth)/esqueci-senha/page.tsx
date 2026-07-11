@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, Suspense, useRef, useState } from 'react'
+import { useActionState, Suspense, useRef, useState, useEffect } from 'react'
 import { verifyResetIdentity, resetPasswordDirect } from '@/lib/actions/auth'
 import Link from 'next/link'
 
@@ -15,19 +15,16 @@ function formatCpf(value: string): string {
 function EsqueciSenhaForm() {
   const [step, setStep] = useState<'verify' | 'reset'>('verify')
   const [userId, setUserId] = useState('')
-  const [verifyState, verifyFormAction, verifyPending] = useActionState(
-    async (prev: { error: string; verified?: boolean; userId?: string } | undefined, formData: FormData) => {
-      const result = await verifyResetIdentity(prev, formData)
-      if (result.verified && result.userId) {
-        setUserId(result.userId)
-        setStep('reset')
-      }
-      return result
-    },
-    undefined
-  )
+  const [verifyState, verifyFormAction, verifyPending] = useActionState(verifyResetIdentity, undefined)
   const [resetState, resetFormAction, resetPending] = useActionState(resetPasswordDirect, undefined)
   const cpfRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (verifyState?.verified && verifyState.userId) {
+      setUserId(verifyState.userId)
+      setStep('reset')
+    }
+  }, [verifyState])
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#FAF7F5] px-4">

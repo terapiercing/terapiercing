@@ -391,37 +391,30 @@ export async function verifyResetIdentity(
   _prevState: { error: string; verified?: boolean; userId?: string } | undefined,
   formData: FormData
 ) {
-  try {
-    const supabaseAdmin = createAdminClient()
+  const supabase = await createClient()
 
-    const email = (formData.get('email') as string || '').trim()
-    const cpf = (formData.get('cpf') as string || '').replace(/\D/g, '')
+  const email = (formData.get('email') as string || '').trim()
+  const cpf = (formData.get('cpf') as string || '').replace(/\D/g, '')
 
-    if (!email || !cpf) {
-      return { error: 'Informe seu e-mail e CPF.' }
-    }
-
-    const { data: usuario, error: queryError } = await supabaseAdmin
-      .from('usuarios')
-      .select('id')
-      .eq('email', email)
-      .eq('cpf', cpf)
-      .single()
-
-    if (queryError) {
-      console.error('[verifyResetIdentity] Query error:', queryError)
-      return { error: 'Erro ao buscar dados. Tente novamente.' }
-    }
-
-    if (!usuario) {
-      return { error: 'E-mail e CPF não conferem no sistema.' }
-    }
-
-    return { error: '', verified: true, userId: usuario.id }
-  } catch (e) {
-    console.error('[verifyResetIdentity] Exception:', e)
-    return { error: 'Erro interno. Verifique os dados e tente novamente.' }
+  if (!email || !cpf) {
+    return { error: 'Informe seu e-mail e CPF.' }
   }
+
+  const { data, error: rpcError } = await supabase.rpc('verify_user_identity', {
+    p_email: email,
+    p_cpf: cpf,
+  })
+
+  if (rpcError) {
+    console.error('[verifyResetIdentity] RPC error:', rpcError)
+    return { error: 'Erro ao verificar identidade. Tente novamente.' }
+  }
+
+  if (!data || data.length === 0) {
+    return { error: 'E-mail e CPF não conferem no sistema.' }
+  }
+
+  return { error: '', verified: true, userId: data[0].user_id }
 }
 
 export async function resetPasswordDirect(
