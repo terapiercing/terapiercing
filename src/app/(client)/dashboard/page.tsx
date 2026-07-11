@@ -5,15 +5,15 @@ const adminModules = [
   {
     href: '/agendamentos/novo',
     icon: '✨',
-    title: 'Novo Agendamento',
-    description: 'Escolher procedimento, data e horário',
+    title: 'Agendamentos',
+    description: 'Agenda do dia, bloquear horários, criar, alterar status e excluir agendamentos',
     color: '#E1A293',
   },
   {
     href: '/agendamentos',
     icon: '📋',
-    title: 'Agendamentos',
-    description: 'Histórico de procedimentos agendados',
+    title: 'Histórico de Agendamentos',
+    description: 'Histórico completo de procedimentos agendados',
     color: '#5B9BD5',
   },
   {
