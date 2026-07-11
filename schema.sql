@@ -125,6 +125,20 @@ ON CONFLICT DO NOTHING;
 
 ALTER TABLE public.usuarios ENABLE ROW LEVEL SECURITY;
 
+-- Function SECURITY DEFINER para verificar se o usuario e admin
+-- Usada pelas policies admin para evitar recursao na tabela usuarios
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean
+LANGUAGE sql
+SECURITY DEFINER
+STABLE
+AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.usuarios
+    WHERE id = auth.uid() AND role = 'admin'
+  );
+$$;
+
 -- Usuarios: cada usuario so ve e edita seu proprio registro
 DROP POLICY IF EXISTS "usuarios_select_own" ON public.usuarios;
 CREATE POLICY "usuarios_select_own"
@@ -146,34 +160,19 @@ CREATE POLICY "usuarios_insert_own"
 DROP POLICY IF EXISTS "usuarios_select_admin" ON public.usuarios;
 CREATE POLICY "usuarios_select_admin"
   ON public.usuarios FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.usuarios
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Usuarios: admin pode atualizar registros de outros usuarios
 DROP POLICY IF EXISTS "usuarios_update_admin" ON public.usuarios;
 CREATE POLICY "usuarios_update_admin"
   ON public.usuarios FOR UPDATE
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.usuarios
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Usuarios: admin pode inserir novos registros (cadastro de clientes)
 DROP POLICY IF EXISTS "usuarios_insert_admin" ON public.usuarios;
 CREATE POLICY "usuarios_insert_admin"
   ON public.usuarios FOR INSERT
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.usuarios
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  WITH CHECK (public.is_admin());
 
 -- Anamneses
 ALTER TABLE public.anamneses ENABLE ROW LEVEL SECURITY;
@@ -205,12 +204,7 @@ CREATE POLICY "apontamentos_insert_own"
 DROP POLICY IF EXISTS "apontamentos_select_admin" ON public.apontamentos;
 CREATE POLICY "apontamentos_select_admin"
   ON public.apontamentos FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.usuarios
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Fotos
 ALTER TABLE public.fotos ENABLE ROW LEVEL SECURITY;

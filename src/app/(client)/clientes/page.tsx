@@ -19,7 +19,7 @@ export default async function ClientesPage() {
 
   const { data: usuarios } = await supabase
     .from('usuarios')
-    .select('id, nome, email, cpf, telefone, role, created_at')
+    .select('id, nome, usuario, email, cpf, nascimento, telefone, endereco, numero, bairro, cidade, role, created_at')
     .order('created_at', { ascending: false })
 
   return (
@@ -27,9 +27,15 @@ export default async function ClientesPage() {
       usuarios={(usuarios || []) as Array<{
         id: string
         nome: string
+        usuario: string | null
         email: string
         cpf: string | null
+        nascimento: string | null
         telefone: string
+        endereco: string | null
+        numero: string | null
+        bairro: string | null
+        cidade: string | null
         role: string
         created_at: string
       }>}
