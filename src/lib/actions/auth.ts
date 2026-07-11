@@ -357,7 +357,7 @@ export async function forgotPassword(
   _prevState: { error: string; success?: boolean } | undefined,
   formData: FormData
 ) {
-  const supabase = await createClient()
+  const supabaseAdmin = createAdminClient()
 
   const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
 
@@ -365,7 +365,7 @@ export async function forgotPassword(
     return { error: 'Informe seu CPF.' }
   }
 
-  const { data: usuario } = await supabase
+  const { data: usuario } = await supabaseAdmin
     .from('usuarios')
     .select('email')
     .eq('cpf', cpf)
@@ -375,6 +375,7 @@ export async function forgotPassword(
     return { error: 'CPF não encontrado no sistema.' }
   }
 
+  const supabase = await createClient()
   const { error } = await supabase.auth.resetPasswordForEmail(usuario.email, {
     redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL?.replace('.supabase.co', '')}/reset-password`,
   })
@@ -390,7 +391,7 @@ export async function verifyResetIdentity(
   _prevState: { error: string; verified?: boolean; userId?: string } | undefined,
   formData: FormData
 ) {
-  const supabase = await createClient()
+  const supabaseAdmin = createAdminClient()
 
   const email = (formData.get('email') as string).trim()
   const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
@@ -399,7 +400,7 @@ export async function verifyResetIdentity(
     return { error: 'Informe seu e-mail e CPF.' }
   }
 
-  const { data: usuario } = await supabase
+  const { data: usuario } = await supabaseAdmin
     .from('usuarios')
     .select('id')
     .eq('email', email)
