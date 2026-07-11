@@ -1,11 +1,37 @@
 'use client'
 
-import { useActionState } from 'react'
-import { forgotPassword } from '@/lib/actions/auth'
+import { useActionState, useTransition, useRef, useState } from 'react'
+import { verifyResetIdentity, resetPasswordDirect } from '@/lib/actions/auth'
 import Link from 'next/link'
 
+function formatCpf(value: string): string {
+  const digits = value.replace(/\D/g, '').slice(0, 11)
+  return digits
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+}
+
 export default function EsqueciSenhaPage() {
-  const [state, formAction, pending] = useActionState(forgotPassword, undefined)
+  const [step, setStep] = useState<'verify' | 'reset'>('verify')
+  const [userId, setUserId] = useState('')
+  const [verifyError, setVerifyError] = useState<string>('')
+  const [isPending, startTransition] = useTransition()
+  const [resetState, resetFormAction, resetPending] = useActionState(resetPasswordDirect, undefined)
+  const cpfRef = useRef<HTMLInputElement>(null)
+
+  const handleVerify = (formData: FormData) => {
+    setVerifyError('')
+    startTransition(async () => {
+      const result = await verifyResetIdentity(undefined, formData)
+      if (result.verified && result.userId) {
+        setUserId(result.userId)
+        setStep('reset')
+      } else {
+        setVerifyError(result.error)
+      }
+    })
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#FAF7F5] px-4">
@@ -15,49 +41,127 @@ export default function EsqueciSenhaPage() {
             RBClinic
           </Link>
           <h2 className="mt-6 text-2xl font-semibold text-zinc-800">
-            Esqueci minha senha
+            {step === 'verify' ? 'Esqueci minha senha' : 'Redefinir senha'}
           </h2>
           <p className="mt-2 text-sm text-zinc-500">
-            Informe seu CPF para receber um link de recuperação por email
+            {step === 'verify'
+              ? 'Informe seu e-mail e CPF para verificar sua identidade'
+              : 'Informe sua nova senha abaixo'}
           </p>
         </div>
 
-        <form action={formAction} className="space-y-6">
-          <div>
-            <label htmlFor="cpf" className="block text-sm font-medium text-zinc-700">
-              CPF
-            </label>
-            <input
-              id="cpf"
-              name="cpf"
-              type="text"
-              required
-              maxLength={14}
-              className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm placeholder-zinc-400 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
-              placeholder="000.000.000-00"
-            />
-          </div>
+        {step === 'verify' ? (
+          <form action={handleVerify} className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-zinc-700">
+                  E-mail
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm placeholder-zinc-400 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                  placeholder="seu@email.com"
+                />
+              </div>
 
-          {state?.error && (
-            <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600 border border-red-200">
-              {state.error}
+              <div>
+                <label htmlFor="cpf" className="block text-sm font-medium text-zinc-700">
+                  CPF
+                </label>
+                <input
+                  id="cpf"
+                  name="cpf"
+                  type="text"
+                  required
+                  ref={cpfRef}
+                  maxLength={14}
+                  onChange={(e) => {
+                    if (cpfRef.current) {
+                      cpfRef.current.value = formatCpf(e.target.value)
+                    }
+                  }}
+                  className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm placeholder-zinc-400 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                  placeholder="000.000.000-00"
+                />
+              </div>
             </div>
-          )}
 
-          {state?.success && (
-            <div className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-600 border border-green-200">
-              Um link de recuperação foi enviado para o email cadastrado. Verifique sua caixa de entrada.
+            {verifyError && (
+              <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600 border border-red-200">
+                {verifyError}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isPending}
+              className="w-full rounded-lg bg-[#E1A293] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#d48d7c] focus:ring-2 focus:ring-[#E1A293]/50 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isPending ? 'Verificando...' : 'Verificar Identidade'}
+            </button>
+          </form>
+        ) : (
+          <form action={resetFormAction} className="space-y-6">
+            <input type="hidden" name="userId" value={userId} />
+
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="new_password" className="block text-sm font-medium text-zinc-700">
+                  Nova Senha
+                </label>
+                <input
+                  id="new_password"
+                  name="new_password"
+                  type="password"
+                  required
+                  minLength={6}
+                  className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm placeholder-zinc-400 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                  placeholder="Mínimo 6 caracteres"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="confirm_password" className="block text-sm font-medium text-zinc-700">
+                  Confirmar Nova Senha
+                </label>
+                <input
+                  id="confirm_password"
+                  name="confirm_password"
+                  type="password"
+                  required
+                  minLength={6}
+                  className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm placeholder-zinc-400 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                  placeholder="Repita a nova senha"
+                />
+              </div>
             </div>
-          )}
 
-          <button
-            type="submit"
-            disabled={pending}
-            className="w-full rounded-lg bg-[#E1A293] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#d48d7c] focus:ring-2 focus:ring-[#E1A293]/50 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {pending ? 'Enviando...' : 'Enviar Link de Recuperação'}
-          </button>
-        </form>
+            {resetState?.error && (
+              <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600 border border-red-200">
+                {resetState.error}
+              </div>
+            )}
+
+            {resetState?.success && (
+              <div className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-600 border border-green-200">
+                Senha redefinida com sucesso! Você já pode fazer login.
+              </div>
+            )}
+
+            {!resetState?.success && (
+              <button
+                type="submit"
+                disabled={resetPending}
+                className="w-full rounded-lg bg-[#E1A293] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#d48d7c] focus:ring-2 focus:ring-[#E1A293]/50 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {resetPending ? 'Redefinindo...' : 'Redefinir Senha'}
+              </button>
+            )}
+          </form>
+        )}
 
         <p className="text-center text-sm text-zinc-500">
           Lembrou sua senha?{' '}

@@ -21,7 +21,7 @@ function LoginForm() {
             Olá de volta!
           </h2>
           <p className="mt-2 text-sm text-zinc-500">
-            Entre com seu email ou CPF e senha
+            Entre com seu email, CPF ou usuário e senha
           </p>
         </div>
 
@@ -31,7 +31,7 @@ function LoginForm() {
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-zinc-700">
-                Email ou CPF
+                Email, CPF ou Usuário
               </label>
               <input
                 id="email"
@@ -39,7 +39,7 @@ function LoginForm() {
                 type="text"
                 required
                 className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm placeholder-zinc-400 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
-                placeholder="seu@email.com ou 000.000.000-00"
+                placeholder="seu@email.com, 000.000.000-00 ou usuário"
               />
             </div>
 

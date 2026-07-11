@@ -52,6 +52,19 @@ function CadastroForm() {
               />
             </div>
 
+            <div>
+              <label htmlFor="usuario" className="block text-sm font-medium text-zinc-700">
+                Usuário
+              </label>
+              <input
+                id="usuario"
+                name="usuario"
+                type="text"
+                className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                placeholder="Nome de usuário para login"
+              />
+            </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-zinc-700">

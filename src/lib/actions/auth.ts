@@ -10,6 +10,10 @@ function isCpf(value: string): boolean {
   return /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/.test(value)
 }
 
+function isEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+}
+
 function onlyDigits(value: string): string {
   return value.replace(/\D/g, '')
 }
@@ -35,6 +39,17 @@ export async function login(
 
     if (!usuario) {
       return { error: 'CPF não encontrado no sistema.' }
+    }
+    email = usuario.email
+  } else if (!isEmail(identifier)) {
+    const { data: usuario } = await supabase
+      .from('usuarios')
+      .select('email')
+      .eq('usuario', identifier)
+      .single()
+
+    if (!usuario) {
+      return { error: 'Usuário não encontrado no sistema.' }
     }
     email = usuario.email
   }
@@ -366,6 +381,68 @@ export async function forgotPassword(
 
   if (error) {
     return { error: `Erro ao enviar email de recuperação: ${error.message}` }
+  }
+
+  return { success: true, error: '' }
+}
+
+export async function verifyResetIdentity(
+  _prevState: { error: string; verified?: boolean; userId?: string } | undefined,
+  formData: FormData
+) {
+  const supabase = await createClient()
+
+  const email = (formData.get('email') as string).trim()
+  const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
+
+  if (!email || !cpf) {
+    return { error: 'Informe seu e-mail e CPF.' }
+  }
+
+  const { data: usuario } = await supabase
+    .from('usuarios')
+    .select('id')
+    .eq('email', email)
+    .eq('cpf', cpf)
+    .single()
+
+  if (!usuario) {
+    return { error: 'E-mail e CPF não conferem no sistema.' }
+  }
+
+  return { error: '', verified: true, userId: usuario.id }
+}
+
+export async function resetPasswordDirect(
+  _prevState: { error: string; success?: boolean } | undefined,
+  formData: FormData
+) {
+  const supabase = await createClient()
+
+  const userId = formData.get('userId') as string
+  const newPassword = formData.get('new_password') as string
+  const confirmPassword = formData.get('confirm_password') as string
+
+  if (!userId || !newPassword || !confirmPassword) {
+    return { error: 'Preencha todos os campos.' }
+  }
+
+  if (newPassword !== confirmPassword) {
+    return { error: 'A nova senha e a confirmação não conferem.' }
+  }
+
+  if (newPassword.length < 6) {
+    return { error: 'A nova senha deve ter no mínimo 6 caracteres.' }
+  }
+
+  const supabaseAdmin = createAdminClient()
+
+  const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+    password: newPassword,
+  })
+
+  if (error) {
+    return { error: `Erro ao redefinir senha: ${error.message}` }
   }
 
   return { success: true, error: '' }
