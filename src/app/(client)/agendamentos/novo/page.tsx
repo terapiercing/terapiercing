@@ -88,11 +88,17 @@ export default async function Page({
     .eq('data', todayStr)
     .order('hora_inicio', { ascending: true })
 
+  const { data: clientes } = await supabase
+    .from('usuarios')
+    .select('id, nome, email, telefone, cpf')
+    .order('nome', { ascending: true })
+
   return (
     <AdminAgendamentosHub
       todayAppointments={(todayAppointments || []) as any}
       bloqueios={(bloqueios || []) as any}
       servicos={(servicos || []) as any}
+      clientes={(clientes || []) as any}
       initialServiceId={initialServiceId}
       todayClosed={todayClosed}
       todayDate={todayStr}

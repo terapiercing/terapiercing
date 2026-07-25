@@ -35,6 +35,14 @@ interface Servico {
   preco: number
 }
 
+interface Cliente {
+  id: string
+  nome: string
+  email: string
+  telefone: string
+  cpf: string | null
+}
+
 type Tab = 'agenda' | 'bloqueios' | 'novo'
 
 const STATUS_OPTIONS: { value: AppointmentStatus; label: string }[] = [
@@ -61,6 +69,7 @@ export default function AdminAgendamentosHub({
   todayAppointments,
   bloqueios,
   servicos,
+  clientes = [],
   initialServiceId,
   todayClosed,
   todayDate,
@@ -68,6 +77,7 @@ export default function AdminAgendamentosHub({
   todayAppointments: TodayAppointment[]
   bloqueios: Bloqueio[]
   servicos: Servico[]
+  clientes?: Cliente[]
   initialServiceId: string
   todayClosed: boolean
   todayDate: string
@@ -461,8 +471,10 @@ export default function AdminAgendamentosHub({
       {activeTab === 'novo' && (
         <NovoAgendamentoForm
           servicos={servicos}
+          clientes={clientes}
           initialServiceId={initialServiceId}
           todayClosed={todayClosed}
+          isAdmin={true}
         />
       )}
     </div>

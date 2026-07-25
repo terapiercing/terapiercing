@@ -132,10 +132,22 @@ export async function signup(
   redirect(redirectTo)
 }
 
+  export interface NovoClienteResult {
+  error: string
+  success?: boolean
+  cliente?: {
+    id: string
+    nome: string
+    email: string
+    telefone: string
+    cpf: string | null
+  }
+}
+
 export async function cadastrarCliente(
-  _prevState: { error: string; success?: boolean } | undefined,
+  _prevState: NovoClienteResult | undefined,
   formData: FormData
-) {
+): Promise<NovoClienteResult> {
   const supabase = await createClient()
   const { data: userData } = await supabase.auth.getUser()
   const caller = userData.user
@@ -205,10 +217,23 @@ export async function cadastrarCliente(
     if (userError) {
       return { error: `Erro ao criar perfil: ${userError.message}` }
     }
+
+    revalidatePath('/clientes')
+    revalidatePath('/agendamentos/novo')
+    return {
+      success: true,
+      error: '',
+      cliente: {
+        id: user.id,
+        nome,
+        email,
+        telefone,
+        cpf: cpf || null,
+      },
+    }
   }
 
-  revalidatePath('/clientes')
-  return { success: true, error: '' }
+  return { error: 'Erro inesperado ao criar usuário.' }
 }
 
 export async function logout() {

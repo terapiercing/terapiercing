@@ -144,12 +144,22 @@ export async function createAppointment(
 
   const { data: usuario } = await supabase
     .from('usuarios')
-    .select('id')
+    .select('id, role')
     .eq('id', user.id)
     .single()
 
   if (!usuario) {
     return { error: 'Perfil de usuário não encontrado.' }
+  }
+
+  // Determinar para qual paciente o agendamento está sendo feito
+  let targetPatientId = usuario.id
+  const formPatientId = formData.get('patientId') as string
+  if (formPatientId) {
+    if (usuario.role !== 'admin') {
+      return { error: 'Apenas administradores podem agendar para outros pacientes.' }
+    }
+    targetPatientId = formPatientId
   }
 
   // --- Validação: data não pode ser no passado ---
@@ -257,7 +267,7 @@ export async function createAppointment(
   const { error } = await supabase
     .from('apontamentos')
     .insert({
-      patient_id: usuario.id,
+      patient_id: targetPatientId,
       service_id: serviceId,
       data: date,
       hora: `${time}:00`,
@@ -270,6 +280,7 @@ export async function createAppointment(
   }
 
   revalidatePath('/agendamentos')
+  revalidatePath('/agendamentos/novo')
   redirect('/agendamentos')
 }
 

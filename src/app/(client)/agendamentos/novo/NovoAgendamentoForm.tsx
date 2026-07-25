@@ -3,6 +3,7 @@
 import { useState, useEffect, useActionState } from 'react'
 import { getAvailableSlots, createAppointment } from '@/lib/actions/appointments'
 import { useRouter } from 'next/navigation'
+import ModalNovoCliente from './ModalNovoCliente'
 
 interface Servico {
   id: string
@@ -18,14 +19,26 @@ const MONTHS_PT = [
 
 const WEEKDAYS_PT = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 
+interface Cliente {
+  id: string
+  nome: string
+  email: string
+  telefone: string
+  cpf: string | null
+}
+
 export default function NovoAgendamentoForm({
   servicos,
+  clientes = [],
   initialServiceId,
   todayClosed,
+  isAdmin = false,
 }: {
   servicos: Servico[]
+  clientes?: Cliente[]
   initialServiceId: string
   todayClosed: boolean
+  isAdmin?: boolean
 }) {
   const router = useRouter()
   const [selectedServiceId, setSelectedServiceId] = useState(initialServiceId || (servicos[0]?.id ?? ''))
@@ -33,6 +46,35 @@ export default function NovoAgendamentoForm({
   const [availableSlots, setAvailableSlots] = useState<string[]>([])
   const [selectedTime, setSelectedTime] = useState('')
   const [loadingSlots, setLoadingSlots] = useState(false)
+
+  // Lista de clientes com atualização local ao cadastrar novo paciente
+  const [listaClientes, setListaClientes] = useState<Cliente[]>(clientes)
+  const [selectedPatientId, setSelectedPatientId] = useState<string>(clientes[0]?.id || '')
+  const [clientSearch, setClientSearch] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  useEffect(() => {
+    setListaClientes(clientes)
+    if (clientes.length > 0 && !selectedPatientId) {
+      setSelectedPatientId(clientes[0].id)
+    }
+  }, [clientes])
+
+  const filteredClientes = listaClientes.filter((c) => {
+    if (!clientSearch) return true
+    const q = clientSearch.toLowerCase()
+    return (
+      c.nome.toLowerCase().includes(q) ||
+      c.email.toLowerCase().includes(q) ||
+      c.telefone.includes(q) ||
+      c.cpf?.includes(q)
+    )
+  })
+
+  const handleClienteCreated = (novoCliente: Cliente) => {
+    setListaClientes((prev) => [novoCliente, ...prev])
+    setSelectedPatientId(novoCliente.id)
+  }
 
   // Calendar navigation state
   const [currentMonth, setCurrentMonth] = useState(() => {
@@ -169,10 +211,57 @@ export default function NovoAgendamentoForm({
   }
 
   return (
-    <form action={formAction} className="space-y-6 bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm">
-      <input type="hidden" name="serviceId" value={selectedServiceId} />
-      <input type="hidden" name="date" value={selectedDate} />
-      <input type="hidden" name="time" value={selectedTime} />
+    <>
+      <form action={formAction} className="space-y-6 bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm">
+        <input type="hidden" name="serviceId" value={selectedServiceId} />
+        <input type="hidden" name="date" value={selectedDate} />
+        <input type="hidden" name="time" value={selectedTime} />
+        {isAdmin && <input type="hidden" name="patientId" value={selectedPatientId} />}
+
+        {/* Admin: Seleção de Cliente */}
+        {isAdmin && (
+          <div className="space-y-3 rounded-2xl bg-zinc-50 p-4 border border-zinc-200">
+            <div className="flex items-center justify-between">
+              <label className="block text-sm font-semibold text-zinc-800 flex items-center gap-2">
+                <span>👤</span> Selecionar Cliente
+              </label>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+                className="text-xs font-semibold text-[#E1A293] hover:text-[#d48d7c] hover:underline flex items-center gap-1 transition-colors"
+              >
+                <span>+</span> Cadastrar Novo Cliente
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              <input
+                type="text"
+                value={clientSearch}
+                onChange={(e) => setClientSearch(e.target.value)}
+                placeholder="Filtrar cliente por nome, e-mail, telefone..."
+                className="w-full rounded-lg border border-zinc-300 px-3.5 py-2 text-xs text-zinc-800 bg-white shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+              />
+
+              <select
+                value={selectedPatientId}
+                onChange={(e) => setSelectedPatientId(e.target.value)}
+                required={isAdmin}
+                className="w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 bg-white shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+              >
+                {filteredClientes.length === 0 ? (
+                  <option value="">Nenhum cliente encontrado</option>
+                ) : (
+                  filteredClientes.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.nome} - {c.telefone} ({c.email})
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
+          </div>
+        )}
 
       {/* Select Service */}
       <div className="space-y-2">
@@ -333,5 +422,15 @@ export default function NovoAgendamentoForm({
         </button>
       </div>
     </form>
+
+    {/* Modal de cadastro rápido de cliente */}
+    {isAdmin && (
+      <ModalNovoCliente
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onClienteCreated={handleClienteCreated}
+      />
+    )}
+  </>
   )
 }
