@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useActionState, useTransition } from 'react'
-import { upsertServico, updateDisponibilidades } from '@/lib/actions/admin'
+import { upsertServico, deleteServico, updateDisponibilidades } from '@/lib/actions/admin'
 import TemplateModal from './TemplateModal'
 
 interface Servico {
@@ -93,6 +93,8 @@ export default function ConfiguracoesForm({
   )
 
   const [isPendingDisp, startTransition] = useTransition()
+  const [isPendingDelete, startDeleteTransition] = useTransition()
+  const [deleteError, setDeleteError] = useState('')
   const [dispError, setDispError] = useState('')
   const [dispSuccess, setDispSuccess] = useState(false)
 
@@ -116,6 +118,19 @@ export default function ConfiguracoesForm({
     })
     setExigeForm(false)
     setShowServicoForm(true)
+  }
+
+  const handleDeleteServico = (servicoId: string, nome: string) => {
+    if (!confirm(`Tem certeza que deseja excluir o serviço "${nome}"?`)) return
+    setDeleteError('')
+    startDeleteTransition(async () => {
+      const res = await deleteServico(servicoId)
+      if (res.error) {
+        setDeleteError(res.error)
+      } else {
+        window.location.reload()
+      }
+    })
   }
 
   const handleNovoTemplate = () => {
@@ -185,6 +200,12 @@ export default function ConfiguracoesForm({
             </div>
           </div>
 
+          {deleteError && (
+            <div className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600 border border-red-200 mb-4">
+              {deleteError}
+            </div>
+          )}
+
           <div className="divide-y divide-zinc-100">
             {servicos.map(s => (
               <div key={s.id} className="py-4 flex justify-between items-start gap-4">
@@ -210,12 +231,21 @@ export default function ConfiguracoesForm({
                     Duração: {s.duracao_min} min | Valor: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(s.preco)}
                   </div>
                 </div>
-                <button
-                  onClick={() => handleEditServico(s)}
-                  className="text-sm font-medium text-[#E1A293] hover:underline shrink-0"
-                >
-                  Editar
-                </button>
+                <div className="flex items-center gap-3 shrink-0">
+                  <button
+                    onClick={() => handleEditServico(s)}
+                    className="text-sm font-medium text-[#E1A293] hover:underline"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleDeleteServico(s.id, s.nome)}
+                    disabled={isPendingDelete}
+                    className="text-sm font-medium text-red-500 hover:underline disabled:opacity-50"
+                  >
+                    Excluir
+                  </button>
+                </div>
               </div>
             ))}
           </div>

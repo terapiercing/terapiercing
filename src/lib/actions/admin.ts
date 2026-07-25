@@ -98,6 +98,48 @@ export async function deleteTemplate(_prevState: any, formData: FormData) {
   return { success: true };
 }
 
+export async function deleteServico(servicoId: string) {
+  const supabase = await createClient()
+
+  const { data: userData } = await supabase.auth.getUser()
+  const caller = userData.user
+
+  if (!caller) {
+    return { error: 'Usuário não autenticado.' }
+  }
+
+  const { data: callerProfile } = await supabase
+    .from('usuarios')
+    .select('role')
+    .eq('id', caller.id)
+    .single()
+
+  if (callerProfile?.role !== 'admin') {
+    return { error: 'Apenas administradores podem excluir serviços.' }
+  }
+
+  const { count } = await supabase
+    .from('apontamentos')
+    .select('*', { count: 'exact', head: true })
+    .eq('service_id', servicoId)
+
+  if (count && count > 0) {
+    return { error: 'Não é possível excluir um serviço que possui agendamentos vinculados. Desative-o ao invés de excluir.' }
+  }
+
+  const { error } = await supabase
+    .from('servicos')
+    .delete()
+    .eq('id', servicoId)
+
+  if (error) {
+    return { error: `Erro ao excluir serviço: ${error.message}` }
+  }
+
+  revalidatePath('/admin/configuracoes')
+  return { success: true, error: '' }
+}
+
 export async function updateDisponibilidades(
   _prevState: { error: string; success?: boolean } | undefined,
   data: { id?: string; dia_semana: number; hora_inicio: string; hora_fim: string; ativo: boolean }[]
