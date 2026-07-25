@@ -299,9 +299,9 @@ export default function NovoAgendamentoForm({
       <div className="space-y-2">
         <label className="block text-sm font-semibold text-zinc-700">Selecione o Dia</label>
         
-        <div className="border border-zinc-200 rounded-2xl p-4 bg-white">
+        <div className="mx-auto max-w-sm border border-zinc-200 rounded-2xl p-3 sm:p-4 bg-white shadow-sm">
           {/* Calendar Header */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold text-zinc-800 text-sm">
               {MONTHS_PT[month]} {year}
             </h3>
@@ -309,14 +309,14 @@ export default function NovoAgendamentoForm({
               <button
                 type="button"
                 onClick={handlePrevMonth}
-                className="w-8 h-8 flex items-center justify-center rounded-xl border border-zinc-200 hover:bg-zinc-50 text-zinc-600 transition-all duration-200 active:scale-[0.98]"
+                className="w-7 h-7 flex items-center justify-center rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-600 transition-all duration-200 active:scale-95"
               >
                 &lsaquo;
               </button>
               <button
                 type="button"
                 onClick={handleNextMonth}
-                className="w-8 h-8 flex items-center justify-center rounded-xl border border-zinc-200 hover:bg-zinc-50 text-zinc-600 transition-all duration-200 active:scale-[0.98]"
+                className="w-7 h-7 flex items-center justify-center rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-600 transition-all duration-200 active:scale-95"
               >
                 &rsaquo;
               </button>
@@ -324,7 +324,7 @@ export default function NovoAgendamentoForm({
           </div>
 
           {/* Weekdays */}
-          <div className="grid grid-cols-7 text-center text-xs font-semibold text-zinc-400 uppercase mb-2">
+          <div className="grid grid-cols-7 text-center text-[11px] font-semibold text-zinc-400 uppercase mb-1">
             {WEEKDAYS_PT.map((day) => (
               <span key={day}>{day}</span>
             ))}

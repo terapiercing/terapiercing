@@ -470,13 +470,15 @@ export default function AdminAgendamentosHub({
 
       {/* Tab: Novo Agendamento */}
       {activeTab === 'novo' && (
-        <NovoAgendamentoForm
-          servicos={servicos}
-          clientes={clientes}
-          initialServiceId={initialServiceId}
-          todayClosed={todayClosed}
-          isAdmin={true}
-        />
+        <div className="max-w-2xl mx-auto">
+          <NovoAgendamentoForm
+            servicos={servicos}
+            clientes={clientes}
+            initialServiceId={initialServiceId}
+            todayClosed={todayClosed}
+            isAdmin={true}
+          />
+        </div>
       )}
     </div>
   )
