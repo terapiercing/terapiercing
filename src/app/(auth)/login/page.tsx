@@ -11,10 +11,10 @@ function LoginForm() {
   const [state, formAction, pending] = useActionState(login, undefined)
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#FAF7F5] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#FDFAF8] px-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <Link href="/" className="font-serif text-4xl tracking-tight text-[#D4AF37] hover:opacity-90">
+          <Link href="/" className="font-serif text-4xl tracking-tight text-[#D4AF37] transition-opacity hover:opacity-80">
             RBClinic
           </Link>
           <h2 className="mt-6 text-2xl font-semibold text-zinc-800">
@@ -25,7 +25,7 @@ function LoginForm() {
           </p>
         </div>
 
-        <form action={formAction} className="space-y-6">
+        <form action={formAction} className="space-y-5">
           <input type="hidden" name="redirectTo" value={redirectTo} />
 
           <div className="space-y-4">
@@ -38,7 +38,7 @@ function LoginForm() {
                 name="email"
                 type="text"
                 required
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm placeholder-zinc-400 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] placeholder:text-zinc-400 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
                 placeholder="seu@email.com, 000.000.000-00 ou usuário"
               />
             </div>
@@ -52,14 +52,14 @@ function LoginForm() {
                 name="password"
                 type="password"
                 required
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm placeholder-zinc-400 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] placeholder:text-zinc-400 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
                 placeholder="••••••••"
               />
             </div>
           </div>
 
           {state?.error && (
-            <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600 border border-red-200">
+            <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600 border border-red-200" role="alert">
               {state.error}
             </div>
           )}
@@ -67,7 +67,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={pending}
-            className="w-full rounded-lg bg-[#E1A293] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#d48d7c] focus:ring-2 focus:ring-[#E1A293]/50 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-xl bg-[#C4917B] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] focus:ring-2 focus:ring-[#C4917B]/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {pending ? 'Entrando...' : 'Entrar'}
           </button>
@@ -76,7 +76,7 @@ function LoginForm() {
         <div className="text-center">
           <Link
             href="/esqueci-senha"
-            className="text-sm font-medium text-[#E1A293] hover:underline"
+            className="text-sm font-medium text-[#C4917B] transition-opacity hover:opacity-80"
           >
             Esqueci minha senha
           </Link>
@@ -86,7 +86,7 @@ function LoginForm() {
           Ainda não tem conta?{' '}
           <Link
             href={`/cadastro?redirectTo=${encodeURIComponent(redirectTo)}`}
-            className="font-medium text-[#E1A293] hover:underline"
+            className="font-semibold text-[#C4917B] transition-opacity hover:opacity-80"
           >
             Cadastre-se
           </Link>
@@ -98,7 +98,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-[#FAF7F5] px-4 text-zinc-500 font-medium">Carregando...</div>}>
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-[#FDFAF8] px-4 text-zinc-500 font-medium">Carregando...</div>}>
       <LoginForm />
     </Suspense>
   )

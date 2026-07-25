@@ -47,7 +47,7 @@ export default async function Page() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-semibold text-zinc-800">Configurações da Clínica</h1>
-        <p className="mt-1 text-zinc-500">
+        <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#C4917B]">
           Gerencie o catálogo de procedimentos da clínica e os horários de funcionamento.
         </p>
       </div>

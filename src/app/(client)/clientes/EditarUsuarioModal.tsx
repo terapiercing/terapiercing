@@ -43,9 +43,9 @@ export default function EditarUsuarioModal({
   }, [state, onClose])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
-        <div className="sticky top-0 flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-4 rounded-t-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm px-4">
+      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl">
+        <div className="sticky top-0 flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-4 rounded-t-3xl">
           <h2 className="text-lg font-semibold text-zinc-800">
             Editar {usuario.nome}
           </h2>
@@ -64,7 +64,7 @@ export default function EditarUsuarioModal({
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <label htmlFor="edit-nome" className="block text-sm font-medium text-zinc-700">
-                Nome Completo <span className="text-[#E1A293]">*</span>
+                Nome Completo <span className="text-[#C4917B]">*</span>
               </label>
               <input
                 id="edit-nome"
@@ -72,7 +72,7 @@ export default function EditarUsuarioModal({
                 type="text"
                 required
                 defaultValue={usuario.nome}
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-800 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
               />
             </div>
 
@@ -85,7 +85,7 @@ export default function EditarUsuarioModal({
                 name="usuario"
                 type="text"
                 defaultValue={usuario.usuario || ''}
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-800 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
               />
             </div>
 
@@ -105,7 +105,7 @@ export default function EditarUsuarioModal({
 
             <div>
               <label htmlFor="edit-telefone" className="block text-sm font-medium text-zinc-700">
-                Telefone <span className="text-[#E1A293]">*</span>
+                Telefone <span className="text-[#C4917B]">*</span>
               </label>
               <input
                 id="edit-telefone"
@@ -113,7 +113,7 @@ export default function EditarUsuarioModal({
                 type="tel"
                 required
                 defaultValue={usuario.telefone}
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-800 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
               />
             </div>
 
@@ -133,7 +133,7 @@ export default function EditarUsuarioModal({
                     cpfRef.current.value = formatCpf(e.target.value)
                   }
                 }}
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-800 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
               />
             </div>
 
@@ -146,7 +146,7 @@ export default function EditarUsuarioModal({
                 name="nascimento"
                 type="date"
                 defaultValue={usuario.nascimento || ''}
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-800 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
               />
             </div>
 
@@ -159,7 +159,7 @@ export default function EditarUsuarioModal({
                 name="endereco"
                 type="text"
                 defaultValue={usuario.endereco || ''}
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-800 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
               />
             </div>
 
@@ -172,7 +172,7 @@ export default function EditarUsuarioModal({
                 name="numero"
                 type="text"
                 defaultValue={usuario.numero || ''}
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-800 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
               />
             </div>
 
@@ -185,7 +185,7 @@ export default function EditarUsuarioModal({
                 name="bairro"
                 type="text"
                 defaultValue={usuario.bairro || ''}
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-800 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
               />
             </div>
 
@@ -198,7 +198,7 @@ export default function EditarUsuarioModal({
                 name="cidade"
                 type="text"
                 defaultValue={usuario.cidade || ''}
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-800 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
               />
             </div>
 
@@ -210,7 +210,7 @@ export default function EditarUsuarioModal({
                 id="edit-role"
                 name="role"
                 defaultValue={usuario.role}
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-800 focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
               >
                 <option value="client">Cliente</option>
                 <option value="admin">Administrador</option>
@@ -228,14 +228,14 @@ export default function EditarUsuarioModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50"
+              className="rounded-xl border border-zinc-200 bg-white px-5 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98]"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={pending}
-              className="rounded-lg bg-[#E1A293] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#d48d7c] disabled:opacity-50"
+              className="rounded-xl bg-[#C4917B] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98] disabled:opacity-50"
             >
               {pending ? 'Salvando...' : 'Salvar'}
             </button>

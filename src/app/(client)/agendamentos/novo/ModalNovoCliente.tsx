@@ -82,7 +82,7 @@ export default function ModalNovoCliente({
               type="text"
               required
               placeholder="Ex: Ana Maria Silva"
-              className="w-full rounded-lg border border-zinc-300 px-3.5 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+              className="w-full rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
             />
           </div>
 
@@ -96,7 +96,7 @@ export default function ModalNovoCliente({
                 type="email"
                 required
                 placeholder="cliente@email.com"
-                className="w-full rounded-lg border border-zinc-300 px-3.5 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="w-full rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
               />
             </div>
             <div>
@@ -109,7 +109,7 @@ export default function ModalNovoCliente({
                 required
                 minLength={6}
                 placeholder="Mínimo 6 caracteres"
-                className="w-full rounded-lg border border-zinc-300 px-3.5 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="w-full rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
               />
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function ModalNovoCliente({
                   e.target.value = formatPhone(e.target.value)
                 }}
                 placeholder="(00) 00000-0000"
-                className="w-full rounded-lg border border-zinc-300 px-3.5 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="w-full rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
               />
             </div>
             <div>
@@ -143,7 +143,7 @@ export default function ModalNovoCliente({
                   e.target.value = formatCpf(e.target.value)
                 }}
                 placeholder="000.000.000-00"
-                className="w-full rounded-lg border border-zinc-300 px-3.5 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="w-full rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
               />
             </div>
           </div>
@@ -158,14 +158,14 @@ export default function ModalNovoCliente({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-xs font-semibold text-zinc-700 shadow-sm hover:bg-zinc-50 transition-colors"
+              className="rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold text-zinc-700 shadow-sm hover:bg-zinc-50 transition-all duration-200 active:scale-[0.98]"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={pending}
-              className="rounded-lg bg-[#E1A293] px-5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-[#d48d7c] transition-colors disabled:opacity-50"
+              className="rounded-xl bg-[#C4917B] px-5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-[#A87060] transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
             >
               {pending ? 'Cadastrando...' : 'Cadastrar e Selecionar'}
             </button>

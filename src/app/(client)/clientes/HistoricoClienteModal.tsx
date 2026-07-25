@@ -65,10 +65,10 @@ export default function HistoricoClienteModal({
   }, [patientId])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm px-4">
+      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl">
         {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-4 rounded-t-2xl">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-4 rounded-t-3xl">
           <div>
             <h2 className="text-lg font-semibold text-zinc-800">
               Histórico do Cliente
@@ -109,7 +109,7 @@ export default function HistoricoClienteModal({
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-center">
-                    <p className="text-2xl font-bold text-[#E1A293]">
+                    <p className="text-2xl font-bold text-[#C4917B]">
                       {data.totalAtendimentos}
                     </p>
                     <p className="text-xs text-zinc-500 mt-1">Total</p>
@@ -153,7 +153,7 @@ export default function HistoricoClienteModal({
                             Último: {formatDate(proc.ultimaData)}
                           </p>
                         </div>
-                        <span className="rounded-full bg-[#E1A293]/10 px-3 py-1 text-xs font-semibold text-[#E1A293]">
+                        <span className="rounded-full bg-[#C4917B]/10 px-3 py-1 text-xs font-semibold text-[#C4917B]">
                           {proc.quantidade}x
                         </span>
                       </div>

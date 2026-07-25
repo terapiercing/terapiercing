@@ -62,6 +62,7 @@ export default async function Page({
     return (
       <div className="max-w-2xl mx-auto space-y-6">
         <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C4917B]">Agendamentos</p>
           <h1 className="text-3xl font-semibold text-zinc-800">Novo Agendamento</h1>
           <p className="mt-1 text-zinc-500">
             Escolha o procedimento, data e horário de sua preferência.

@@ -23,7 +23,14 @@ export default async function ClientesPage() {
     .order('created_at', { ascending: false })
 
   return (
-    <ClientesList
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-semibold text-zinc-800">Clientes</h1>
+        <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#C4917B]">
+          Gerenciar clientes cadastrados no sistema.
+        </p>
+      </div>
+      <ClientesList
       usuarios={(usuarios || []) as Array<{
         id: string
         nome: string
@@ -40,5 +47,6 @@ export default async function ClientesPage() {
         created_at: string
       }>}
     />
+    </div>
   )
 }

@@ -189,7 +189,7 @@ export default function NovoAgendamentoForm({
     const isSelected = selectedDate === dateStr
     const isToday = formatDateStr(new Date()) === dateStr
 
-    let classes = 'aspect-square flex items-center justify-center text-sm rounded-lg transition-all '
+    let classes = 'aspect-square flex items-center justify-center text-sm rounded-lg transition-all duration-200 '
 
     if (item.isSunday || item.isPast) {
       classes += 'text-zinc-300 cursor-not-allowed '
@@ -202,9 +202,9 @@ export default function NovoAgendamentoForm({
     }
 
     if (isSelected) {
-      classes += '!bg-[#E1A293] !text-white font-semibold shadow-sm '
+      classes += '!bg-[#C4917B] !text-white font-semibold shadow-sm '
     } else if (isToday) {
-      classes += 'border border-[#E1A293] text-[#E1A293] font-semibold '
+      classes += 'border border-[#C4917B] text-[#C4917B] font-semibold '
     }
 
     return classes
@@ -212,7 +212,7 @@ export default function NovoAgendamentoForm({
 
   return (
     <>
-      <form action={formAction} className="space-y-6 bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm">
+      <form action={formAction} className="space-y-6 bg-white border border-zinc-200 rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
         <input type="hidden" name="serviceId" value={selectedServiceId} />
         <input type="hidden" name="date" value={selectedDate} />
         <input type="hidden" name="time" value={selectedTime} />
@@ -228,7 +228,7 @@ export default function NovoAgendamentoForm({
               <button
                 type="button"
                 onClick={() => setIsModalOpen(true)}
-                className="text-xs font-semibold text-[#E1A293] hover:text-[#d48d7c] hover:underline flex items-center gap-1 transition-colors"
+                className="text-xs font-semibold text-[#C4917B] hover:text-[#A87060] hover:underline flex items-center gap-1 transition-all duration-200"
               >
                 <span>+</span> Cadastrar Novo Cliente
               </button>
@@ -240,14 +240,14 @@ export default function NovoAgendamentoForm({
                 value={clientSearch}
                 onChange={(e) => setClientSearch(e.target.value)}
                 placeholder="Filtrar cliente por nome, e-mail, telefone..."
-                className="w-full rounded-lg border border-zinc-300 px-3.5 py-2 text-xs text-zinc-800 bg-white shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="w-full rounded-xl border border-zinc-200 px-3.5 py-2 text-xs text-zinc-800 bg-white shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
               />
 
               <select
                 value={selectedPatientId}
                 onChange={(e) => setSelectedPatientId(e.target.value)}
                 required={isAdmin}
-                className="w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 bg-white shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+                className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 bg-white shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
               >
                 {filteredClientes.length === 0 ? (
                   <option value="">Nenhum cliente encontrado</option>
@@ -269,7 +269,7 @@ export default function NovoAgendamentoForm({
         <select
           value={selectedServiceId}
           onChange={(e) => setSelectedServiceId(e.target.value)}
-          className="w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+          className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
         >
           {servicos.map((s) => (
             <option key={s.id} value={s.id}>
@@ -281,7 +281,7 @@ export default function NovoAgendamentoForm({
 
       {/* Service Details Card */}
       {selectedService && (
-        <div className="rounded-2xl bg-[#FAF7F5] border border-zinc-150 p-4 flex justify-between items-center text-sm">
+        <div className="rounded-2xl bg-[#FDFAF8] border border-zinc-200 p-4 flex justify-between items-center text-sm">
           <div>
             <p className="font-semibold text-zinc-800">Duração Estimada</p>
             <p className="text-zinc-500">{selectedService.duracao_min} minutos</p>
@@ -309,14 +309,14 @@ export default function NovoAgendamentoForm({
               <button
                 type="button"
                 onClick={handlePrevMonth}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-600 transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-xl border border-zinc-200 hover:bg-zinc-50 text-zinc-600 transition-all duration-200 active:scale-[0.98]"
               >
                 &lsaquo;
               </button>
               <button
                 type="button"
                 onClick={handleNextMonth}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-600 transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-xl border border-zinc-200 hover:bg-zinc-50 text-zinc-600 transition-all duration-200 active:scale-[0.98]"
               >
                 &rsaquo;
               </button>
@@ -369,10 +369,10 @@ export default function NovoAgendamentoForm({
                   key={slot}
                   type="button"
                   onClick={() => setSelectedTime(slot)}
-                  className={`rounded-lg py-2.5 text-center text-sm font-medium border transition-all ${
+                  className={`rounded-xl py-2.5 text-center text-sm font-medium border transition-all duration-200 ${
                     selectedTime === slot
-                      ? 'bg-[#E1A293] border-[#E1A293] text-white shadow-sm'
-                      : 'bg-white border-zinc-200 text-zinc-700 hover:border-[#E1A293] hover:text-[#E1A293]'
+                      ? 'bg-[#C4917B] border-[#C4917B] text-white shadow-sm'
+                      : 'bg-white border-zinc-200 text-zinc-700 hover:border-[#C4917B]/30 hover:text-[#C4917B]'
                   }`}
                 >
                   {slot}
@@ -380,7 +380,7 @@ export default function NovoAgendamentoForm({
               ))}
             </div>
           ) : (
-            <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600 border border-red-100">
+            <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600 border border-red-100">
               Não há horários disponíveis para o procedimento selecionado nesta data. Por favor, escolha outro dia.
             </div>
           )}
@@ -394,7 +394,7 @@ export default function NovoAgendamentoForm({
           name="notes"
           rows={3}
           placeholder="Alguma recomendação ou detalhe que queira compartilhar conosco..."
-          className="w-full rounded-lg border border-zinc-300 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none resize-none"
+          className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200 resize-none"
         />
       </div>
 
@@ -409,14 +409,14 @@ export default function NovoAgendamentoForm({
         <button
           type="button"
           onClick={() => router.back()}
-          className="flex-1 rounded-lg border border-zinc-300 bg-white py-3 text-sm font-semibold text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50"
+          className="flex-1 rounded-xl border border-zinc-200 bg-white py-3 text-sm font-semibold text-zinc-700 shadow-sm transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98]"
         >
           Voltar
         </button>
         <button
           type="submit"
           disabled={pending || !selectedTime}
-          className="flex-[2] rounded-lg bg-[#E1A293] py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#d48d7c] focus:ring-2 focus:ring-[#E1A293]/50 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex-[2] rounded-xl bg-[#C4917B] py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {pending ? 'Processando...' : 'Confirmar Agendamento'}
         </button>

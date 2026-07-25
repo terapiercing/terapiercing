@@ -70,28 +70,23 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-semibold text-zinc-800">Clientes</h1>
-          <p className="mt-1 text-zinc-500">
-            Gerenciar clientes cadastrados no sistema.
-          </p>
-        </div>
+        <div />
         <Link
           href="/clientes/novo"
-          className="inline-flex justify-center items-center rounded-lg bg-[#E1A293] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#d48d7c]"
+          className="inline-flex justify-center items-center rounded-xl bg-[#C4917B] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98]"
         >
           Novo Cliente
         </Link>
       </div>
 
       {/* Busca */}
-      <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
+      <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Buscar por nome, email, CPF, telefone, cidade ou bairro..."
-          className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#E1A293] focus:ring-2 focus:ring-[#E1A293]/20 focus:outline-none"
+          className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
         />
       </div>
 
@@ -104,7 +99,7 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
           {filtered.map((usuario) => (
             <div
               key={usuario.id}
-              className="rounded-2xl border border-zinc-200 bg-white shadow-sm"
+              className="rounded-2xl border border-zinc-200 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
             >
               {/* Cabeçalho do card */}
               <div className="p-5">
@@ -173,14 +168,14 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
                   <button
                     type="button"
                     onClick={() => setHistoryUser(usuario)}
-                    className="rounded-lg bg-[#E1A293]/10 px-4 py-2 text-xs font-medium text-[#E1A293] shadow-sm transition-colors hover:bg-[#E1A293]/20"
+                    className="rounded-xl bg-[#C4917B]/10 px-4 py-2 text-xs font-medium text-[#C4917B] shadow-sm transition-all duration-200 hover:bg-[#C4917B]/20 active:scale-[0.98]"
                   >
                     Histórico
                   </button>
                   <button
                     type="button"
                     onClick={() => setEditingUser(usuario)}
-                    className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-xs font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50"
+                    className="rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-medium text-zinc-700 shadow-sm transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98]"
                   >
                     Editar
                   </button>
@@ -188,7 +183,7 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
                     type="button"
                     onClick={() => handleToggleRole(usuario.id, usuario.role)}
                     disabled={isPending}
-                    className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-xs font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 disabled:opacity-50"
+                    className="rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-medium text-zinc-700 shadow-sm transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98] disabled:opacity-50"
                   >
                     Tornar {usuario.role === 'admin' ? 'Cliente' : 'Admin'}
                   </button>
@@ -198,7 +193,7 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl border border-zinc-200 bg-white p-12 text-center shadow-sm">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-12 text-center shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
           <p className="text-zinc-400">
             {search
               ? 'Nenhum cliente encontrado com os termos buscados.'
