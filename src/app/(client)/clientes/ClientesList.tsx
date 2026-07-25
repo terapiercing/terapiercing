@@ -102,11 +102,11 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
               className="rounded-2xl border border-zinc-200 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
             >
               {/* Cabeçalho do card */}
-              <div className="p-5">
-                <div className="flex items-start justify-between gap-4">
+              <div className="p-4 sm:p-5">
+                <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1 min-w-0">
-                    <p className="font-semibold text-zinc-800">{usuario.nome}</p>
-                    <p className="text-sm text-zinc-500">{usuario.email}</p>
+                    <p className="font-semibold text-zinc-800 truncate">{usuario.nome}</p>
+                    <p className="text-sm text-zinc-500 truncate">{usuario.email}</p>
                     <p className="text-sm text-zinc-400">
                       Tel: {formatPhone(usuario.telefone)}
                     </p>
@@ -126,7 +126,7 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
               </div>
 
               {/* Detalhes */}
-              <div className="border-t border-zinc-100 px-5 py-4 space-y-4">
+              <div className="border-t border-zinc-100 px-4 py-3 sm:px-5 sm:py-4 space-y-4">
                 <div className="grid gap-3 sm:grid-cols-2 text-sm">
                   <div>
                     <span className="text-zinc-400">Usuário:</span>{' '}
@@ -164,7 +164,7 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-2">
+                <div className="flex flex-wrap justify-end gap-2">
                   <button
                     type="button"
                     onClick={() => setHistoryUser(usuario)}

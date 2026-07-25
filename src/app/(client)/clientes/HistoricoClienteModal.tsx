@@ -65,10 +65,10 @@ export default function HistoricoClienteModal({
   }, [patientId])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm px-4">
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-3 sm:p-4">
+      <div className="w-full max-w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl">
         {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-4 rounded-t-3xl">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-zinc-200 bg-white px-4 py-3 sm:px-6 sm:py-4 rounded-t-3xl">
           <div>
             <h2 className="text-lg font-semibold text-zinc-800">
               Histórico do Cliente
@@ -84,7 +84,7 @@ export default function HistoricoClienteModal({
           </button>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* Loading */}
           {loading && (
             <div className="py-12 text-center text-zinc-400">

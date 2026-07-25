@@ -85,7 +85,7 @@ export default async function Dashboard() {
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C4917B]">
             Painel Administrativo
           </p>
-          <h1 className="font-serif text-4xl tracking-tight text-[#D4AF37]">
+          <h1 className="font-serif text-3xl tracking-tight text-[#D4AF37] sm:text-4xl">
             RBClinic
           </h1>
         </div>
@@ -207,16 +207,16 @@ export default async function Dashboard() {
         </div>
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
         <Link
           href="/agendamentos"
-          className="rounded-xl bg-[#C4917B] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98]"
+          className="rounded-xl bg-[#C4917B] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98] text-center"
         >
           Ver Agendamentos
         </Link>
         <Link
           href="/perfil"
-          className="rounded-xl border border-zinc-200 bg-white px-6 py-3 text-sm font-semibold text-zinc-600 shadow-sm transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98]"
+          className="rounded-xl border border-zinc-200 bg-white px-6 py-3 text-sm font-semibold text-zinc-600 shadow-sm transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98] text-center"
         >
           Meu Perfil
         </Link>

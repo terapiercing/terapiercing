@@ -212,7 +212,7 @@ export default function NovoAgendamentoForm({
 
   return (
     <>
-      <form action={formAction} className="space-y-6 bg-white border border-zinc-200 rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+      <form action={formAction} className="space-y-6 bg-white border border-zinc-200 rounded-2xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] sm:p-6">
         <input type="hidden" name="serviceId" value={selectedServiceId} />
         <input type="hidden" name="date" value={selectedDate} />
         <input type="hidden" name="time" value={selectedTime} />

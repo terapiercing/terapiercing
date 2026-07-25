@@ -16,16 +16,16 @@ export default async function Home() {
           <span className="font-serif text-2xl tracking-tight text-[#D4AF37]">
             RBClinic
           </span>
-          <nav className="flex items-center gap-3">
+          <nav className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/login"
-              className="rounded-xl border border-zinc-200 bg-white px-5 py-2.5 text-sm font-medium text-zinc-600 transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98]"
+              className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-600 transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98] sm:px-5 sm:py-2.5"
             >
               Já sou cliente
             </Link>
             <Link
               href="/cadastro"
-              className="rounded-xl bg-[#C4917B] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98]"
+              className="rounded-xl bg-[#C4917B] px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98] sm:px-5 sm:py-2.5"
             >
               Cadastre-se
             </Link>
@@ -33,33 +33,33 @@ export default async function Home() {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-6xl flex-1 items-center px-6 py-16">
+      <main className="mx-auto flex w-full max-w-6xl flex-1 items-center px-4 py-10 sm:px-6 sm:py-16">
         <div className="flex flex-col items-center gap-16 text-center lg:flex-row lg:text-left w-full">
           <div className="flex-1 space-y-8">
             <div className="space-y-2">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C4917B]">
                 Estética Avançada
               </p>
-              <h1 className="font-serif text-5xl leading-tight tracking-tight text-zinc-800 lg:text-6xl">
+              <h1 className="font-serif text-4xl leading-tight tracking-tight text-zinc-800 sm:text-5xl lg:text-6xl">
                 Sua beleza merece{" "}
                 <span className="text-[#D4AF37]">cuidado</span>{" "}
                 <span className="text-[#C4917B]">especial</span>
               </h1>
             </div>
-            <p className="max-w-lg text-lg leading-relaxed text-zinc-500 mx-auto lg:mx-0">
+            <p className="max-w-lg text-base leading-relaxed text-zinc-500 mx-auto lg:mx-0 sm:text-lg">
               Agende seus horários, acompanhe seus tratamentos e tenha acesso a
               todo o histórico de procedimentos estéticos em um só lugar.
             </p>
-            <div className="flex justify-center gap-4 lg:justify-start">
+            <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 lg:justify-start">
               <Link
                 href="/cadastro"
-                className="rounded-xl bg-[#C4917B] px-8 py-3.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98]"
+                className="rounded-xl bg-[#C4917B] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98] sm:px-8 sm:py-3.5"
               >
                 Cadastre-se
               </Link>
               <Link
                 href="/login"
-                className="rounded-xl border border-zinc-200 bg-white px-8 py-3.5 text-sm font-semibold text-zinc-600 shadow-sm transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98]"
+                className="rounded-xl border border-zinc-200 bg-white px-6 py-3 text-sm font-semibold text-zinc-600 shadow-sm transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98] sm:px-8 sm:py-3.5"
               >
                 Já sou cliente
               </Link>

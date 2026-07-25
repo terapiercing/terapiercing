@@ -181,13 +181,13 @@ export default function AdminAgendamentosHub({
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-zinc-200">
-        <div className="flex gap-1 -mb-px">
+      <div className="border-b border-zinc-200 overflow-x-auto scrollbar-hide">
+        <div className="flex gap-1 -mb-px min-w-max">
           {TABS.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 transition-all duration-200 ${
+              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all duration-200 whitespace-nowrap sm:px-5 ${
                 activeTab === tab.key
                   ? 'border-[#C4917B] text-[#C4917B]'
                   : 'border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300'
@@ -221,7 +221,7 @@ export default function AdminAgendamentosHub({
               {todayAppointments.map((appt) => (
                 <div
                   key={appt.id}
-                  className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200"
+                  className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200 sm:p-5"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="space-y-1 min-w-0 flex-1">
@@ -247,7 +247,7 @@ export default function AdminAgendamentosHub({
                       )}
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex flex-wrap items-center gap-2 shrink-0">
                       {/* Status select */}
                       <select
                         value={appt.status}

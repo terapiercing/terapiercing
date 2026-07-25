@@ -57,8 +57,8 @@ export default function ModalNovoCliente({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm animate-fadeIn">
-      <div className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-xl space-y-5 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4 backdrop-blur-sm animate-fadeIn">
+      <div className="w-full max-w-full sm:max-w-lg rounded-3xl bg-white p-4 shadow-xl space-y-5 max-h-[90vh] overflow-y-auto sm:p-6">
         <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
           <h3 className="text-lg font-semibold text-zinc-800 flex items-center gap-2">
             <span>👤</span> Novo Cliente Rápido

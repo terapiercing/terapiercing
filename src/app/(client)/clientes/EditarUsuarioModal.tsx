@@ -43,10 +43,10 @@ export default function EditarUsuarioModal({
   }, [state, onClose])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm px-4">
-      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl">
-        <div className="sticky top-0 flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-4 rounded-t-3xl">
-          <h2 className="text-lg font-semibold text-zinc-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-3 sm:p-4">
+      <div className="w-full max-w-full sm:max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl">
+        <div className="sticky top-0 flex items-center justify-between border-b border-zinc-200 bg-white px-4 py-3 sm:px-6 sm:py-4 rounded-t-3xl">
+          <h2 className="text-base font-semibold text-zinc-800 sm:text-lg truncate pr-2">
             Editar {usuario.nome}
           </h2>
           <button
@@ -58,7 +58,7 @@ export default function EditarUsuarioModal({
           </button>
         </div>
 
-        <form action={formAction} className="p-6 space-y-4">
+        <form action={formAction} className="p-4 sm:p-6 space-y-4">
           <input type="hidden" name="userId" value={usuario.id} />
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -228,14 +228,14 @@ export default function EditarUsuarioModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-zinc-200 bg-white px-5 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98]"
+              className="rounded-xl border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 shadow-sm transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98] sm:px-5 sm:py-2.5"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={pending}
-              className="rounded-xl bg-[#C4917B] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98] disabled:opacity-50"
+              className="rounded-xl bg-[#C4917B] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98] disabled:opacity-50 sm:px-5 sm:py-2.5"
             >
               {pending ? 'Salvando...' : 'Salvar'}
             </button>

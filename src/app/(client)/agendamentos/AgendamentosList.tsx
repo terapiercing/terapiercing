@@ -196,7 +196,7 @@ export default function AgendamentosList({
           {filtered.map((agendamento) => (
             <div
               key={agendamento.id}
-              className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200"
+              className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200 sm:p-5"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1 min-w-0">

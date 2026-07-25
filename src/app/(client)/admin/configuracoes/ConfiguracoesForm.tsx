@@ -188,7 +188,7 @@ export default function ConfiguracoesForm({
       <div className="lg:col-span-2 space-y-6">
         {/* Serviços */}
         <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
             <h2 className="text-xl font-semibold text-zinc-800 font-serif">Serviços e Procedimentos</h2>
             <div className="flex gap-2">
               <button
@@ -208,7 +208,7 @@ export default function ConfiguracoesForm({
 
           <div className="divide-y divide-zinc-100">
             {servicos.map(s => (
-              <div key={s.id} className="py-4 flex justify-between items-start gap-4">
+              <div key={s.id} className="py-4 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-semibold text-zinc-800">{s.nome}</span>
@@ -253,7 +253,7 @@ export default function ConfiguracoesForm({
 
         {/* Modelos de Formulário */}
         <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
             <div>
               <h2 className="text-xl font-semibold text-zinc-800 font-serif">Modelos de Formulário</h2>
               <p className="text-xs text-zinc-400 mt-1">Formulários de anamnese vinculados aos serviços.</p>
