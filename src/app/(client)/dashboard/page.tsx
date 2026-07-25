@@ -24,11 +24,19 @@ const adminModules = [
     color: '#7C6FA0',
   },
   {
-    href: '/clientes/novo',
+    href: '/clientes',
     icon: '👥',
+    title: 'Clientes',
+    description: 'Visualizar, editar e acompanhar o histórico dos clientes cadastrados',
+    color: '#4CAF50',
+    badge: 'Admin',
+  },
+  {
+    href: '/clientes/novo',
+    icon: '➕',
     title: 'Novo Cliente',
     description: 'Cadastrar um novo cliente no sistema',
-    color: '#4CAF50',
+    color: '#2E7D32',
     badge: 'Admin',
   },
   {

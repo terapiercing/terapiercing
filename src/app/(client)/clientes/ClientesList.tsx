@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react'
 import Link from 'next/link'
 import { toggleUserRole } from '@/lib/actions/auth'
 import EditarUsuarioModal from './EditarUsuarioModal'
+import HistoricoClienteModal from './HistoricoClienteModal'
 
 interface Usuario {
   id: string
@@ -41,6 +42,7 @@ function formatPhone(phone: string): string {
 export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
   const [search, setSearch] = useState('')
   const [editingUser, setEditingUser] = useState<Usuario | null>(null)
+  const [historyUser, setHistoryUser] = useState<Usuario | null>(null)
   const [isPending, startTransition] = useTransition()
 
   const filtered = usuarios.filter((u) => {
@@ -170,6 +172,13 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
                 <div className="flex justify-end gap-2">
                   <button
                     type="button"
+                    onClick={() => setHistoryUser(usuario)}
+                    className="rounded-lg bg-[#E1A293]/10 px-4 py-2 text-xs font-medium text-[#E1A293] shadow-sm transition-colors hover:bg-[#E1A293]/20"
+                  >
+                    Histórico
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => setEditingUser(usuario)}
                     className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-xs font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50"
                   >
@@ -203,6 +212,15 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
         <EditarUsuarioModal
           usuario={editingUser}
           onClose={() => setEditingUser(null)}
+        />
+      )}
+
+      {/* Modal de histórico */}
+      {historyUser && (
+        <HistoricoClienteModal
+          patientId={historyUser.id}
+          patientName={historyUser.nome}
+          onClose={() => setHistoryUser(null)}
         />
       )}
     </div>

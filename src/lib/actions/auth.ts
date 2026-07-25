@@ -581,3 +581,111 @@ export async function updateUsuario(
   revalidatePath('/clientes')
   return { success: true, error: '' }
 }
+
+export interface HistoricoCliente {
+  totalAtendimentos: number
+  atendimentosPorStatus: {
+    Pendente: number
+    Confirmado: number
+    Concluido: number
+    Cancelado: number
+  }
+  procedimentos: Array<{
+    nome: string
+    quantidade: number
+    ultimaData: string
+  }>
+  formularios: Array<{
+    id: string
+    servicoNome: string | null
+    templateNome: string | null
+    camposJson: Record<string, unknown>
+    aceiteDigital: boolean
+    criadoEm: string
+  }>
+}
+
+export async function getHistoricoCliente(
+  patientId: string
+): Promise<{ data: HistoricoCliente | null; error: string }> {
+  const supabase = await createClient()
+  const { data: userData } = await supabase.auth.getUser()
+  const caller = userData.user
+
+  if (!caller) {
+    return { data: null, error: 'Usuário não autenticado.' }
+  }
+
+  const { data: callerProfile } = await supabase
+    .from('usuarios')
+    .select('role')
+    .eq('id', caller.id)
+    .single()
+
+  if (callerProfile?.role !== 'admin') {
+    return { data: null, error: 'Apenas administradores podem acessar o histórico.' }
+  }
+
+  const { data: apontamentos } = await supabase
+    .from('apontamentos')
+    .select('id, status, data, servicos(nome)')
+    .eq('patient_id', patientId)
+
+  const totalAtendimentos = apontamentos?.length ?? 0
+
+  const atendimentosPorStatus = {
+    Pendente: 0,
+    Confirmado: 0,
+    Concluido: 0,
+    Cancelado: 0,
+  }
+
+  const procedimentosMap = new Map<string, { quantidade: number; ultimaData: string }>()
+
+  for (const apt of apontamentos ?? []) {
+    if (apt.status in atendimentosPorStatus) {
+      atendimentosPorStatus[apt.status as keyof typeof atendimentosPorStatus]++
+    }
+
+    const servico = apt.servicos as unknown as { nome: string } | null
+    const nomeServico = servico?.nome ?? 'Serviço removido'
+    const existing = procedimentosMap.get(nomeServico)
+    if (existing) {
+      existing.quantidade++
+      if (apt.data > existing.ultimaData) {
+        existing.ultimaData = apt.data
+      }
+    } else {
+      procedimentosMap.set(nomeServico, { quantidade: 1, ultimaData: apt.data })
+    }
+  }
+
+  const procedimentos = Array.from(procedimentosMap.entries())
+    .map(([nome, info]) => ({ nome, ...info }))
+    .sort((a, b) => b.quantidade - a.quantidade)
+
+  const { data: anamneses } = await supabase
+    .from('anamneses')
+    .select('id, campos_json, aceite_digital, created_at, servicos(nome), formulario_templates(nome)')
+    .eq('patient_id', patientId)
+    .order('created_at', { ascending: false })
+
+  const formularios = (anamneses ?? []).map((an) => ({
+    id: an.id,
+    servicoNome: (an.servicos as unknown as { nome: string } | null)?.nome ?? null,
+    templateNome: (an.formulario_templates as unknown as { nome: string } | null)?.nome ?? null,
+    camposJson: an.campos_json as Record<string, unknown>,
+    aceiteDigital: an.aceite_digital,
+    criadoEm: an.created_at,
+  }))
+
+  return {
+    data: {
+      totalAtendimentos,
+      atendimentosPorStatus,
+      procedimentos,
+      formularios,
+    },
+    error: '',
+  }
+}
