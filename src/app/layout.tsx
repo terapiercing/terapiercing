@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   title: "RBClinic - Estética Avançada",
   description:
     "Sistema de gestão para clínica de estética. Agende seus horários, acompanhe seus tratamentos e muito mais.",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
