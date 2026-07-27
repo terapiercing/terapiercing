@@ -20,7 +20,7 @@ export default async function ClientLayout({
     .from('usuarios')
     .select('nome, role')
     .eq('id', data.user.id)
-    .single()
+    .maybeSingle()
 
   const nome = usuario?.nome || data.user.email?.split('@')[0] || 'Cliente'
   const isAdmin = usuario?.role === 'admin'

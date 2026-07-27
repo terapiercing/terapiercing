@@ -60,23 +60,29 @@ export default async function Dashboard() {
     .from('usuarios')
     .select('id, nome, role')
     .eq('id', user.id)
-    .single()
+    .maybeSingle()
 
   const isAdmin = usuario?.role === 'admin'
+  const patientId = usuario?.id ?? user.id
 
   const { count: agendamentosCount } = await supabase
     .from('apontamentos')
     .select('*', { count: 'exact', head: true })
-    .eq('patient_id', usuario?.id ?? '')
+    .eq('patient_id', patientId)
 
   const { data: proximoAgendamento } = await supabase
     .from('apontamentos')
     .select('data, hora, servicos(nome)')
-    .eq('patient_id', usuario?.id ?? '')
+    .eq('patient_id', patientId)
     .gte('data', new Date().toISOString().split('T')[0])
     .order('data', { ascending: true })
     .limit(1)
-    .single()
+    .maybeSingle()
+
+  const servicosRaw = proximoAgendamento?.servicos as unknown as { nome: string } | { nome: string }[] | null
+  const servicoNome = Array.isArray(servicosRaw)
+    ? servicosRaw.map((s) => s.nome).join(', ')
+    : servicosRaw?.nome ?? '—'
 
   if (isAdmin) {
     return (
@@ -119,11 +125,7 @@ export default async function Dashboard() {
               Próximo Serviço
             </h3>
             <p className="mt-3 text-sm text-zinc-600">
-              {proximoAgendamento
-                ? (
-                    proximoAgendamento.servicos as { nome: string }[]
-                  )?.map((s) => s.nome).join(', ')
-                : '—'}
+              {servicoNome}
             </p>
           </div>
         </div>
@@ -198,11 +200,7 @@ export default async function Dashboard() {
             Serviço
           </h3>
           <p className="mt-3 text-sm text-zinc-600">
-            {proximoAgendamento
-              ? (
-                  proximoAgendamento.servicos as { nome: string }[]
-                )?.map((s) => s.nome).join(', ')
-              : '—'}
+            {servicoNome}
           </p>
         </div>
       </div>
@@ -224,3 +222,4 @@ export default async function Dashboard() {
     </div>
   )
 }
+
