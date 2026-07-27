@@ -4,6 +4,7 @@ import { useState, useEffect, useActionState } from 'react'
 import { getAvailableSlots, createAppointment } from '@/lib/actions/appointments'
 import { useRouter } from 'next/navigation'
 import ModalNovoCliente from './ModalNovoCliente'
+import ModalPagamentoPendente from './ModalPagamentoPendente'
 
 interface Servico {
   id: string
@@ -86,6 +87,14 @@ export default function NovoAgendamentoForm({
     createAppointment,
     undefined
   )
+
+  const showPaymentPopup = !!state?.success && !isAdmin
+
+  useEffect(() => {
+    if (state?.success && isAdmin) {
+      router.push('/agendamentos')
+    }
+  }, [state, isAdmin, router])
 
   const selectedService = servicos.find(s => s.id === selectedServiceId)
 
@@ -431,6 +440,12 @@ export default function NovoAgendamentoForm({
         onClienteCreated={handleClienteCreated}
       />
     )}
+
+    {/* Modal de pagamento pendente */}
+    <ModalPagamentoPendente
+      isOpen={showPaymentPopup}
+      onConfirm={() => router.push('/agendamentos')}
+    />
   </>
-  )
+)
 }

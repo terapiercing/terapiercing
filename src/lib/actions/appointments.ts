@@ -2,7 +2,6 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 
 // Helper to convert "HH:MM:SS" or "HH:MM" to minutes from midnight
 function timeToMinutes(timeStr: string): number {
@@ -121,7 +120,7 @@ export async function getAvailableSlots(serviceId: string, dateStr: string) {
 }
 
 export async function createAppointment(
-  _prevState: { error: string } | undefined,
+  _prevState: { error: string; success?: boolean } | undefined,
   formData: FormData
 ) {
   const supabase = await createClient()
@@ -132,7 +131,7 @@ export async function createAppointment(
   const notes = formData.get('notes') as string
 
   if (!serviceId || !date || !time) {
-    return { error: 'Por favor, selecione um serviço, data e horário.' }
+    return { error: 'Por favor, selecione um serviço, data e horário.', success: false }
   }
 
   const { data: userData } = await supabase.auth.getUser()
@@ -281,7 +280,7 @@ export async function createAppointment(
 
   revalidatePath('/agendamentos')
   revalidatePath('/agendamentos/novo')
-  redirect('/agendamentos')
+  return { error: '', success: true }
 }
 
 // ============================

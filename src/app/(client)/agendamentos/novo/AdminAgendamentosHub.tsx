@@ -13,6 +13,7 @@ import NovoAgendamentoForm from './NovoAgendamentoForm'
 
 interface TodayAppointment {
   id: string
+  data: string
   hora: string
   status: string
   notas: string | null
@@ -105,6 +106,30 @@ export default function AdminAgendamentosHub({
     if (result.error) {
       alert(result.error)
     }
+
+    if (newStatus === 'Confirmado' && !result.error) {
+      const appt = todayAppointments.find((a) => a.id === appointmentId)
+      if (appt?.usuarios?.telefone) {
+        const phone = appt.usuarios.telefone.replace(/\D/g, '')
+        const dataFormatada = new Date(appt.data + 'T00:00:00').toLocaleDateString('pt-BR', {
+          weekday: 'long',
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        })
+        const servico = appt.servicos?.nome || 'Procedimento'
+        const mensagem = encodeURIComponent(
+          `Olá ${appt.usuarios!.nome}! ✅\n\n` +
+          `Seu agendamento na RBClinic foi confirmado!\n\n` +
+          `📅 Data: ${dataFormatada}\n` +
+          `🕐 Horário: ${appt.hora.slice(0, 5)}\n` +
+          `💆 Procedimento: ${servico}\n\n` +
+          `Aguardamos você! 💛`
+        )
+        window.open(`https://api.whatsapp.com/send?phone=55${phone}&text=${mensagem}`, '_blank')
+      }
+    }
+
     router.refresh()
   }
 

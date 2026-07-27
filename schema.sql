@@ -203,10 +203,25 @@ CREATE POLICY "apontamentos_insert_own"
   ON public.apontamentos FOR INSERT
   WITH CHECK (auth.uid() = patient_id);
 
--- Apontamentos: admin pode visualizar todos os registros
+-- Apontamentos: admin pode visualizar, inserir, atualizar e excluir todos os registros
 DROP POLICY IF EXISTS "apontamentos_select_admin" ON public.apontamentos;
 CREATE POLICY "apontamentos_select_admin"
   ON public.apontamentos FOR SELECT
+  USING (public.is_admin());
+
+DROP POLICY IF EXISTS "apontamentos_insert_admin" ON public.apontamentos;
+CREATE POLICY "apontamentos_insert_admin"
+  ON public.apontamentos FOR INSERT
+  WITH CHECK (public.is_admin());
+
+DROP POLICY IF EXISTS "apontamentos_update_admin" ON public.apontamentos;
+CREATE POLICY "apontamentos_update_admin"
+  ON public.apontamentos FOR UPDATE
+  USING (public.is_admin());
+
+DROP POLICY IF EXISTS "apontamentos_delete_admin" ON public.apontamentos;
+CREATE POLICY "apontamentos_delete_admin"
+  ON public.apontamentos FOR DELETE
   USING (public.is_admin());
 
 -- Fotos
