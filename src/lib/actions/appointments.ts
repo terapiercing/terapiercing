@@ -129,6 +129,8 @@ export async function createAppointment(
   const date = formData.get('date') as string
   const time = formData.get('time') as string
   const notes = formData.get('notes') as string
+  const signature = formData.get('signature') as string
+  const respostas = formData.get('respostas') as string
 
   if (!serviceId || !date || !time) {
     return { error: 'Por favor, selecione um serviço, data e horário.', success: false }
@@ -263,7 +265,7 @@ export async function createAppointment(
   }
 
   // --- Inserir agendamento ---
-  const { error } = await supabase
+  const { data: newAppointment, error } = await supabase
     .from('apontamentos')
     .insert({
       patient_id: targetPatientId,
@@ -273,9 +275,35 @@ export async function createAppointment(
       status: 'Pendente',
       notas: notes || null,
     })
+    .select('id')
+    .single()
 
   if (error) {
     return { error: `Erro ao agendar: ${error.message}` }
+  }
+
+  // --- Inserir anamnese com assinatura (se fornecida) ---
+  if (signature && respostas && newAppointment) {
+    const parsedRespostas = JSON.parse(respostas) as Record<string, unknown>
+
+    const { data: servico } = await supabase
+      .from('servicos')
+      .select('formulario_template_id')
+      .eq('id', serviceId)
+      .single()
+
+    await supabase.from('anamneses').insert({
+      patient_id: targetPatientId,
+      servico_id: serviceId,
+      apontamento_id: newAppointment.id,
+      formulario_template_id: servico?.formulario_template_id || null,
+      campos_json: {
+        ...parsedRespostas,
+        _assinatura: signature,
+      },
+      aceite_digital: true,
+      aceito_em: new Date().toISOString(),
+    })
   }
 
   revalidatePath('/agendamentos')

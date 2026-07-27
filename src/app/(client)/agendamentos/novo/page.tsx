@@ -33,7 +33,7 @@ export default async function Page({
 
   const { data: servicos } = await supabase
     .from('servicos')
-    .select('id, nome, duracao_min, preco')
+    .select('id, nome, duracao_min, preco, exige_formulario, formulario_template_id, formulario_recorrencia')
     .eq('ativo', true)
     .order('nome')
 

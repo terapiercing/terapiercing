@@ -34,6 +34,9 @@ interface Servico {
   nome: string
   duracao_min: number
   preco: number
+  exige_formulario: boolean
+  formulario_template_id: string | null
+  formulario_recorrencia: string
 }
 
 interface Cliente {

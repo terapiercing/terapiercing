@@ -602,6 +602,7 @@ export interface HistoricoCliente {
     camposJson: Record<string, unknown>
     aceiteDigital: boolean
     criadoEm: string
+    aceitoEm: string | null
   }>
 }
 
@@ -666,7 +667,7 @@ export async function getHistoricoCliente(
 
   const { data: anamneses } = await supabase
     .from('anamneses')
-    .select('id, campos_json, aceite_digital, created_at, servicos(nome), formulario_templates(nome)')
+    .select('id, campos_json, aceite_digital, aceito_em, created_at, servicos(nome), formulario_templates(nome)')
     .eq('patient_id', patientId)
     .order('created_at', { ascending: false })
 
@@ -677,6 +678,7 @@ export async function getHistoricoCliente(
     camposJson: an.campos_json as Record<string, unknown>,
     aceiteDigital: an.aceite_digital,
     criadoEm: an.created_at,
+    aceitoEm: an.aceito_em as string | null,
   }))
 
   return {

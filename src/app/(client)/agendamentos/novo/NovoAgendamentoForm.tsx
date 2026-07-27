@@ -5,12 +5,16 @@ import { getAvailableSlots, createAppointment } from '@/lib/actions/appointments
 import { useRouter } from 'next/navigation'
 import ModalNovoCliente from './ModalNovoCliente'
 import ModalPagamentoPendente from './ModalPagamentoPendente'
+import FormularioAnamnese from './FormularioAnamnese'
 
 interface Servico {
   id: string
   nome: string
   duracao_min: number
   preco: number
+  exige_formulario: boolean
+  formulario_template_id: string | null
+  formulario_recorrencia: string
 }
 
 const MONTHS_PT = [
@@ -53,6 +57,11 @@ export default function NovoAgendamentoForm({
   const [selectedPatientId, setSelectedPatientId] = useState<string>(clientes[0]?.id || '')
   const [clientSearch, setClientSearch] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // Anamnese states
+  const [showFormAnamnese, setShowFormAnamnese] = useState(false)
+  const [anamneseRespostas, setAnamneseRespostas] = useState<Record<string, unknown> | null>(null)
+  const [anamneseAssinatura, setAnamneseAssinatura] = useState<string | null>(null)
 
   useEffect(() => {
     setListaClientes(clientes)
@@ -97,6 +106,27 @@ export default function NovoAgendamentoForm({
   }, [state, isAdmin, router])
 
   const selectedService = servicos.find(s => s.id === selectedServiceId)
+
+  const needsForm = !isAdmin && selectedService?.exige_formulario && selectedService?.formulario_template_id && selectedTime
+  const formCompleted = !needsForm || (anamneseRespostas !== null && anamneseAssinatura !== null)
+
+  const handleSubmitClick = () => {
+    if (needsForm && !showFormAnamnese) {
+      setShowFormAnamnese(true)
+    }
+  }
+
+  const handleFormComplete = (respostas: Record<string, unknown>, assinatura: string) => {
+    setAnamneseRespostas(respostas)
+    setAnamneseAssinatura(assinatura)
+    setShowFormAnamnese(false)
+  }
+
+  const handleFormCancel = () => {
+    setShowFormAnamnese(false)
+    setAnamneseRespostas(null)
+    setAnamneseAssinatura(null)
+  }
 
   // Fetch available slots when service or date changes
   useEffect(() => {
@@ -226,6 +256,8 @@ export default function NovoAgendamentoForm({
         <input type="hidden" name="date" value={selectedDate} />
         <input type="hidden" name="time" value={selectedTime} />
         {isAdmin && <input type="hidden" name="patientId" value={selectedPatientId} />}
+        {anamneseRespostas && <input type="hidden" name="respostas" value={JSON.stringify(anamneseRespostas)} />}
+        {anamneseAssinatura && <input type="hidden" name="signature" value={anamneseAssinatura} />}
 
         {/* Admin: Seleção de Cliente */}
         {isAdmin && (
@@ -422,15 +454,44 @@ export default function NovoAgendamentoForm({
         >
           Voltar
         </button>
-        <button
-          type="submit"
-          disabled={pending || !selectedTime}
-          className="flex-[2] rounded-xl bg-[#C4917B] py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {pending ? 'Processando...' : 'Confirmar Agendamento'}
-        </button>
+        {needsForm && !formCompleted ? (
+          <button
+            type="button"
+            onClick={handleSubmitClick}
+            disabled={pending || !selectedTime || showFormAnamnese}
+            className="flex-[2] rounded-xl bg-[#C4917B] py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {showFormAnamnese ? 'Preencha o formulário abaixo' : 'Preencher Ficha de Anamnese'}
+          </button>
+        ) : (
+          <button
+            type="submit"
+            disabled={pending || !selectedTime || !formCompleted}
+            className="flex-[2] rounded-xl bg-[#C4917B] py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {pending ? 'Processando...' : formCompleted && anamneseAssinatura ? 'Confirmar e Assinar' : 'Confirmar Agendamento'}
+          </button>
+        )}
       </div>
+
+      {needsForm && formCompleted && anamneseAssinatura && (
+        <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700 border border-green-200 flex items-center gap-2">
+          <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+          Ficha de anamnese preenchida e assinada com sucesso!
+        </div>
+      )}
     </form>
+
+    {/* Formulário de Anamnese */}
+    {showFormAnamnese && selectedService?.formulario_template_id && (
+      <FormularioAnamnese
+        templateId={selectedService.formulario_template_id}
+        onComplete={handleFormComplete}
+        onCancel={handleFormCancel}
+      />
+    )}
 
     {/* Modal de cadastro rápido de cliente */}
     {isAdmin && (
