@@ -91,67 +91,19 @@ export async function signup(
     return { error: 'Preencha todos os campos obrigatórios (Nome, E-mail, Senha e Telefone).' }
   }
 
-  const supabaseAdmin = createAdminClient()
-
-  const { data: existingProfile } = await supabaseAdmin
-    .from('usuarios')
-    .select('id')
-    .eq('email', email)
-    .maybeSingle()
-
-  if (existingProfile) {
-    return { error: 'Este e-mail já está cadastrado.' }
-  }
-
-  let { data: authData, error: authError } = await supabase.auth.signUp({
+  const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
   })
 
   if (authError) {
-    if (authError.message === 'User already registered') {
-      try {
-        const { data: foundUser } = await supabaseAdmin.auth.admin.listUsers({
-          page: 1,
-          perPage: 1000,
-        })
-        const orphaned = foundUser?.users?.find(
-          (u) => u.email?.toLowerCase() === email.toLowerCase()
-        )
-
-        if (orphaned) {
-          const { data: orphanProfile } = await supabaseAdmin
-            .from('usuarios')
-            .select('id')
-            .eq('id', orphaned.id)
-            .maybeSingle()
-
-          if (!orphanProfile) {
-            await supabaseAdmin.auth.admin.deleteUser(orphaned.id)
-            const retry = await supabase.auth.signUp({ email, password })
-            authData = retry.data
-            authError = retry.error
-
-            if (authError) {
-              return { error: authError.message }
-            }
-          } else {
-            return { error: 'Este e-mail já está cadastrado.' }
-          }
-        } else {
-          return { error: 'Este e-mail já está cadastrado.' }
-        }
-      } catch {
-        return { error: 'Este e-mail já está cadastrado.' }
-      }
-    } else {
-      return { error: authError.message }
-    }
+    return { error: authError.message }
   }
 
   const user = authData.user
 
   if (user) {
+    const supabaseAdmin = createAdminClient()
     const { error: userError } = await supabaseAdmin
       .from('usuarios')
       .insert({
@@ -233,16 +185,6 @@ export async function cadastrarCliente(
 
   const supabaseAdmin = createAdminClient()
 
-  const { data: existingProfile } = await supabaseAdmin
-    .from('usuarios')
-    .select('id')
-    .eq('email', email)
-    .maybeSingle()
-
-  if (existingProfile) {
-    return { error: 'Este e-mail já está cadastrado.' }
-  }
-
   const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email,
     password,
@@ -250,88 +192,7 @@ export async function cadastrarCliente(
   })
 
   if (authError) {
-    if (authError.message === 'User already registered') {
-      try {
-        const { data: foundUser } = await supabaseAdmin.auth.admin.listUsers({
-          page: 1,
-          perPage: 1000,
-        })
-        const orphaned = foundUser?.users?.find(
-          (u) => u.email?.toLowerCase() === email.toLowerCase()
-        )
-
-        if (orphaned) {
-          const { data: orphanProfile } = await supabaseAdmin
-            .from('usuarios')
-            .select('id')
-            .eq('id', orphaned.id)
-            .maybeSingle()
-
-          if (!orphanProfile) {
-            await supabaseAdmin.auth.admin.deleteUser(orphaned.id)
-            const retry = await supabaseAdmin.auth.admin.createUser({
-              email,
-              password,
-              email_confirm: true,
-            })
-
-            if (retry.error) {
-              return { error: retry.error.message }
-            }
-
-            const retryUser = retry.data.user
-
-            if (retryUser) {
-              const { error: retryInsertError } = await supabaseAdmin
-                .from('usuarios')
-                .insert({
-                  id: retryUser.id,
-                  email: retryUser.email!,
-                  nome,
-                  usuario: usuario || null,
-                  telefone,
-                  cpf: cpf || null,
-                  nascimento: nascimento || null,
-                  endereco: endereco || null,
-                  numero: numero || null,
-                  bairro: bairro || null,
-                  cidade: cidade || null,
-                  role: 'client',
-                })
-
-              if (retryInsertError) {
-                await supabaseAdmin.auth.admin.deleteUser(retryUser.id)
-                return { error: `Erro ao criar perfil: ${retryInsertError.message}` }
-              }
-
-              revalidatePath('/clientes')
-              revalidatePath('/agendamentos/novo')
-              return {
-                success: true,
-                error: '',
-                cliente: {
-                  id: retryUser.id,
-                  nome,
-                  email,
-                  telefone,
-                  cpf: cpf || null,
-                },
-              }
-            }
-
-            return { error: 'Erro inesperado ao criar usuário.' }
-          } else {
-            return { error: 'Este e-mail já está cadastrado.' }
-          }
-        } else {
-          return { error: 'Este e-mail já está cadastrado.' }
-        }
-      } catch {
-        return { error: 'Este e-mail já está cadastrado.' }
-      }
-    } else {
-      return { error: authError.message }
-    }
+    return { error: authError.message }
   }
 
   const user = authData.user
