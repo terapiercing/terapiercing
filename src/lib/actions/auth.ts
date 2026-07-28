@@ -73,93 +73,62 @@ export async function signup(
   _prevState: { error: string } | undefined,
   formData: FormData
 ) {
-  try {
-    const supabase = await createClient()
+  const supabase = await createClient()
 
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-    const nome = formData.get('nome') as string
-    const usuario = formData.get('usuario') as string
-    const telefone = formData.get('telefone') as string
-    const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
-    const nascimento = formData.get('nascimento') as string
-    const endereco = formData.get('endereco') as string
-    const numero = formData.get('numero') as string
-    const bairro = formData.get('bairro') as string
-    const cidade = formData.get('cidade') as string
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+  const nome = formData.get('nome') as string
+  const usuario = formData.get('usuario') as string
+  const telefone = formData.get('telefone') as string
+  const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
+  const nascimento = formData.get('nascimento') as string
+  const endereco = formData.get('endereco') as string
+  const numero = formData.get('numero') as string
+  const bairro = formData.get('bairro') as string
+  const cidade = formData.get('cidade') as string
 
-    if (!email || !password || !nome || !telefone) {
-      return { error: 'Preencha todos os campos obrigatórios (Nome, E-mail, Senha e Telefone).' }
-    }
-
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-    })
-
-    if (authError) {
-      return { error: authError.message }
-    }
-
-    const user = authData.user
-
-    if (user) {
-      const supabaseAdmin = createAdminClient()
-
-      const { data: insertData, error: userError } = await supabaseAdmin
-        .from('usuarios')
-        .insert({
-          id: user.id,
-          email: user.email!,
-          nome,
-          usuario: usuario || null,
-          telefone,
-          cpf: cpf || null,
-          nascimento: nascimento || null,
-          endereco: endereco || null,
-          numero: numero || null,
-          bairro: bairro || null,
-          cidade: cidade || null,
-          role: 'client',
-        })
-        .select()
-
-      if (userError) {
-        try {
-          await supabaseAdmin.auth.admin.deleteUser(user.id)
-        } catch {
-          // rollback best-effort
-        }
-        return {
-          error: `Erro ao criar perfil: [${userError.code}] ${userError.message} | details: ${userError.details} | hint: ${userError.hint}`
-        }
-      }
-
-      if (!insertData || insertData.length === 0) {
-        try {
-          await supabaseAdmin.auth.admin.deleteUser(user.id)
-        } catch {
-          // rollback best-effort
-        }
-        return { error: 'Perfil não foi criado. insert retornou vazio.' }
-      }
-    }
-
-    const redirectTo = (formData.get('redirectTo') as string) || '/dashboard'
-
-    revalidatePath('/', 'layout')
-    redirect(redirectTo)
-  } catch (e: unknown) {
-    if (
-      e instanceof Error &&
-      'digest' in e &&
-      typeof (e as Error & { digest: string }).digest === 'string' &&
-      (e as Error & { digest: string }).digest.includes('NEXT_REDIRECT')
-    ) {
-      throw e
-    }
-    return { error: `Erro inesperado: ${e instanceof Error ? e.message : String(e)}` }
+  if (!email || !password || !nome || !telefone) {
+    return { error: 'Preencha todos os campos obrigatórios (Nome, E-mail, Senha e Telefone).' }
   }
+
+  const { data: authData, error: authError } = await supabase.auth.signUp({
+    email,
+    password,
+  })
+
+  if (authError) {
+    return { error: authError.message }
+  }
+
+  const user = authData.user
+
+  if (user) {
+    const { error: userError } = await supabase
+      .from('usuarios')
+      .insert({
+        id: user.id,
+        email: user.email!,
+        nome,
+        usuario: usuario || null,
+        telefone,
+        cpf: cpf || null,
+        nascimento: nascimento || null,
+        endereco: endereco || null,
+        numero: numero || null,
+        bairro: bairro || null,
+        cidade: cidade || null,
+        role: 'client',
+      })
+
+    if (userError) {
+      return { error: `Erro ao criar perfil: ${userError.message}` }
+    }
+  }
+
+  const redirectTo = (formData.get('redirectTo') as string) || '/dashboard'
+
+  revalidatePath('/', 'layout')
+  redirect(redirectTo)
 }
 
   export interface NovoClienteResult {
@@ -213,6 +182,10 @@ export async function cadastrarCliente(
   }
 
   const supabaseAdmin = createAdminClient()
+
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return { error: 'Serviço de cadastro indisponível. Configure a variável SUPABASE_SERVICE_ROLE_KEY.' }
+  }
 
   const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email,
