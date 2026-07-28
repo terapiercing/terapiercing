@@ -73,80 +73,68 @@ export async function signup(
   _prevState: { error: string } | undefined,
   formData: FormData
 ) {
-  try {
-    const supabase = await createClient()
+  const supabase = await createClient()
 
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-    const nome = formData.get('nome') as string
-    const usuario = formData.get('usuario') as string
-    const telefone = formData.get('telefone') as string
-    const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
-    const nascimento = formData.get('nascimento') as string
-    const endereco = formData.get('endereco') as string
-    const numero = formData.get('numero') as string
-    const bairro = formData.get('bairro') as string
-    const cidade = formData.get('cidade') as string
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+  const nome = formData.get('nome') as string
+  const usuario = formData.get('usuario') as string
+  const telefone = formData.get('telefone') as string
+  const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
+  const nascimento = formData.get('nascimento') as string
+  const endereco = formData.get('endereco') as string
+  const numero = formData.get('numero') as string
+  const bairro = formData.get('bairro') as string
+  const cidade = formData.get('cidade') as string
 
-    if (!email || !password || !nome || !telefone) {
-      return { error: 'Preencha todos os campos obrigatórios (Nome, E-mail, Senha e Telefone).' }
-    }
-
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-    })
-
-    if (authError) {
-      return { error: authError.message }
-    }
-
-    const user = authData.user
-
-    if (user) {
-      const supabaseAdmin = createAdminClient()
-      const { data: insertData, error: userError } = await supabaseAdmin
-        .from('usuarios')
-        .insert({
-          id: user.id,
-          email: user.email!,
-          nome,
-          usuario: usuario || null,
-          telefone,
-          cpf: cpf || null,
-          nascimento: nascimento || null,
-          endereco: endereco || null,
-          numero: numero || null,
-          bairro: bairro || null,
-          cidade: cidade || null,
-          role: 'client',
-        })
-        .select()
-
-      if (userError) {
-        console.error('[signup] Erro ao inserir perfil:', JSON.stringify(userError))
-        try {
-          await supabaseAdmin.auth.admin.deleteUser(user.id)
-        } catch (deleteErr) {
-          console.error('[signup] Erro ao remover auth user orfao:', deleteErr)
-        }
-        return { error: `Erro ao criar perfil: ${userError.message}` }
-      }
-
-      console.log('[signup] Perfil criado com sucesso:', insertData)
-    }
-
-    const redirectTo = (formData.get('redirectTo') as string) || '/dashboard'
-
-    revalidatePath('/', 'layout')
-    redirect(redirectTo)
-  } catch (e: unknown) {
-    console.error('[signup] Excecao nao tratada:', e)
-    if (e && typeof e === 'object' && 'digest' in e) {
-      throw e
-    }
-    return { error: 'Erro interno ao realizar cadastro. Tente novamente.' }
+  if (!email || !password || !nome || !telefone) {
+    return { error: 'Preencha todos os campos obrigatórios (Nome, E-mail, Senha e Telefone).' }
   }
+
+  const { data: authData, error: authError } = await supabase.auth.signUp({
+    email,
+    password,
+  })
+
+  if (authError) {
+    return { error: authError.message }
+  }
+
+  const user = authData.user
+
+  if (user) {
+    const supabaseAdmin = createAdminClient()
+    const { error: userError } = await supabaseAdmin
+      .from('usuarios')
+      .insert({
+        id: user.id,
+        email: user.email!,
+        nome,
+        usuario: usuario || null,
+        telefone,
+        cpf: cpf || null,
+        nascimento: nascimento || null,
+        endereco: endereco || null,
+        numero: numero || null,
+        bairro: bairro || null,
+        cidade: cidade || null,
+        role: 'client',
+      })
+
+    if (userError) {
+      try {
+        await supabaseAdmin.auth.admin.deleteUser(user.id)
+      } catch {
+        // rollback best-effort
+      }
+      return { error: `Erro ao criar perfil: ${userError.code} - ${userError.message} - ${userError.details ?? ''}` }
+    }
+  }
+
+  const redirectTo = (formData.get('redirectTo') as string) || '/dashboard'
+
+  revalidatePath('/', 'layout')
+  redirect(redirectTo)
 }
 
   export interface NovoClienteResult {
@@ -165,106 +153,97 @@ export async function cadastrarCliente(
   _prevState: NovoClienteResult | undefined,
   formData: FormData
 ): Promise<NovoClienteResult> {
-  try {
-    const supabase = await createClient()
-    const { data: userData } = await supabase.auth.getUser()
-    const caller = userData.user
+  const supabase = await createClient()
+  const { data: userData } = await supabase.auth.getUser()
+  const caller = userData.user
 
-    if (!caller) {
-      return { error: 'Usuário não autenticado.' }
-    }
-
-    const { data: callerProfile } = await supabase
-      .from('usuarios')
-      .select('role')
-      .eq('id', caller.id)
-      .single()
-
-    if (callerProfile?.role !== 'admin') {
-      return { error: 'Apenas administradores podem cadastrar clientes.' }
-    }
-
-    const email = (formData.get('email') as string).trim()
-    const password = formData.get('password') as string
-    const nome = formData.get('nome') as string
-    const usuario = formData.get('usuario') as string
-    const telefone = formData.get('telefone') as string
-    const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
-    const nascimento = formData.get('nascimento') as string
-    const endereco = formData.get('endereco') as string
-    const numero = formData.get('numero') as string
-    const bairro = formData.get('bairro') as string
-    const cidade = formData.get('cidade') as string
-
-    if (!email || !password || !nome || !telefone) {
-      return { error: 'Preencha todos os campos obrigatórios (Nome, E-mail, Senha e Telefone).' }
-    }
-
-    const supabaseAdmin = createAdminClient()
-
-    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-    })
-
-    if (authError) {
-      return { error: authError.message }
-    }
-
-    const user = authData.user
-
-    if (user) {
-      const { error: userError } = await supabaseAdmin
-        .from('usuarios')
-        .insert({
-          id: user.id,
-          email: user.email!,
-          nome,
-          usuario: usuario || null,
-          telefone,
-          cpf: cpf || null,
-          nascimento: nascimento || null,
-          endereco: endereco || null,
-          numero: numero || null,
-          bairro: bairro || null,
-          cidade: cidade || null,
-          role: 'client',
-        })
-
-      if (userError) {
-        console.error('[cadastrarCliente] Erro ao inserir perfil:', JSON.stringify(userError))
-        try {
-          await supabaseAdmin.auth.admin.deleteUser(user.id)
-        } catch (deleteErr) {
-          console.error('[cadastrarCliente] Erro ao remover auth user orfao:', deleteErr)
-        }
-        return { error: `Erro ao criar perfil: ${userError.message}` }
-      }
-
-      revalidatePath('/clientes')
-      revalidatePath('/agendamentos/novo')
-      return {
-        success: true,
-        error: '',
-        cliente: {
-          id: user.id,
-          nome,
-          email,
-          telefone,
-          cpf: cpf || null,
-        },
-      }
-    }
-
-    return { error: 'Erro inesperado ao criar usuário.' }
-  } catch (e: unknown) {
-    console.error('[cadastrarCliente] Excecao nao tratada:', e)
-    if (e && typeof e === 'object' && 'digest' in e) {
-      throw e
-    }
-    return { error: 'Erro interno ao cadastrar cliente. Tente novamente.' }
+  if (!caller) {
+    return { error: 'Usuário não autenticado.' }
   }
+
+  const { data: callerProfile } = await supabase
+    .from('usuarios')
+    .select('role')
+    .eq('id', caller.id)
+    .single()
+
+  if (callerProfile?.role !== 'admin') {
+    return { error: 'Apenas administradores podem cadastrar clientes.' }
+  }
+
+  const email = (formData.get('email') as string).trim()
+  const password = formData.get('password') as string
+  const nome = formData.get('nome') as string
+  const usuario = formData.get('usuario') as string
+  const telefone = formData.get('telefone') as string
+  const cpf = (formData.get('cpf') as string).replace(/\D/g, '')
+  const nascimento = formData.get('nascimento') as string
+  const endereco = formData.get('endereco') as string
+  const numero = formData.get('numero') as string
+  const bairro = formData.get('bairro') as string
+  const cidade = formData.get('cidade') as string
+
+  if (!email || !password || !nome || !telefone) {
+    return { error: 'Preencha todos os campos obrigatórios (Nome, E-mail, Senha e Telefone).' }
+  }
+
+  const supabaseAdmin = createAdminClient()
+
+  const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+  })
+
+  if (authError) {
+    return { error: authError.message }
+  }
+
+  const user = authData.user
+
+  if (user) {
+    const { error: userError } = await supabaseAdmin
+      .from('usuarios')
+      .insert({
+        id: user.id,
+        email: user.email!,
+        nome,
+        usuario: usuario || null,
+        telefone,
+        cpf: cpf || null,
+        nascimento: nascimento || null,
+        endereco: endereco || null,
+        numero: numero || null,
+        bairro: bairro || null,
+        cidade: cidade || null,
+        role: 'client',
+      })
+
+    if (userError) {
+      try {
+        await supabaseAdmin.auth.admin.deleteUser(user.id)
+      } catch {
+        // rollback best-effort
+      }
+      return { error: `Erro ao criar perfil: ${userError.code} - ${userError.message} - ${userError.details ?? ''}` }
+    }
+
+    revalidatePath('/clientes')
+    revalidatePath('/agendamentos/novo')
+    return {
+      success: true,
+      error: '',
+      cliente: {
+        id: user.id,
+        nome,
+        email,
+        telefone,
+        cpf: cpf || null,
+      },
+    }
+  }
+
+  return { error: 'Erro inesperado ao criar usuário.' }
 }
 
 export async function logout() {
