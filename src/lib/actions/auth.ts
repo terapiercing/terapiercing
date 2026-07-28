@@ -110,35 +110,39 @@ export async function signup(
 
   if (authError) {
     if (authError.message === 'User already registered') {
-      const { data: listResult } = await supabaseAdmin.auth.admin.listUsers({
-        page: 1,
-        perPage: 1000,
-      })
-      const orphaned = listResult?.users?.find(
-        (u) => u.email?.toLowerCase() === email.toLowerCase()
-      )
+      try {
+        const { data: foundUser } = await supabaseAdmin.auth.admin.listUsers({
+          page: 1,
+          perPage: 1000,
+        })
+        const orphaned = foundUser?.users?.find(
+          (u) => u.email?.toLowerCase() === email.toLowerCase()
+        )
 
-      if (orphaned) {
-        const { data: existingProfile } = await supabaseAdmin
-          .from('usuarios')
-          .select('id')
-          .eq('id', orphaned.id)
-          .maybeSingle()
+        if (orphaned) {
+          const { data: orphanProfile } = await supabaseAdmin
+            .from('usuarios')
+            .select('id')
+            .eq('id', orphaned.id)
+            .maybeSingle()
 
-        if (!existingProfile) {
-          await supabaseAdmin.auth.admin.deleteUser(orphaned.id)
-          const retry = await supabase.auth.signUp({ email, password })
-          authData = retry.data
-          authError = retry.error
+          if (!orphanProfile) {
+            await supabaseAdmin.auth.admin.deleteUser(orphaned.id)
+            const retry = await supabase.auth.signUp({ email, password })
+            authData = retry.data
+            authError = retry.error
 
-          if (authError) {
-            return { error: authError.message }
+            if (authError) {
+              return { error: authError.message }
+            }
+          } else {
+            return { error: 'Este e-mail já está cadastrado.' }
           }
         } else {
           return { error: 'Este e-mail já está cadastrado.' }
         }
-      } else {
-        return { error: authError.message }
+      } catch {
+        return { error: 'Este e-mail já está cadastrado.' }
       }
     } else {
       return { error: authError.message }
@@ -247,79 +251,83 @@ export async function cadastrarCliente(
 
   if (authError) {
     if (authError.message === 'User already registered') {
-      const { data: listResult } = await supabaseAdmin.auth.admin.listUsers({
-        page: 1,
-        perPage: 1000,
-      })
-      const orphaned = listResult?.users?.find(
-        (u) => u.email?.toLowerCase() === email.toLowerCase()
-      )
+      try {
+        const { data: foundUser } = await supabaseAdmin.auth.admin.listUsers({
+          page: 1,
+          perPage: 1000,
+        })
+        const orphaned = foundUser?.users?.find(
+          (u) => u.email?.toLowerCase() === email.toLowerCase()
+        )
 
-      if (orphaned) {
-        const { data: orphanProfile } = await supabaseAdmin
-          .from('usuarios')
-          .select('id')
-          .eq('id', orphaned.id)
-          .maybeSingle()
+        if (orphaned) {
+          const { data: orphanProfile } = await supabaseAdmin
+            .from('usuarios')
+            .select('id')
+            .eq('id', orphaned.id)
+            .maybeSingle()
 
-        if (!orphanProfile) {
-          await supabaseAdmin.auth.admin.deleteUser(orphaned.id)
-          const retry = await supabaseAdmin.auth.admin.createUser({
-            email,
-            password,
-            email_confirm: true,
-          })
+          if (!orphanProfile) {
+            await supabaseAdmin.auth.admin.deleteUser(orphaned.id)
+            const retry = await supabaseAdmin.auth.admin.createUser({
+              email,
+              password,
+              email_confirm: true,
+            })
 
-          if (retry.error) {
-            return { error: retry.error.message }
-          }
-
-          const retryUser = retry.data.user
-
-          if (retryUser) {
-            const { error: retryInsertError } = await supabaseAdmin
-              .from('usuarios')
-              .insert({
-                id: retryUser.id,
-                email: retryUser.email!,
-                nome,
-                usuario: usuario || null,
-                telefone,
-                cpf: cpf || null,
-                nascimento: nascimento || null,
-                endereco: endereco || null,
-                numero: numero || null,
-                bairro: bairro || null,
-                cidade: cidade || null,
-                role: 'client',
-              })
-
-            if (retryInsertError) {
-              await supabaseAdmin.auth.admin.deleteUser(retryUser.id)
-              return { error: `Erro ao criar perfil: ${retryInsertError.message}` }
+            if (retry.error) {
+              return { error: retry.error.message }
             }
 
-            revalidatePath('/clientes')
-            revalidatePath('/agendamentos/novo')
-            return {
-              success: true,
-              error: '',
-              cliente: {
-                id: retryUser.id,
-                nome,
-                email,
-                telefone,
-                cpf: cpf || null,
-              },
-            }
-          }
+            const retryUser = retry.data.user
 
-          return { error: 'Erro inesperado ao criar usuário.' }
+            if (retryUser) {
+              const { error: retryInsertError } = await supabaseAdmin
+                .from('usuarios')
+                .insert({
+                  id: retryUser.id,
+                  email: retryUser.email!,
+                  nome,
+                  usuario: usuario || null,
+                  telefone,
+                  cpf: cpf || null,
+                  nascimento: nascimento || null,
+                  endereco: endereco || null,
+                  numero: numero || null,
+                  bairro: bairro || null,
+                  cidade: cidade || null,
+                  role: 'client',
+                })
+
+              if (retryInsertError) {
+                await supabaseAdmin.auth.admin.deleteUser(retryUser.id)
+                return { error: `Erro ao criar perfil: ${retryInsertError.message}` }
+              }
+
+              revalidatePath('/clientes')
+              revalidatePath('/agendamentos/novo')
+              return {
+                success: true,
+                error: '',
+                cliente: {
+                  id: retryUser.id,
+                  nome,
+                  email,
+                  telefone,
+                  cpf: cpf || null,
+                },
+              }
+            }
+
+            return { error: 'Erro inesperado ao criar usuário.' }
+          } else {
+            return { error: 'Este e-mail já está cadastrado.' }
+          }
         } else {
           return { error: 'Este e-mail já está cadastrado.' }
         }
-      } else {
-        return { error: authError.message }
+      } catch {
+        return { error: 'Este e-mail já está cadastrado.' }
       }
     } else {
       return { error: authError.message }
