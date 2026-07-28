@@ -104,22 +104,26 @@ export async function signup(
 
   if (user) {
     const supabaseAdmin = createAdminClient()
-    const { error: userError } = await supabaseAdmin
+
+    const insertPayload = {
+      id: user.id,
+      email: user.email!,
+      nome,
+      usuario: usuario || null,
+      telefone,
+      cpf: cpf || null,
+      nascimento: nascimento || null,
+      endereco: endereco || null,
+      numero: numero || null,
+      bairro: bairro || null,
+      cidade: cidade || null,
+      role: 'client' as const,
+    }
+
+    const { data: insertData, error: userError } = await supabaseAdmin
       .from('usuarios')
-      .insert({
-        id: user.id,
-        email: user.email!,
-        nome,
-        usuario: usuario || null,
-        telefone,
-        cpf: cpf || null,
-        nascimento: nascimento || null,
-        endereco: endereco || null,
-        numero: numero || null,
-        bairro: bairro || null,
-        cidade: cidade || null,
-        role: 'client',
-      })
+      .insert(insertPayload)
+      .select()
 
     if (userError) {
       try {
@@ -127,7 +131,18 @@ export async function signup(
       } catch {
         // rollback best-effort
       }
-      return { error: `Erro ao criar perfil: ${userError.code} - ${userError.message} - ${userError.details ?? ''}` }
+      return {
+        error: `Erro ao criar perfil: [${userError.code}] ${userError.message} | details: ${userError.details} | hint: ${userError.hint}`
+      }
+    }
+
+    if (!insertData || insertData.length === 0) {
+      try {
+        await supabaseAdmin.auth.admin.deleteUser(user.id)
+      } catch {
+        // rollback best-effort
+      }
+      return { error: 'Perfil não foi criado. insert retornou vazio.' }
     }
   }
 
