@@ -10,6 +10,7 @@ import {
   type AppointmentStatus,
 } from '@/lib/actions/appointments'
 import NovoAgendamentoForm from './NovoAgendamentoForm'
+import ConsultarAgendamentosTab from './ConsultarAgendamentosTab'
 
 interface TodayAppointment {
   id: string
@@ -47,7 +48,7 @@ interface Cliente {
   cpf: string | null
 }
 
-type Tab = 'agenda' | 'bloqueios' | 'novo'
+type Tab = 'agenda' | 'bloqueios' | 'consultar' | 'novo'
 
 const STATUS_OPTIONS: { value: AppointmentStatus; label: string }[] = [
   { value: 'Pendente', label: 'Pendente' },
@@ -66,6 +67,7 @@ const STATUS_COLORS: Record<string, string> = {
 const TABS: { key: Tab; label: string; icon: string }[] = [
   { key: 'agenda', label: 'Agenda do Dia', icon: '📅' },
   { key: 'bloqueios', label: 'Bloquear Agenda', icon: '🚫' },
+  { key: 'consultar', label: 'Consultar Agendamentos', icon: '🔍' },
   { key: 'novo', label: 'Novo Agendamento', icon: '✨' },
 ]
 
@@ -204,7 +206,7 @@ export default function AdminAgendamentosHub({
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C4917B]">Painel Admin</p>
         <h1 className="text-3xl font-semibold text-zinc-800">Agendamentos</h1>
         <p className="mt-1 text-zinc-500">
-          Gerencie a agenda do dia, bloqueios e crie novos agendamentos.
+          Consulte agendamentos passados e futuros, gerencie a agenda do dia, bloqueios e crie novos agendamentos.
         </p>
       </div>
 
@@ -494,6 +496,11 @@ export default function AdminAgendamentosHub({
             )}
           </div>
         </div>
+      )}
+
+      {/* Tab: Consultar Agendamentos */}
+      {activeTab === 'consultar' && (
+        <ConsultarAgendamentosTab />
       )}
 
       {/* Tab: Novo Agendamento */}

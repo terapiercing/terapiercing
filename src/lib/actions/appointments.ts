@@ -366,6 +366,21 @@ export async function getTodayAppointments() {
   return data || []
 }
 
+export async function getAppointmentsByDate(dateStr: string) {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('apontamentos')
+    .select(
+      'id, data, hora, status, notas, servicos(id, nome, duracao_min, preco), usuarios(nome, email, telefone), anamneses(id, formulario_template_id, campos_json, aceite_digital, aceito_em, formulario_templates(nome, perguntas_json))'
+    )
+    .eq('data', dateStr)
+    .order('hora', { ascending: true })
+
+  if (error) throw error
+  return data || []
+}
+
 // ============================
 // Admin: gerenciar bloqueios
 // ============================
