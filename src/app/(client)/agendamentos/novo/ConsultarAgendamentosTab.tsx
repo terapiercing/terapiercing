@@ -67,12 +67,15 @@ export default function ConsultarAgendamentosTab() {
   const loadAppointments = useCallback(async (dateStr: string) => {
     try {
       const data = await getAppointmentsByDate(dateStr)
+      const parsed = data as unknown as ConsultedAppointment[]
       setError('')
-      setAppointments(data as unknown as ConsultedAppointment[])
+      setAppointments(parsed)
+      return parsed
     } catch (err) {
       console.error('Erro ao buscar agendamentos:', err)
       setError('Não foi possível carregar os agendamentos desta data.')
       setAppointments([])
+      return []
     } finally {
       setLoading(false)
     }
@@ -81,6 +84,12 @@ export default function ConsultarAgendamentosTab() {
   const changeDate = (dateStr: string) => {
     setLoading(true)
     setSelectedDate(dateStr)
+  }
+
+  const handleFormSaved = async (appointmentId: string) => {
+    const fresh = await loadAppointments(selectedDate)
+    const updated = fresh.find((a) => a.id === appointmentId)
+    if (updated) setViewingAppointment(updated)
   }
 
   useEffect(() => {
@@ -391,6 +400,7 @@ export default function ConsultarAgendamentosTab() {
         <ModalVerFormulario
           appointment={viewingAppointment}
           onClose={() => setViewingAppointment(null)}
+          onSaved={handleFormSaved}
         />
       )}
     </div>

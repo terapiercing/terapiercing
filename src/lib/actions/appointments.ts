@@ -381,6 +381,36 @@ export async function getAppointmentsByDate(dateStr: string) {
   return data || []
 }
 
+export async function updateAnamnese(
+  appointmentId: string,
+  campos: Record<string, unknown>
+): Promise<{ error?: string }> {
+  const supabase = await createClient()
+
+  const { data: existing, error: fetchError } = await supabase
+    .from('anamneses')
+    .select('campos_json')
+    .eq('apontamento_id', appointmentId)
+    .maybeSingle()
+
+  if (fetchError) return { error: fetchError.message }
+  if (!existing) return { error: 'Anamnese não encontrada para este agendamento.' }
+
+  const current = (existing.campos_json as Record<string, unknown>) || {}
+  const merged = { ...current, ...campos }
+
+  const { error } = await supabase
+    .from('anamneses')
+    .update({ campos_json: merged })
+    .eq('apontamento_id', appointmentId)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/agendamentos')
+  revalidatePath('/agendamentos/novo')
+  return {}
+}
+
 // ============================
 // Admin: gerenciar bloqueios
 // ============================
