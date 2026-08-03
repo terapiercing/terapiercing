@@ -284,7 +284,16 @@ export async function createAppointment(
 
   // --- Inserir anamnese com assinatura (se fornecida) ---
   if (signature && respostas && newAppointment) {
-    const parsedRespostas = JSON.parse(respostas) as Record<string, unknown>
+    let parsedRespostas: Record<string, unknown>
+    try {
+      parsedRespostas = JSON.parse(respostas) as Record<string, unknown>
+    } catch {
+      await supabase.from('apontamentos').delete().eq('id', newAppointment.id)
+      return {
+        error: 'Erro ao salvar as respostas do formulário: dados inválidos.',
+        success: false,
+      }
+    }
 
     const { data: servico } = await supabase
       .from('servicos')
@@ -292,7 +301,7 @@ export async function createAppointment(
       .eq('id', serviceId)
       .single()
 
-    await supabase.from('anamneses').insert({
+    const { error: anamneseError } = await supabase.from('anamneses').insert({
       patient_id: targetPatientId,
       servico_id: serviceId,
       apontamento_id: newAppointment.id,
@@ -304,6 +313,14 @@ export async function createAppointment(
       aceite_digital: true,
       aceito_em: new Date().toISOString(),
     })
+
+    if (anamneseError) {
+      await supabase.from('apontamentos').delete().eq('id', newAppointment.id)
+      return {
+        error: `Erro ao salvar a assinatura e o formulário: ${anamneseError.message}`,
+        success: false,
+      }
+    }
   }
 
   revalidatePath('/agendamentos')
@@ -383,9 +400,27 @@ export async function getAppointmentsByDate(dateStr: string) {
 
 export async function updateAnamnese(
   appointmentId: string,
-  campos: Record<string, unknown>
+  campos: Record<string, unknown>,
+  opts?: { onlyPending?: boolean; reassign?: boolean }
 ): Promise<{ error?: string }> {
   const supabase = await createClient()
+
+  if (opts?.onlyPending) {
+    const { data: appointment, error: apptError } = await supabase
+      .from('apontamentos')
+      .select('status')
+      .eq('id', appointmentId)
+      .single()
+
+    if (apptError) return { error: apptError.message }
+
+    if (appointment.status !== 'Pendente') {
+      return {
+        error:
+          'Não é possível editar o formulário: o agendamento não está mais com status Pendente.',
+      }
+    }
+  }
 
   const { data: existing, error: fetchError } = await supabase
     .from('anamneses')
@@ -399,9 +434,15 @@ export async function updateAnamnese(
   const current = (existing.campos_json as Record<string, unknown>) || {}
   const merged = { ...current, ...campos }
 
+  const payload: Record<string, unknown> = { campos_json: merged }
+  if (opts?.reassign) {
+    payload.aceite_digital = true
+    payload.aceito_em = new Date().toISOString()
+  }
+
   const { error } = await supabase
     .from('anamneses')
-    .update({ campos_json: merged })
+    .update(payload)
     .eq('apontamento_id', appointmentId)
 
   if (error) return { error: error.message }

@@ -16,6 +16,7 @@ export default function SignaturePad({
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [hasDrawn, setHasDrawn] = useState(false)
+  const hasInk = useRef(false)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -30,26 +31,18 @@ export default function SignaturePad({
     ctx.lineJoin = 'round'
   }, [width, height])
 
-  const getPos = useCallback((e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const getPos = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current!
     const rect = canvas.getBoundingClientRect()
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
-
-    if ('touches' in e) {
-      const touch = e.touches[0]
-      return {
-        x: (touch.clientX - rect.left) * scaleX,
-        y: (touch.clientY - rect.top) * scaleY,
-      }
-    }
     return {
       x: (e.clientX - rect.left) * scaleX,
       y: (e.clientY - rect.top) * scaleY,
     }
   }, [])
 
-  const startDrawing = useCallback((e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const startDrawing = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     e.preventDefault()
     const canvas = canvasRef.current!
     const ctx = canvas.getContext('2d')!
@@ -59,7 +52,7 @@ export default function SignaturePad({
     setIsDrawing(true)
   }, [getPos])
 
-  const draw = useCallback((e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const draw = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     e.preventDefault()
     if (!isDrawing) return
     const canvas = canvasRef.current!
@@ -67,15 +60,30 @@ export default function SignaturePad({
     const pos = getPos(e)
     ctx.lineTo(pos.x, pos.y)
     ctx.stroke()
+    hasInk.current = true
   }, [isDrawing, getPos])
 
   const stopDrawing = useCallback(() => {
     if (!isDrawing) return
     setIsDrawing(false)
-    setHasDrawn(true)
     const canvas = canvasRef.current!
+    const ctx = canvas.getContext('2d')!
+    const { data } = ctx.getImageData(0, 0, width, height)
+    let ink = 0
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i] < 240 || data[i + 1] < 240 || data[i + 2] < 240) {
+        ink++
+        if (ink > 20) break
+      }
+    }
+    if (!hasInk.current && ink <= 20) {
+      onClear()
+      return
+    }
+    hasInk.current = false
+    setHasDrawn(true)
     onSign(canvas.toDataURL('image/png'))
-  }, [isDrawing, onSign])
+  }, [isDrawing, onSign, onClear, width, height])
 
   const handleClear = useCallback(() => {
     const canvas = canvasRef.current!
@@ -84,6 +92,7 @@ export default function SignaturePad({
     ctx.fillRect(0, 0, width, height)
     ctx.strokeStyle = '#1a1a1a'
     ctx.lineWidth = 2
+    hasInk.current = false
     setHasDrawn(false)
     onClear()
   }, [width, height, onClear])
@@ -94,13 +103,11 @@ export default function SignaturePad({
         ref={canvasRef}
         width={width}
         height={height}
-        onMouseDown={startDrawing}
-        onMouseMove={draw}
-        onMouseUp={stopDrawing}
-        onMouseLeave={stopDrawing}
-        onTouchStart={startDrawing}
-        onTouchMove={draw}
-        onTouchEnd={stopDrawing}
+        onPointerDown={startDrawing}
+        onPointerMove={draw}
+        onPointerUp={stopDrawing}
+        onPointerLeave={stopDrawing}
+        onPointerCancel={stopDrawing}
         className="w-full rounded-xl border-2 border-dashed border-zinc-300 bg-white cursor-crosshair touch-none"
         style={{ aspectRatio: `${width}/${height}` }}
       />

@@ -2,6 +2,16 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import ModalEditarFormulario from './ModalEditarFormulario'
+
+interface AnamneseData {
+  id: string
+  formulario_template_id: string | null
+  campos_json: Record<string, unknown> | null
+  aceite_digital: boolean | null
+  aceito_em: string | null
+  formulario_templates: { nome: string; perguntas_json: string } | null
+}
 
 interface Agendamento {
   id: string
@@ -12,6 +22,7 @@ interface Agendamento {
   patient_id: string
   servicos: { nome: string; preco: number } | null
   usuarios: { nome: string; email: string } | null
+  anamneses: AnamneseData[] | null
 }
 
 interface Servico {
@@ -48,6 +59,7 @@ export default function AgendamentosList({
   const [filterDate, setFilterDate] = useState('')
   const [filterService, setFilterService] = useState('')
   const [filterStatus, setFilterStatus] = useState('')
+  const [editingAppointment, setEditingAppointment] = useState<Agendamento | null>(null)
 
   const filtered = useMemo(() => {
     return agendamentos.filter((a) => {
@@ -193,7 +205,10 @@ export default function AgendamentosList({
           <p className="text-xs text-zinc-400">
             {filtered.length} agendamento{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
           </p>
-          {filtered.map((agendamento) => (
+          {filtered.map((agendamento) => {
+            const hasForm = agendamento.anamneses && agendamento.anamneses.length > 0
+            const canEditForm = agendamento.status === 'Pendente' && hasForm
+            return (
             <div
               key={agendamento.id}
               className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200 sm:p-5"
@@ -229,16 +244,33 @@ export default function AgendamentosList({
                     </p>
                   )}
                 </div>
-                <span
-                  className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
-                    STATUS_COLORS[agendamento.status] || 'bg-zinc-100 text-zinc-600'
-                  }`}
-                >
-                  {STATUS_LABELS[agendamento.status] || agendamento.status}
-                </span>
+                <div className="shrink-0 flex flex-col items-end gap-2">
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-medium ${
+                      STATUS_COLORS[agendamento.status] || 'bg-zinc-100 text-zinc-600'
+                    }`}
+                  >
+                    {STATUS_LABELS[agendamento.status] || agendamento.status}
+                  </span>
+                  {canEditForm && (
+                    <button
+                      type="button"
+                      onClick={() => setEditingAppointment(agendamento)}
+                      className="rounded-xl border border-[#C4917B]/30 bg-white px-3 py-1.5 text-xs font-semibold text-[#C4917B] shadow-sm transition-all duration-200 hover:bg-[#C4917B]/10 active:scale-[0.98]"
+                    >
+                      ✏️ Revisar Formulário
+                    </button>
+                  )}
+                  {agendamento.status === 'Pendente' && hasForm && (
+                    <span className="rounded-full px-2.5 py-0.5 text-[10px] font-medium bg-emerald-50 text-emerald-700">
+                      Formulário preenchido
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       ) : (
         <div className="rounded-2xl border border-zinc-200 bg-white p-12 text-center shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
@@ -248,6 +280,15 @@ export default function AgendamentosList({
               : 'Nenhum agendamento encontrado.'}
           </p>
         </div>
+      )}
+
+      {/* Modal de revisão/edição do formulário */}
+      {editingAppointment && (
+        <ModalEditarFormulario
+          appointment={editingAppointment}
+          onClose={() => setEditingAppointment(null)}
+          onSaved={() => setEditingAppointment(null)}
+        />
       )}
     </div>
   )

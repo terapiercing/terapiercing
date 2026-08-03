@@ -30,7 +30,9 @@ export default async function AgendamentosPage() {
   // Admin vê todos, cliente vê apenas os seus
   let query = supabase
     .from('apontamentos')
-    .select('id, data, hora, status, notas, patient_id, servicos(nome, preco), usuarios(nome, email)')
+    .select(
+      'id, data, hora, status, notas, patient_id, servicos(nome, preco), usuarios(nome, email), anamneses(id, formulario_template_id, campos_json, aceite_digital, aceito_em, formulario_templates(nome, perguntas_json))'
+    )
 
   if (!isAdmin) {
     query = query.eq('patient_id', usuario.id)
@@ -49,6 +51,14 @@ export default async function AgendamentosPage() {
         patient_id: string
         servicos: { nome: string; preco: number } | null
         usuarios: { nome: string; email: string } | null
+        anamneses: Array<{
+          id: string
+          formulario_template_id: string | null
+          campos_json: Record<string, unknown> | null
+          aceite_digital: boolean | null
+          aceito_em: string | null
+          formulario_templates: { nome: string; perguntas_json: string } | null
+        }> | null
       }>}
       servicos={(servicos || []) as Array<{ id: string; nome: string }>}
       isAdmin={isAdmin}
