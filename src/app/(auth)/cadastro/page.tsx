@@ -4,6 +4,7 @@ import { useActionState, Suspense, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { signup } from '@/lib/actions/auth'
 import Link from 'next/link'
+import { useConfig } from '@/lib/config-context'
 
 function formatCpf(value: string): string {
   const digits = value.replace(/\D/g, '').slice(0, 11)
@@ -18,13 +19,14 @@ function CadastroForm() {
   const redirectTo = searchParams.get('redirectTo') || '/dashboard'
   const [state, formAction, pending] = useActionState(signup, undefined)
   const cpfRef = useRef<HTMLInputElement>(null)
+  const { nomeClinica } = useConfig()
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#FDFAF8] py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-lg space-y-8 bg-white p-8 rounded-3xl border border-zinc-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
         <div className="text-center">
-          <Link href="/" className="font-serif text-4xl tracking-tight text-[#D4AF37] transition-opacity hover:opacity-80">
-            RBClinic
+          <Link href="/" className="font-serif text-4xl tracking-tight text-secondary transition-opacity hover:opacity-80">
+            {nomeClinica}
           </Link>
           <h2 className="mt-6 text-2xl font-semibold text-zinc-800">
             Crie sua conta
@@ -40,14 +42,14 @@ function CadastroForm() {
           <div className="space-y-4">
             <div>
               <label htmlFor="nome" className="block text-sm font-medium text-zinc-700">
-                Nome Completo <span className="text-[#C4917B]">*</span>
+                Nome Completo <span className="text-primary">*</span>
               </label>
               <input
                 id="nome"
                 name="nome"
                 type="text"
                 required
-                className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15"
                 placeholder="Seu nome completo"
               />
             </div>
@@ -60,7 +62,7 @@ function CadastroForm() {
                 id="usuario"
                 name="usuario"
                 type="text"
-                className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15"
                 placeholder="Nome de usuário para login"
               />
             </div>
@@ -68,28 +70,28 @@ function CadastroForm() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-zinc-700">
-                  Email <span className="text-[#C4917B]">*</span>
+                  Email <span className="text-primary">*</span>
                 </label>
                 <input
                   id="email"
                   name="email"
                   type="email"
                   required
-                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
+                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15"
                   placeholder="seu@email.com"
                 />
               </div>
 
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-zinc-700">
-                  Senha <span className="text-[#C4917B]">*</span>
+                  Senha <span className="text-primary">*</span>
                 </label>
                 <input
                   id="password"
                   name="password"
                   type="password"
                   required
-                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
+                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15"
                   placeholder="Mínimo 6 caracteres"
                 />
               </div>
@@ -98,14 +100,14 @@ function CadastroForm() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label htmlFor="telefone" className="block text-sm font-medium text-zinc-700">
-                  Telefone <span className="text-[#C4917B]">*</span>
+                  Telefone <span className="text-primary">*</span>
                 </label>
                 <input
                   id="telefone"
                   name="telefone"
                   type="tel"
                   required
-                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
+                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15"
                   placeholder="(11) 99999-9999"
                 />
               </div>
@@ -125,7 +127,7 @@ function CadastroForm() {
                       cpfRef.current.value = formatCpf(e.target.value)
                     }
                   }}
-                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
+                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15"
                   placeholder="000.000.000-00"
                 />
               </div>
@@ -139,7 +141,7 @@ function CadastroForm() {
                 id="nascimento"
                 name="nascimento"
                 type="date"
-                className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15"
               />
             </div>
 
@@ -152,7 +154,7 @@ function CadastroForm() {
                   id="endereco"
                   name="endereco"
                   type="text"
-                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
+                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15"
                   placeholder="Rua, Avenida..."
                 />
               </div>
@@ -165,7 +167,7 @@ function CadastroForm() {
                   id="numero"
                   name="numero"
                   type="text"
-                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
+                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15"
                   placeholder="Nº"
                 />
               </div>
@@ -180,7 +182,7 @@ function CadastroForm() {
                   id="bairro"
                   name="bairro"
                   type="text"
-                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
+                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15"
                   placeholder="Bairro"
                 />
               </div>
@@ -193,7 +195,7 @@ function CadastroForm() {
                   id="cidade"
                   name="cidade"
                   type="text"
-                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15"
+                  className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15"
                   placeholder="Cidade"
                 />
               </div>
@@ -209,7 +211,7 @@ function CadastroForm() {
           <button
             type="submit"
             disabled={pending}
-            className="w-full rounded-xl bg-[#C4917B] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] focus:ring-2 focus:ring-[#C4917B]/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark focus:ring-2 focus:ring-primary/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {pending ? 'Criando conta...' : 'Cadastrar'}
           </button>
@@ -219,7 +221,7 @@ function CadastroForm() {
           Já tem uma conta?{' '}
           <Link
             href={`/login?redirectTo=${encodeURIComponent(redirectTo)}`}
-            className="font-semibold text-[#C4917B] transition-opacity hover:opacity-80"
+            className="font-semibold text-primary transition-opacity hover:opacity-80"
           >
             Faça login
           </Link>
@@ -231,7 +233,7 @@ function CadastroForm() {
 
 export default function CadastroPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-[#FDFAF8] px-4 text-zinc-500 font-medium">Carregando...</div>}>
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-background px-4 text-zinc-500 font-medium">Carregando...</div>}>
       <CadastroForm />
     </Suspense>
   )

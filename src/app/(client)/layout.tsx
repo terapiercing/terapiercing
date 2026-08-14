@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { getConfiguracao } from '@/lib/config'
 import Link from 'next/link'
 import { logout } from '@/lib/actions/auth'
 import MobileNav from './MobileNav'
@@ -10,6 +11,7 @@ export default async function ClientLayout({
   children: React.ReactNode
 }) {
   const supabase = await createClient()
+  const config = await getConfiguracao()
   const { data } = await supabase.auth.getUser()
 
   if (!data?.user) {
@@ -39,14 +41,14 @@ export default async function ClientLayout({
   ]
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#FDFAF8]">
+    <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-50 border-b border-zinc-100 bg-white/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
           <Link
             href="/dashboard"
-            className="font-serif text-2xl tracking-tight text-[#D4AF37] transition-opacity hover:opacity-80"
+            className="font-serif text-2xl tracking-tight text-secondary transition-opacity hover:opacity-80"
           >
-            RBClinic
+            {config.nomeClinica}
           </Link>
 
           {/* Desktop nav */}
@@ -55,7 +57,7 @@ export default async function ClientLayout({
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition-all duration-200 hover:bg-[#F5E6DF] hover:text-[#C4917B]"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition-all duration-200 hover:bg-primary-light hover:text-primary"
               >
                 {link.label}
               </Link>

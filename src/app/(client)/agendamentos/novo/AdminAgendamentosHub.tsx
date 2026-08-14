@@ -11,6 +11,7 @@ import {
 } from '@/lib/actions/appointments'
 import NovoAgendamentoForm from './NovoAgendamentoForm'
 import ConsultarAgendamentosTab from './ConsultarAgendamentosTab'
+import { useConfig } from '@/lib/config-context'
 
 interface TodayAppointment {
   id: string
@@ -89,6 +90,7 @@ export default function AdminAgendamentosHub({
   todayDate: string
 }) {
   const router = useRouter()
+  const { nomeClinica } = useConfig()
   const [activeTab, setActiveTab] = useState<Tab>('agenda')
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
@@ -125,7 +127,7 @@ export default function AdminAgendamentosHub({
         const servico = appt.servicos?.nome || 'Procedimento'
         const mensagem = encodeURIComponent(
           `Olá ${appt.usuarios!.nome}! ✅\n\n` +
-          `Seu agendamento na RBClinic foi confirmado!\n\n` +
+          `Seu agendamento na ${nomeClinica} foi confirmado!\n\n` +
           `📅 Data: ${dataFormatada}\n` +
           `🕐 Horário: ${appt.hora.slice(0, 5)}\n` +
           `💆 Procedimento: ${servico}\n\n` +
@@ -203,7 +205,7 @@ export default function AdminAgendamentosHub({
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C4917B]">Painel Admin</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Painel Admin</p>
         <h1 className="text-3xl font-semibold text-zinc-800">Agendamentos</h1>
         <p className="mt-1 text-zinc-500">
           Consulte agendamentos passados e futuros, gerencie a agenda do dia, bloqueios e crie novos agendamentos.
@@ -219,7 +221,7 @@ export default function AdminAgendamentosHub({
               onClick={() => setActiveTab(tab.key)}
               className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all duration-200 whitespace-nowrap sm:px-5 ${
                 activeTab === tab.key
-                  ? 'border-[#C4917B] text-[#C4917B]'
+                  ? 'border-primary text-primary'
                   : 'border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300'
               }`}
             >
@@ -256,7 +258,7 @@ export default function AdminAgendamentosHub({
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="space-y-1 min-w-0 flex-1">
                       <div className="flex items-center gap-3">
-                        <span className="text-lg font-bold text-[#C4917B]">
+                        <span className="text-lg font-bold text-primary">
                           {appt.hora.slice(0, 5)}
                         </span>
                         <span className={`rounded-full px-3 py-1 text-xs font-medium border ${STATUS_COLORS[appt.status] || 'bg-zinc-100 text-zinc-600 border-zinc-200'}`}>
@@ -285,7 +287,7 @@ export default function AdminAgendamentosHub({
                         onChange={(e) =>
                           handleStatusChange(appt.id, e.target.value as AppointmentStatus)
                         }
-                        className="rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-700 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none disabled:opacity-50 transition-all duration-200"
+                        className="rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-700 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none disabled:opacity-50 transition-all duration-200"
                       >
                         {STATUS_OPTIONS.map((opt) => (
                           <option key={opt.value} value={opt.value}>
@@ -348,7 +350,7 @@ export default function AdminAgendamentosHub({
                 type="date"
                 value={bloqueioDate}
                 onChange={(e) => handleBloqueioDateChange(e.target.value)}
-                className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+                className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
               />
             </div>
 
@@ -363,7 +365,7 @@ export default function AdminAgendamentosHub({
                     value="dia"
                     checked={bloqueioType === 'dia'}
                     onChange={() => setBloqueioType('dia')}
-                    className="accent-[#C4917B]"
+                    className="accent-primary"
                   />
                   <span className="text-sm text-zinc-700">Dia inteiro</span>
                 </label>
@@ -374,7 +376,7 @@ export default function AdminAgendamentosHub({
                     value="horario"
                     checked={bloqueioType === 'horario'}
                     onChange={() => setBloqueioType('horario')}
-                    className="accent-[#C4917B]"
+                    className="accent-primary"
                   />
                   <span className="text-sm text-zinc-700">Horário específico</span>
                 </label>
@@ -391,7 +393,7 @@ export default function AdminAgendamentosHub({
                     name="hora_inicio"
                     value={bloqueioHoraInicio}
                     onChange={(e) => setBloqueioHoraInicio(e.target.value)}
-                    className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+                    className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
                   />
                 </div>
                 <div>
@@ -401,7 +403,7 @@ export default function AdminAgendamentosHub({
                     name="hora_fim"
                     value={bloqueioHoraFim}
                     onChange={(e) => setBloqueioHoraFim(e.target.value)}
-                    className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+                    className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
                   />
                 </div>
               </div>
@@ -416,7 +418,7 @@ export default function AdminAgendamentosHub({
                 value={bloqueioMotivo}
                 onChange={(e) => setBloqueioMotivo(e.target.value)}
                 placeholder="Ex: Feriado, almoço, reunião..."
-                className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+                className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
               />
             </div>
 
@@ -433,7 +435,7 @@ export default function AdminAgendamentosHub({
 
             <button
               type="submit"
-              className="rounded-xl bg-[#C4917B] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98]"
+              className="rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark active:scale-[0.98]"
             >
               Criar Bloqueio
             </button>

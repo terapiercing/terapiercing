@@ -73,7 +73,7 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
         <div />
         <Link
           href="/clientes/novo"
-          className="inline-flex justify-center items-center rounded-xl bg-[#C4917B] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98]"
+          className="inline-flex justify-center items-center rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark active:scale-[0.98]"
         >
           Novo Cliente
         </Link>
@@ -86,7 +86,7 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Buscar por nome, email, CPF, telefone, cidade ou bairro..."
-          className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+          className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
         />
       </div>
 
@@ -115,7 +115,7 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-medium ${
                         usuario.role === 'admin'
-                          ? 'bg-[#D4AF37]/10 text-[#D4AF37]'
+                          ? 'bg-secondary/10 text-secondary'
                           : 'bg-zinc-100 text-zinc-600'
                       }`}
                     >
@@ -168,7 +168,7 @@ export default function ClientesList({ usuarios }: { usuarios: Usuario[] }) {
                   <button
                     type="button"
                     onClick={() => setHistoryUser(usuario)}
-                    className="rounded-xl bg-[#C4917B]/10 px-4 py-2 text-xs font-medium text-[#C4917B] shadow-sm transition-all duration-200 hover:bg-[#C4917B]/20 active:scale-[0.98]"
+                    className="rounded-xl bg-primary/10 px-4 py-2 text-xs font-medium text-primary shadow-sm transition-all duration-200 hover:bg-primary/20 active:scale-[0.98]"
                   >
                     Histórico
                   </button>

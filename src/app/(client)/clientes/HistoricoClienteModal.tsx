@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { getHistoricoCliente, type HistoricoCliente } from '@/lib/actions/auth'
 import { jsPDF } from 'jspdf'
+import { useConfig } from '@/lib/config-context'
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString('pt-BR')
@@ -33,7 +34,8 @@ function formatJsonFields(obj: Record<string, unknown>): string {
 
 function gerarPdfAnamnese(
   patientName: string,
-  form: HistoricoCliente['formularios'][0]
+  form: HistoricoCliente['formularios'][0],
+  nomeClinica: string
 ) {
   const doc = new jsPDF()
   const pageWidth = doc.internal.pageSize.getWidth()
@@ -42,7 +44,7 @@ function gerarPdfAnamnese(
   // Header
   doc.setFontSize(18)
   doc.setFont('helvetica', 'bold')
-  doc.text('RBClinic', pageWidth / 2, y, { align: 'center' })
+  doc.text(nomeClinica, pageWidth / 2, y, { align: 'center' })
   y += 10
 
   doc.setFontSize(12)
@@ -141,7 +143,7 @@ function gerarPdfAnamnese(
     doc.setFontSize(8)
     doc.setTextColor(150)
     doc.text(
-      `RBClinic - Ficha de Anamnese - Pagina ${i} de ${totalPages}`,
+      `${nomeClinica} - Ficha de Anamnese - Pagina ${i} de ${totalPages}`,
       pageWidth / 2,
       doc.internal.pageSize.getHeight() - 10,
       { align: 'center' }
@@ -176,6 +178,7 @@ export default function HistoricoClienteModal({
   patientName: string
   onClose: () => void
 }) {
+  const { nomeClinica } = useConfig()
   const [data, setData] = useState<HistoricoCliente | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -243,7 +246,7 @@ export default function HistoricoClienteModal({
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-center">
-                    <p className="text-2xl font-bold text-[#C4917B]">
+                    <p className="text-2xl font-bold text-primary">
                       {data.totalAtendimentos}
                     </p>
                     <p className="text-xs text-zinc-500 mt-1">Total</p>
@@ -287,7 +290,7 @@ export default function HistoricoClienteModal({
                             Último: {formatDate(proc.ultimaData)}
                           </p>
                         </div>
-                        <span className="rounded-full bg-[#C4917B]/10 px-3 py-1 text-xs font-semibold text-[#C4917B]">
+                        <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
                           {proc.quantidade}x
                         </span>
                       </div>
@@ -380,8 +383,8 @@ export default function HistoricoClienteModal({
 
                             <button
                               type="button"
-                              onClick={() => gerarPdfAnamnese(patientName, form)}
-                              className="inline-flex items-center gap-2 rounded-xl border border-[#C4917B] bg-white px-4 py-2 text-xs font-semibold text-[#C4917B] hover:bg-[#C4917B]/5 transition-all duration-200 active:scale-[0.98]"
+                              onClick={() => gerarPdfAnamnese(patientName, form, nomeClinica)}
+                              className="inline-flex items-center gap-2 rounded-xl border border-primary bg-white px-4 py-2 text-xs font-semibold text-primary hover:bg-primary/5 transition-all duration-200 active:scale-[0.98]"
                             >
                               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />

@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useEffect, useActionState, useTransition } from 'react'
-import { upsertServico, deleteServico, updateDisponibilidades } from '@/lib/actions/admin'
+import { upsertServico, deleteServico, updateDisponibilidades, updateConfiguracao } from '@/lib/actions/admin'
+import { THEMES, THEME_IDS } from '@/lib/themes'
+import type { AppConfig } from '@/lib/config-shared'
 import TemplateModal from './TemplateModal'
 
 interface Servico {
@@ -44,9 +46,11 @@ const DIAS_SEMANA = [
 export default function ConfiguracoesForm({
   initialServicos,
   initialDisponibilidades,
+  initialConfig,
 }: {
   initialServicos: Servico[]
   initialDisponibilidades: Disponibilidade[]
+  initialConfig: AppConfig
 }) {
   const [servicos] = useState<Servico[]>(initialServicos)
   const [disponibilidades, setDisponibilidades] = useState<Disponibilidade[]>(() => {
@@ -71,6 +75,18 @@ export default function ConfiguracoesForm({
   const [templates, setTemplates] = useState<Template[]>([])
   const [isTemplateModalOpen, setTemplateModalOpen] = useState(false)
   const [editingTemplate, setEditingTemplate] = useState<Template | null>(null)
+  const [selectedTema, setSelectedTema] = useState(initialConfig.tema)
+
+  const [stateConfig, actionConfig, pendingConfig] = useActionState(
+    async (prevState: { error: string; success?: boolean } | undefined, formData: FormData) => {
+      const res = await updateConfiguracao(prevState, formData)
+      if (res.success) {
+        window.location.reload()
+      }
+      return res
+    },
+    undefined as { error: string; success?: boolean } | undefined
+  )
 
   useEffect(() => {
     const ctrl = new AbortController()
@@ -186,6 +202,79 @@ export default function ConfiguracoesForm({
     <div className="grid gap-8 lg:grid-cols-3">
       {/* Services + Templates */}
       <div className="lg:col-span-2 space-y-6">
+        {/* Aparência da Clínica */}
+        <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+          <h2 className="text-xl font-semibold text-zinc-800 font-serif">Aparência da Clínica</h2>
+          <p className="text-xs text-zinc-400 mt-1 mb-5">
+            Nome exibido nas telas e esquema de cores do sistema.
+          </p>
+
+          <form action={actionConfig} className="space-y-5">
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-zinc-700">Nome da Clínica</label>
+              <input
+                type="text"
+                name="nome_clinica"
+                required
+                defaultValue={initialConfig.nomeClinica}
+                maxLength={60}
+                className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-primary focus:outline-none"
+                placeholder="Ex: RBClinic"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <span className="block text-sm font-medium text-zinc-700">Tema de Cores</span>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {THEME_IDS.map((id) => {
+                  const theme = THEMES[id]
+                  const isSelected = selectedTema === id
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setSelectedTema(id)}
+                      className={`rounded-xl border p-3 text-left transition-all duration-200 ${isSelected ? 'border-primary ring-2 ring-primary/30' : 'border-zinc-200 hover:border-zinc-300'}`}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <span className="h-4 w-4 rounded-full" style={{ backgroundColor: theme.colors.primary }} />
+                        <span className="h-4 w-4 rounded-full" style={{ backgroundColor: theme.colors.secondary }} />
+                        <span className="h-4 w-4 rounded-full" style={{ backgroundColor: theme.colors.primaryDark }} />
+                        <span
+                          className="h-4 w-4 rounded-full"
+                          style={{ backgroundColor: theme.colors.background, border: '1px solid #E4E4E7' }}
+                        />
+                      </div>
+                      <p className="mt-2 text-sm font-semibold text-zinc-800">{theme.label}</p>
+                    </button>
+                  )
+                })}
+              </div>
+              <input type="hidden" name="tema" value={selectedTema} />
+            </div>
+
+            {stateConfig?.error && (
+              <div className="rounded-xl bg-red-50 px-4 py-2 text-sm text-red-600 border border-red-200">
+                {stateConfig.error}
+              </div>
+            )}
+
+            {stateConfig?.success && (
+              <div className="rounded-xl bg-green-50 px-4 py-2 text-sm text-green-700 border border-green-200">
+                Configuração salva com sucesso!
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={pendingConfig}
+              className="w-full sm:w-auto rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark active:scale-[0.98] disabled:opacity-50"
+            >
+              {pendingConfig ? 'Salvando...' : 'Salvar Configuração'}
+            </button>
+          </form>
+        </div>
+
         {/* Serviços */}
         <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
@@ -193,7 +282,7 @@ export default function ConfiguracoesForm({
             <div className="flex gap-2">
               <button
                 onClick={handleNovoServico}
-                className="rounded-xl bg-[#C4917B] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98]"
+                className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-primary-dark active:scale-[0.98]"
               >
                 Novo Serviço
               </button>
@@ -234,7 +323,7 @@ export default function ConfiguracoesForm({
                 <div className="flex items-center gap-3 shrink-0">
                   <button
                     onClick={() => handleEditServico(s)}
-                    className="text-sm font-medium text-[#C4917B] hover:underline"
+                    className="text-sm font-medium text-primary hover:underline"
                   >
                     Editar
                   </button>
@@ -260,7 +349,7 @@ export default function ConfiguracoesForm({
             </div>
             <button
               onClick={handleNovoTemplate}
-              className="rounded-xl bg-[#C4917B] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98]"
+              className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-primary-dark active:scale-[0.98]"
             >
               Novo Modelo
             </button>
@@ -284,7 +373,7 @@ export default function ConfiguracoesForm({
                   </div>
                   <button
                     onClick={() => handleEditTemplate(t)}
-                    className="text-sm font-medium text-[#C4917B] hover:underline shrink-0"
+                    className="text-sm font-medium text-primary hover:underline shrink-0"
                   >
                     Editar
                   </button>
@@ -311,7 +400,7 @@ export default function ConfiguracoesForm({
                     name="nome"
                     required
                     defaultValue={editingServico.nome || ''}
-                    className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-[#C4917B] focus:outline-none"
+                    className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-primary focus:outline-none"
                     placeholder="Ex: Limpeza de Pele"
                   />
                 </div>
@@ -324,7 +413,7 @@ export default function ConfiguracoesForm({
                     step="0.01"
                     required
                     defaultValue={editingServico.preco || 0}
-                    className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-[#C4917B] focus:outline-none"
+                    className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-primary focus:outline-none"
                   />
                 </div>
               </div>
@@ -337,7 +426,7 @@ export default function ConfiguracoesForm({
                     name="duracao_min"
                     required
                     defaultValue={editingServico.duracao_min || 30}
-                    className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-[#C4917B] focus:outline-none"
+                    className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-primary focus:outline-none"
                   />
                 </div>
 
@@ -347,7 +436,7 @@ export default function ConfiguracoesForm({
                     id="ativo"
                     name="ativo"
                     defaultChecked={editingServico.ativo ?? true}
-                    className="rounded text-[#C4917B] focus:ring-[#C4917B]"
+                    className="rounded text-primary focus:ring-primary"
                   />
                   <label htmlFor="ativo" className="text-sm font-medium text-zinc-700">
                     Serviço Ativo (visível para agendamentos)
@@ -361,7 +450,7 @@ export default function ConfiguracoesForm({
                   name="descricao"
                   rows={2}
                   defaultValue={editingServico.descricao || ''}
-                  className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-[#C4917B] focus:outline-none resize-none"
+                  className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-primary focus:outline-none resize-none"
                   placeholder="Explicação curta do serviço..."
                 />
               </div>
@@ -375,7 +464,7 @@ export default function ConfiguracoesForm({
                     name="exige_formulario"
                     checked={exigeForm}
                     onChange={e => setExigeForm(e.target.checked)}
-                    className="rounded text-[#C4917B] focus:ring-[#C4917B]"
+                    className="rounded text-primary focus:ring-primary"
                   />
                   <label htmlFor="exige_formulario" className="text-sm font-semibold text-zinc-800">
                     Exige preenchimento de Formulário Prévio (Anamnese)?
@@ -388,7 +477,7 @@ export default function ConfiguracoesForm({
                     <select
                       name="formulario_recorrencia"
                       defaultValue={editingServico.formulario_recorrencia || 'primeira_vez'}
-                      className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-[#C4917B] focus:outline-none"
+                      className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-primary focus:outline-none"
                     >
                       <option value="primeira_vez">Apenas na primeira vez que o cliente for fazer o atendimento</option>
                       <option value="sempre">Todas as vezes (a cada novo agendamento)</option>
@@ -402,7 +491,7 @@ export default function ConfiguracoesForm({
                     <select
                       name="formulario_template_id"
                       defaultValue={editingServico.formulario_template_id || ''}
-                      className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-[#C4917B] focus:outline-none"
+                      className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-primary focus:outline-none"
                     >
                       <option value="">Selecione um modelo</option>
                       {templates.map(t => (
@@ -430,7 +519,7 @@ export default function ConfiguracoesForm({
                 <button
                   type="submit"
                   disabled={pendingServico}
-                  className="rounded-xl bg-[#C4917B] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98]"
+                  className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-primary-dark active:scale-[0.98]"
                 >
                   {pendingServico ? 'Salvando...' : 'Salvar Serviço'}
                 </button>
@@ -457,7 +546,7 @@ export default function ConfiguracoesForm({
                     type="checkbox"
                     checked={d.ativo}
                     onChange={e => handleDispChange(index, 'ativo', e.target.checked)}
-                    className="rounded text-[#C4917B] focus:ring-[#C4917B]"
+                    className="rounded text-primary focus:ring-primary"
                   />
                 </div>
 
@@ -467,14 +556,14 @@ export default function ConfiguracoesForm({
                       type="time"
                       value={d.hora_inicio.slice(0, 5)}
                       onChange={e => handleDispChange(index, 'hora_inicio', e.target.value)}
-                      className="flex-1 rounded-xl border border-zinc-200 px-2 py-1 text-xs text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-[#C4917B] focus:outline-none"
+                      className="flex-1 rounded-xl border border-zinc-200 px-2 py-1 text-xs text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-primary focus:outline-none"
                     />
                     <span className="text-xs text-zinc-400">às</span>
                     <input
                       type="time"
                       value={d.hora_fim.slice(0, 5)}
                       onChange={e => handleDispChange(index, 'hora_fim', e.target.value)}
-                      className="flex-1 rounded-xl border border-zinc-200 px-2 py-1 text-xs text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-[#C4917B] focus:outline-none"
+                      className="flex-1 rounded-xl border border-zinc-200 px-2 py-1 text-xs text-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] focus:border-primary focus:outline-none"
                     />
                   </div>
                 )}
@@ -497,7 +586,7 @@ export default function ConfiguracoesForm({
           <button
             type="submit"
             disabled={isPendingDisp}
-            className="w-full rounded-xl bg-[#C4917B] py-2.5 text-sm font-semibold text-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98] disabled:opacity-50"
+            className="w-full rounded-xl bg-primary py-2.5 text-sm font-semibold text-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200 hover:bg-primary-dark active:scale-[0.98] disabled:opacity-50"
           >
             {isPendingDisp ? 'Atualizando...' : 'Atualizar Horários'}
           </button>

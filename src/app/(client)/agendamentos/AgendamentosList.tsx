@@ -91,7 +91,7 @@ export default function AgendamentosList({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C4917B]">Agendamentos</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Agendamentos</p>
           <h1 className="text-3xl font-semibold text-zinc-800">
             {isAdmin ? 'Todos os Agendamentos' : 'Meus Agendamentos'}
           </h1>
@@ -104,7 +104,7 @@ export default function AgendamentosList({
         <div>
           <Link
             href="/agendamentos/novo"
-            className="inline-flex justify-center items-center rounded-xl bg-[#C4917B] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98]"
+            className="inline-flex justify-center items-center rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark active:scale-[0.98]"
           >
             Novo Agendamento
           </Link>
@@ -125,7 +125,7 @@ export default function AgendamentosList({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Nome ou email do cliente..."
-                className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+                className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
               />
             </div>
           )}
@@ -139,7 +139,7 @@ export default function AgendamentosList({
               type="date"
               value={filterDate}
               onChange={(e) => setFilterDate(e.target.value)}
-              className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+              className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
             />
           </div>
 
@@ -151,7 +151,7 @@ export default function AgendamentosList({
             <select
               value={filterService}
               onChange={(e) => setFilterService(e.target.value)}
-              className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+              className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
             >
               <option value="">Todos</option>
               {servicos.map((s) => (
@@ -170,7 +170,7 @@ export default function AgendamentosList({
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+              className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
             >
               <option value="">Todos</option>
               {STATUS_OPTIONS.map((s) => (
@@ -192,7 +192,7 @@ export default function AgendamentosList({
               setFilterService('')
               setFilterStatus('')
             }}
-            className="text-xs font-medium text-[#C4917B] hover:underline"
+            className="text-xs font-medium text-primary hover:underline"
           >
             Limpar filtros
           </button>
@@ -231,7 +231,7 @@ export default function AgendamentosList({
                     às {agendamento.hora.slice(0, 5)}
                   </p>
                   {agendamento.servicos?.preco != null && (
-                    <p className="text-sm font-medium text-[#D4AF37]">
+                    <p className="text-sm font-medium text-secondary">
                       {new Intl.NumberFormat('pt-BR', {
                         style: 'currency',
                         currency: 'BRL',
@@ -256,7 +256,7 @@ export default function AgendamentosList({
                     <button
                       type="button"
                       onClick={() => setEditingAppointment(agendamento)}
-                      className="rounded-xl border border-[#C4917B]/30 bg-white px-3 py-1.5 text-xs font-semibold text-[#C4917B] shadow-sm transition-all duration-200 hover:bg-[#C4917B]/10 active:scale-[0.98]"
+                      className="rounded-xl border border-primary/30 bg-white px-3 py-1.5 text-xs font-semibold text-primary shadow-sm transition-all duration-200 hover:bg-primary/10 active:scale-[0.98]"
                     >
                       ✏️ Revisar Formulário
                     </button>

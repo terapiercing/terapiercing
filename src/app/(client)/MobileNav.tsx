@@ -52,7 +52,7 @@ export default function MobileNav({
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-600 transition-all duration-200 hover:bg-[#F5E6DF] hover:text-[#C4917B]"
+                className="block rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-600 transition-all duration-200 hover:bg-primary-light hover:text-primary"
               >
                 {link.label}
               </Link>

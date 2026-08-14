@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getConfiguracao } from '@/lib/config'
 import Link from 'next/link'
 
 const adminModules = [
@@ -7,7 +8,7 @@ const adminModules = [
     icon: '✨',
     title: 'Agendamentos',
     description: 'Agenda do dia, bloquear horários, criar e gerenciar agendamentos',
-    color: '#C4917B',
+    color: 'var(--primary)',
   },
   {
     href: '/agendamentos',
@@ -51,6 +52,7 @@ const adminModules = [
 
 export default async function Dashboard() {
   const supabase = await createClient()
+  const config = await getConfiguracao()
   const { data: userData } = await supabase.auth.getUser()
   const user = userData.user
 
@@ -88,11 +90,11 @@ export default async function Dashboard() {
     return (
       <div className="space-y-10">
         <div className="text-center space-y-2">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C4917B]">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
             Painel Administrativo
           </p>
-          <h1 className="font-serif text-3xl tracking-tight text-[#D4AF37] sm:text-4xl">
-            RBClinic
+          <h1 className="font-serif text-3xl tracking-tight text-secondary sm:text-4xl">
+            {config.nomeClinica}
           </h1>
         </div>
 
@@ -101,7 +103,7 @@ export default async function Dashboard() {
             <h3 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
               Total de Agendamentos
             </h3>
-            <p className="mt-3 text-3xl font-bold text-[#C4917B]">
+            <p className="mt-3 text-3xl font-bold text-primary">
               {agendamentosCount ?? 0}
             </p>
           </div>
@@ -135,10 +137,10 @@ export default async function Dashboard() {
             <Link
               key={mod.href}
               href={mod.href}
-              className="group relative flex flex-col items-center rounded-2xl border border-zinc-200 bg-white p-8 text-center shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] hover:border-[#C4917B]/30 active:scale-[0.98]"
+              className="group relative flex flex-col items-center rounded-2xl border border-zinc-200 bg-white p-8 text-center shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] hover:border-primary/30 active:scale-[0.98]"
             >
               <span className="text-4xl">{mod.icon}</span>
-              <h3 className="mt-4 text-lg font-semibold text-zinc-800 transition-colors duration-200 group-hover:text-[#C4917B]">
+              <h3 className="mt-4 text-lg font-semibold text-zinc-800 transition-colors duration-200 group-hover:text-primary">
                 {mod.title}
               </h3>
               <p className="mt-1.5 text-sm text-zinc-500 leading-relaxed">{mod.description}</p>
@@ -160,14 +162,14 @@ export default async function Dashboard() {
   return (
     <div className="space-y-8">
       <div className="space-y-1">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C4917B]">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
           Sua área pessoal
         </p>
         <h1 className="text-3xl font-semibold text-zinc-800">
           Olá, {usuario?.nome?.split(' ')[0] || 'Cliente'}!
         </h1>
         <p className="text-zinc-500">
-          Bem-vindo à RBClinic.
+          Bem-vindo à {config.nomeClinica}.
         </p>
       </div>
 
@@ -176,7 +178,7 @@ export default async function Dashboard() {
           <h3 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
             Total de Agendamentos
           </h3>
-          <p className="mt-3 text-3xl font-bold text-[#C4917B]">
+          <p className="mt-3 text-3xl font-bold text-primary">
             {agendamentosCount ?? 0}
           </p>
         </div>
@@ -208,7 +210,7 @@ export default async function Dashboard() {
       <div className="flex flex-col sm:flex-row gap-3">
         <Link
           href="/agendamentos"
-          className="rounded-xl bg-[#C4917B] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98] text-center"
+          className="rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark active:scale-[0.98] text-center"
         >
           Ver Agendamentos
         </Link>

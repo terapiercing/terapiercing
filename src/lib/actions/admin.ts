@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { isThemeId } from '@/lib/themes'
 
 export async function upsertServico(
   _prevState: { error: string; success?: boolean } | undefined,
@@ -58,7 +59,53 @@ export async function upsertServico(
   return { success: true, error: '' }
 }
 
-// New server actions for form templates
+export async function updateConfiguracao(
+  _prevState: { error: string; success?: boolean } | undefined,
+  formData: FormData
+) {
+  const supabase = await createClient()
+
+  const nomeClinica = ((formData.get('nome_clinica') as string) || '').trim()
+  const tema = formData.get('tema') as string
+
+  if (!nomeClinica) {
+    return { error: 'Informe o nome da clínica.' }
+  }
+
+  if (!isThemeId(tema)) {
+    return { error: 'Tema inválido. Selecione uma das opções disponíveis.' }
+  }
+
+  const { data: existing } = await supabase
+    .from('configuracao_temas')
+    .select('id')
+    .limit(1)
+    .maybeSingle()
+
+  const payload = { nome_clinica: nomeClinica, tema }
+
+  let error
+  if (existing?.id) {
+    const { error: err } = await supabase
+      .from('configuracao_temas')
+      .update(payload)
+      .eq('id', existing.id)
+    error = err
+  } else {
+    const { error: err } = await supabase
+      .from('configuracao_temas')
+      .insert(payload)
+    error = err
+  }
+
+  if (error) {
+    return { error: `Erro ao salvar configuração: ${error.message}` }
+  }
+
+  revalidatePath('/', 'layout')
+  return { success: true, error: '' }
+}
+
 export async function listTemplates() {
   const supabase = await createClient();
   const { data, error } = await supabase.from('formulario_templates').select('id, nome, descricao');

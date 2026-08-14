@@ -26,7 +26,7 @@ export default async function ClientesPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-semibold text-zinc-800">Clientes</h1>
-        <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#C4917B]">
+        <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-primary">
           Gerenciar clientes cadastrados no sistema.
         </p>
       </div>

@@ -98,7 +98,7 @@ export default function FormularioAnamnese({
         <button
           type="button"
           onClick={onCancel}
-          className="mt-3 text-sm font-medium text-[#C4917B] hover:underline"
+          className="mt-3 text-sm font-medium text-primary hover:underline"
         >
           Voltar
         </button>
@@ -109,7 +109,7 @@ export default function FormularioAnamnese({
   return (
     <div className="space-y-6 rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-[#C4917B]">Ficha de Anamnese</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-primary">Ficha de Anamnese</p>
         <h3 className="text-lg font-semibold text-zinc-800 mt-1">{template.nome}</h3>
         {template.descricao && (
           <p className="text-sm text-zinc-500 mt-1">{template.descricao}</p>
@@ -134,7 +134,7 @@ export default function FormularioAnamnese({
                   value={(value as string) || ''}
                   onChange={(e) => updateResposta(pergunta.id, e.target.value)}
                   required={pergunta.required}
-                  className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+                  className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
                 />
               )}
 
@@ -144,7 +144,7 @@ export default function FormularioAnamnese({
                   value={(value as string) || ''}
                   onChange={(e) => updateResposta(pergunta.id, e.target.value)}
                   required={pergunta.required}
-                  className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200 resize-none"
+                  className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200 resize-none"
                 />
               )}
 
@@ -154,7 +154,7 @@ export default function FormularioAnamnese({
                   value={(value as string) || ''}
                   onChange={(e) => updateResposta(pergunta.id, e.target.value)}
                   required={pergunta.required}
-                  className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+                  className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
                 />
               )}
 
@@ -164,7 +164,7 @@ export default function FormularioAnamnese({
                   value={(value as number) ?? ''}
                   onChange={(e) => updateResposta(pergunta.id, e.target.value ? Number(e.target.value) : '')}
                   required={pergunta.required}
-                  className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+                  className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
                 />
               )}
 
@@ -174,7 +174,7 @@ export default function FormularioAnamnese({
                     type="checkbox"
                     checked={!!value}
                     onChange={(e) => updateResposta(pergunta.id, e.target.checked)}
-                    className="rounded text-[#C4917B] focus:ring-[#C4917B]"
+                    className="rounded text-primary focus:ring-primary"
                   />
                   <span className="text-sm text-zinc-700">Sim</span>
                 </label>
@@ -185,7 +185,7 @@ export default function FormularioAnamnese({
                   value={(value as string) || ''}
                   onChange={(e) => updateResposta(pergunta.id, e.target.value)}
                   required={pergunta.required}
-                  className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+                  className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
                 >
                   <option value="">Selecione...</option>
                   {pergunta.options.map((opt, i) => (
@@ -211,7 +211,7 @@ export default function FormularioAnamnese({
                               updateResposta(pergunta.id, [...current, opt])
                             }
                           }}
-                          className="rounded text-[#C4917B] focus:ring-[#C4917B]"
+                          className="rounded text-primary focus:ring-primary"
                         />
                         <span className="text-sm text-zinc-700">{opt}</span>
                       </label>
@@ -227,7 +227,7 @@ export default function FormularioAnamnese({
                     const file = e.target.files?.[0]
                     if (file) updateResposta(pergunta.id, file.name)
                   }}
-                  className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+                  className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
                 />
               )}
             </div>
@@ -249,7 +249,7 @@ export default function FormularioAnamnese({
             type="checkbox"
             checked={aceite}
             onChange={(e) => setAceite(e.target.checked)}
-            className="mt-0.5 rounded text-[#C4917B] focus:ring-[#C4917B]"
+            className="mt-0.5 rounded text-primary focus:ring-primary"
           />
           <span className="text-sm text-zinc-600 leading-relaxed">
             Li e aceito as informações acima. Declaro que as informações fornecidas são verdadeiras e autorizo o procedimento.
@@ -269,7 +269,7 @@ export default function FormularioAnamnese({
           type="button"
           onClick={handleSubmit}
           disabled={!canSubmit}
-          className="flex-[2] rounded-xl bg-[#C4917B] py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex-[2] rounded-xl bg-primary py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark focus:ring-2 focus:ring-primary/15 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         >
           Confirmar e Assinar
         </button>

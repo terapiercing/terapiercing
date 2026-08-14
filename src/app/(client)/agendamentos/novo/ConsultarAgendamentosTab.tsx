@@ -9,6 +9,7 @@ import {
   type AppointmentStatus,
 } from '@/lib/actions/appointments'
 import ModalVerFormulario from './ModalVerFormulario'
+import { useConfig } from '@/lib/config-context'
 
 interface AnamneseData {
   id: string
@@ -54,6 +55,7 @@ const shiftDate = (dateStr: string, days: number) => {
 
 export default function ConsultarAgendamentosTab() {
   const router = useRouter()
+  const { nomeClinica } = useConfig()
   const [selectedDate, setSelectedDate] = useState(todayStr)
   const [appointments, setAppointments] = useState<ConsultedAppointment[]>([])
   const [loading, setLoading] = useState(true)
@@ -123,7 +125,7 @@ export default function ConsultarAgendamentosTab() {
         const servico = appt.servicos?.nome || 'Procedimento'
         const mensagem = encodeURIComponent(
           `Olá ${appt.usuarios.nome}! ✅\n\n` +
-            `Seu agendamento na RBClinic foi confirmado!\n\n` +
+            `Seu agendamento na ${nomeClinica} foi confirmado!\n\n` +
             `📅 Data: ${dataFormatada}\n` +
             `🕐 Horário: ${appt.hora.slice(0, 5)}\n` +
             `💆 Procedimento: ${servico}\n\n` +
@@ -181,7 +183,7 @@ export default function ConsultarAgendamentosTab() {
               type="date"
               value={selectedDate}
               onChange={(e) => changeDate(e.target.value || todayStr())}
-              className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+              className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
             />
           </div>
 
@@ -221,7 +223,7 @@ export default function ConsultarAgendamentosTab() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Nome, e-mail ou telefone..."
-              className="w-full rounded-xl border border-zinc-200 px-3.5 py-2 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+              className="w-full rounded-xl border border-zinc-200 px-3.5 py-2 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
             />
           </div>
           <div>
@@ -229,7 +231,7 @@ export default function ConsultarAgendamentosTab() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full rounded-xl border border-zinc-200 px-3.5 py-2 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+              className="w-full rounded-xl border border-zinc-200 px-3.5 py-2 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
             >
               <option value="">Todos</option>
               {STATUS_OPTIONS.map((s) => (
@@ -248,7 +250,7 @@ export default function ConsultarAgendamentosTab() {
               setStatusFilter('')
               setSearch('')
             }}
-            className="text-xs font-medium text-[#C4917B] hover:underline"
+            className="text-xs font-medium text-primary hover:underline"
           >
             Limpar filtros
           </button>
@@ -301,7 +303,7 @@ export default function ConsultarAgendamentosTab() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="space-y-1 min-w-0 flex-1">
                     <div className="flex items-center gap-3 flex-wrap">
-                      <span className="text-lg font-bold text-[#C4917B]">
+                      <span className="text-lg font-bold text-primary">
                         {appt.hora.slice(0, 5)}
                       </span>
                       <span
@@ -339,7 +341,7 @@ export default function ConsultarAgendamentosTab() {
                       onChange={(e) =>
                         handleStatusChange(appt.id, e.target.value as AppointmentStatus)
                       }
-                      className="rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-700 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none disabled:opacity-50 transition-all duration-200"
+                      className="rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-700 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none disabled:opacity-50 transition-all duration-200"
                     >
                       {STATUS_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>

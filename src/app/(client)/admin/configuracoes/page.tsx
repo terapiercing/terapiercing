@@ -1,9 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
+import { getConfiguracao } from '@/lib/config'
 import ConfiguracoesForm from './ConfiguracoesForm'
 import { redirect } from 'next/navigation'
 
 export default async function Page() {
   const supabase = await createClient()
+  const config = await getConfiguracao()
 
   // 1. Check authentication and role
   const { data: userData } = await supabase.auth.getUser()
@@ -47,7 +49,7 @@ export default async function Page() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-semibold text-zinc-800">Configurações da Clínica</h1>
-        <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#C4917B]">
+        <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-primary">
           Gerencie o catálogo de procedimentos da clínica e os horários de funcionamento.
         </p>
       </div>
@@ -55,6 +57,7 @@ export default async function Page() {
       <ConfiguracoesForm
         initialServicos={servicos || []}
         initialDisponibilidades={disponibilidades || []}
+        initialConfig={config}
       />
     </div>
   )

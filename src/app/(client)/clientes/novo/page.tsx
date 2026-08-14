@@ -22,7 +22,7 @@ export default async function NovoClientePage() {
         <h1 className="text-3xl font-semibold text-zinc-800">
           Cadastrar Novo Cliente
         </h1>
-        <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#C4917B]">
+        <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-primary">
           Preencha os dados do cliente para criá-lo no sistema.
         </p>
       </div>

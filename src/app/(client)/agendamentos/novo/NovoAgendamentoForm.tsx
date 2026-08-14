@@ -241,9 +241,9 @@ export default function NovoAgendamentoForm({
     }
 
     if (isSelected) {
-      classes += '!bg-[#C4917B] !text-white font-semibold shadow-sm '
+      classes += '!bg-primary !text-white font-semibold shadow-sm '
     } else if (isToday) {
-      classes += 'border border-[#C4917B] text-[#C4917B] font-semibold '
+      classes += 'border border-primary text-primary font-semibold '
     }
 
     return classes
@@ -269,7 +269,7 @@ export default function NovoAgendamentoForm({
               <button
                 type="button"
                 onClick={() => setIsModalOpen(true)}
-                className="text-xs font-semibold text-[#C4917B] hover:text-[#A87060] hover:underline flex items-center gap-1 transition-all duration-200"
+                className="text-xs font-semibold text-primary hover:text-primary-dark hover:underline flex items-center gap-1 transition-all duration-200"
               >
                 <span>+</span> Cadastrar Novo Cliente
               </button>
@@ -281,14 +281,14 @@ export default function NovoAgendamentoForm({
                 value={clientSearch}
                 onChange={(e) => setClientSearch(e.target.value)}
                 placeholder="Filtrar cliente por nome, e-mail, telefone..."
-                className="w-full rounded-xl border border-zinc-200 px-3.5 py-2 text-xs text-zinc-800 bg-white shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+                className="w-full rounded-xl border border-zinc-200 px-3.5 py-2 text-xs text-zinc-800 bg-white shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
               />
 
               <select
                 value={selectedPatientId}
                 onChange={(e) => setSelectedPatientId(e.target.value)}
                 required={isAdmin}
-                className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 bg-white shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+                className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 bg-white shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
               >
                 {filteredClientes.length === 0 ? (
                   <option value="">Nenhum cliente encontrado</option>
@@ -310,7 +310,7 @@ export default function NovoAgendamentoForm({
         <select
           value={selectedServiceId}
           onChange={(e) => setSelectedServiceId(e.target.value)}
-          className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200"
+          className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200"
         >
           {servicos.map((s) => (
             <option key={s.id} value={s.id}>
@@ -322,14 +322,14 @@ export default function NovoAgendamentoForm({
 
       {/* Service Details Card */}
       {selectedService && (
-        <div className="rounded-2xl bg-[#FDFAF8] border border-zinc-200 p-4 flex justify-between items-center text-sm">
+        <div className="rounded-2xl bg-background border border-zinc-200 p-4 flex justify-between items-center text-sm">
           <div>
             <p className="font-semibold text-zinc-800">Duração Estimada</p>
             <p className="text-zinc-500">{selectedService.duracao_min} minutos</p>
           </div>
           <div className="text-right">
             <p className="font-semibold text-zinc-800">Valor</p>
-            <p className="font-semibold text-[#D4AF37] text-base font-serif">
+            <p className="font-semibold text-secondary text-base font-serif">
               {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedService.preco)}
             </p>
           </div>
@@ -412,8 +412,8 @@ export default function NovoAgendamentoForm({
                   onClick={() => setSelectedTime(slot)}
                   className={`rounded-xl py-2.5 text-center text-sm font-medium border transition-all duration-200 ${
                     selectedTime === slot
-                      ? 'bg-[#C4917B] border-[#C4917B] text-white shadow-sm'
-                      : 'bg-white border-zinc-200 text-zinc-700 hover:border-[#C4917B]/30 hover:text-[#C4917B]'
+                      ? 'bg-primary border-primary text-white shadow-sm'
+                      : 'bg-white border-zinc-200 text-zinc-700 hover:border-primary/30 hover:text-primary'
                   }`}
                 >
                   {slot}
@@ -435,7 +435,7 @@ export default function NovoAgendamentoForm({
           name="notes"
           rows={3}
           placeholder="Alguma recomendação ou detalhe que queira compartilhar conosco..."
-          className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200 resize-none"
+          className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200 resize-none"
         />
       </div>
 
@@ -459,7 +459,7 @@ export default function NovoAgendamentoForm({
             type="button"
             onClick={handleSubmitClick}
             disabled={pending || !selectedTime || showFormAnamnese}
-            className="flex-[2] rounded-xl bg-[#C4917B] py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex-[2] rounded-xl bg-primary py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark focus:ring-2 focus:ring-primary/15 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {showFormAnamnese ? 'Preencha o formulário abaixo' : 'Preencher Ficha de Anamnese'}
           </button>
@@ -467,7 +467,7 @@ export default function NovoAgendamentoForm({
           <button
             type="submit"
             disabled={pending || !selectedTime || !formCompleted}
-            className="flex-[2] rounded-xl bg-[#C4917B] py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex-[2] rounded-xl bg-primary py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark focus:ring-2 focus:ring-primary/15 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {pending ? 'Processando...' : formCompleted && anamneseAssinatura ? 'Confirmar e Assinar' : 'Confirmar Agendamento'}
           </button>

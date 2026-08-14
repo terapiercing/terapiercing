@@ -30,7 +30,7 @@ interface AppointmentView {
 }
 
 const INPUT_CLASSES =
-  'w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none transition-all duration-200'
+  'w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-zinc-800 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all duration-200'
 
 const isBlankImage = (dataUrl: string): Promise<boolean> => {
   return new Promise((resolve) => {
@@ -186,7 +186,7 @@ export default function ModalEditarFormulario({
               type="checkbox"
               checked={!!value}
               onChange={(e) => updateField(pergunta.id, e.target.checked)}
-              className="rounded text-[#C4917B] focus:ring-[#C4917B]"
+              className="rounded text-primary focus:ring-primary"
             />
             <span className="text-sm text-zinc-700">Sim</span>
           </label>
@@ -226,7 +226,7 @@ export default function ModalEditarFormulario({
                         updateField(pergunta.id, [...current, opt])
                       }
                     }}
-                    className="rounded text-[#C4917B] focus:ring-[#C4917B]"
+                    className="rounded text-primary focus:ring-primary"
                   />
                   <span className="text-sm text-zinc-700">{opt}</span>
                 </label>
@@ -395,7 +395,7 @@ export default function ModalEditarFormulario({
                   type="checkbox"
                   checked={aceite}
                   onChange={(e) => setAceite(e.target.checked)}
-                  className="mt-0.5 rounded text-[#C4917B] focus:ring-[#C4917B]"
+                  className="mt-0.5 rounded text-primary focus:ring-primary"
                 />
                 <span className="text-sm text-zinc-600 leading-relaxed">
                   Reconfirmo que as informações acima estão corretas e autorizo o
@@ -420,7 +420,7 @@ export default function ModalEditarFormulario({
               <button
                 onClick={handleSave}
                 disabled={!canSave}
-                className="flex-[2] rounded-xl bg-[#C4917B] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98] disabled:opacity-50"
+                className="flex-[2] rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark active:scale-[0.98] disabled:opacity-50"
               >
                 {saving ? 'Salvando...' : 'Salvar alterações'}
               </button>
@@ -428,7 +428,7 @@ export default function ModalEditarFormulario({
           ) : (
             <button
               onClick={onClose}
-              className="w-full rounded-xl bg-[#C4917B] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98]"
+              className="w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark active:scale-[0.98]"
             >
               Fechar
             </button>

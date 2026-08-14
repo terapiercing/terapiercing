@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>RBClinic — Proposta Comercial · Licença de Uso</title>
+<style>
+  /* ============================================================
+     RBClinic · Proposta Comercial · A4 print design
+     Palette: cream #FAF7F5 · terracota #C4917B/#A87060 · gold #D4AF37
+     ============================================================ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  html, body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    color: #3A3230;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    background: #EDE7E1;
+  }
+
+  .sheet {
+    width: 210mm;
+    height: 297mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: #FFFFFF;
+  }
+  .sheet:last-child { page-break-after: auto; }
+
+  .inner {
+    position: relative;
+    height: 100%;
+    padding: 15mm 16mm 20mm;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+  }
+
+  .serif { font-family: Georgia, 'Times New Roman', serif; }
+
+  /* ---------- shared chrome ---------- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 6mm;
+    border-bottom: 0.5pt solid rgba(196,145,123,0.35);
+  }
+  .wordmark { font-size: 15pt; letter-spacing: 1.5pt; color: #C4917B; font-weight: 700; }
+  .wordmark .gold { color: #D4AF37; }
+  .eyebrow {
+    font-size: 7.5pt; letter-spacing: 2.5pt; text-transform: uppercase;
+    color: #B08A75; font-weight: 600;
+  }
+
+  .section-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 21pt;
+    color: #4A3B35;
+    font-weight: 700;
+    letter-spacing: 0.2pt;
+    margin-top: 1.5mm;
+  }
+  .section-title .accent { color: #C4917B; }
+  .section-lead {
+    font-size: 10pt; color: #7A6C66; max-width: 165mm; margin-top: 2mm;
+  }
+  .gold-rule { height: 2.2pt; width: 22mm; background: #D4AF37; border-radius: 2pt; margin: 4mm 0 0; }
+
+  .foot {
+    margin-top: auto;
+    padding-top: 5mm;
+    border-top: 0.5pt solid rgba(196,145,123,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 7.5pt;
+    color: #A99A94;
+    letter-spacing: 0.6pt;
+  }
+  .foot .pageno { color: #C4917B; font-weight: 700; }
+
+  /* decorative soft circles */
+  .deco {
+    position: absolute;
+    bottom: -32mm;
+    right: -32mm;
+    width: 96mm;
+    height: 96mm;
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .deco.terra { background: radial-gradient(circle, rgba(196,145,123,0.14) 0%, rgba(196,145,123,0) 70%); }
+  .deco.gold  { background: radial-gradient(circle, rgba(212,175,55,0.16) 0%, rgba(212,175,55,0) 70%); }
+  .deco.top-left {
+    top: -34mm; left: -34mm; right: auto; bottom: auto;
+  }
+  .deco.top-left.terra { background: radial-gradient(circle, rgba(196,145,123,0.10) 0%, rgba(196,145,123,0) 70%); }
+
+  /* ---------- PAGE 1 · COVER ---------- */
+  .cover {
+    background: linear-gradient(160deg, #FDF9F5 0%, #F6ECE4 55%, #F1E3D8 100%);
+  }
+  .cover .frame {
+    position: absolute;
+    inset: 9mm;
+    border: 0.6pt solid rgba(212,175,55,0.55);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .cover .inner { text-align: center; }
+  .cover .topbar { border-bottom: none; padding-bottom: 0; }
+  .cover-mid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cover .kicker {
+    font-size: 9pt; letter-spacing: 4pt; text-transform: uppercase;
+    color: #A87060; font-weight: 600; margin-top: 4mm;
+  }
+  .cover h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 33pt; line-height: 1.14; color: #4A3B35; font-weight: 700;
+    margin-top: 5mm;
+  }
+  .cover h1 .gold { color: #D4AF37; }
+  .cover h1 .terra { color: #C4917B; }
+  .cover .sub {
+    font-size: 11.5pt; color: #6F615B; max-width: 138mm; margin: 6mm auto 0;
+  }
+  .cover .monogram {
+    margin: 8mm auto 0;
+    width: 20mm; height: 20mm; border-radius: 50%;
+    background: linear-gradient(140deg, #C4917B, #A87060);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3mm 6mm rgba(168,112,96,0.28);
+  }
+  .cover .monogram span {
+    font-family: Georgia, serif; color: #FFF; font-size: 11pt; letter-spacing: 1pt; font-weight: 700;
+  }
+
+  .price-card {
+    margin: 9mm auto 0;
+    width: 118mm;
+    background: #FFFFFF;
+    border: 0.8pt solid rgba(212,175,55,0.6);
+    border-radius: 4mm;
+    box-shadow: 0 4mm 10mm rgba(74,59,53,0.10);
+    padding: 6mm 8mm;
+  }
+  .price-card .pc-label {
+    font-size: 7.5pt; letter-spacing: 2.2pt; text-transform: uppercase; color: #B08A75; font-weight: 600;
+  }
+  .price-card .pc-value {
+    font-family: Georgia, serif; font-size: 30pt; color: #A87060; font-weight: 700; margin-top: 1mm;
+  }
+  .price-card .pc-value .per { font-size: 13pt; color: #8A7A72; font-weight: 400; }
+  .price-card .pc-note { font-size: 9pt; color: #6F615B; margin-top: 1mm; }
+  .price-card .pc-tags { margin-top: 3mm; display: flex; justify-content: center; gap: 3mm; }
+  .pc-tag {
+    font-size: 7.5pt; font-weight: 600; color: #7A6C66;
+    border: 0.5pt solid rgba(196,145,123,0.5); border-radius: 10pt;
+    padding: 1.2mm 3.5mm;
+  }
+
+  .cover .destiny {
+    margin-top: 9mm; font-size: 9.5pt; color: #8A7A72;
+  }
+  .cover .destiny strong { color: #4A3B35; }
+
+  /* ---------- SECTION HEADER PAGES ---------- */
+  .content { flex: 1; }
+
+  /* stat strip */
+  .stats {
+    display: flex; gap: 5mm; margin-top: 7mm;
+  }
+  .stat {
+    flex: 1;
+    border-radius: 3.5mm;
+    padding: 5mm 5mm 4.5mm;
+    background: #FBF7F3;
+    border: 0.5pt solid rgba(196,145,123,0.28);
+  }
+  .stat .num {
+    font-family: Georgia, serif; font-size: 19pt; font-weight: 700; color: #C4917B;
+  }
+  .stat .num .suffix { font-size: 10pt; color: #D4AF37; }
+  .stat .lab { font-size: 8pt; color: #7A6C66; margin-top: 1mm; line-height: 1.35; }
+
+  .h2 {
+    font-family: Georgia, serif; font-size: 13.5pt; color: #4A3B35; font-weight: 700;
+    margin: 7mm 0 3mm;
+  }
+  .h2 .n { color: #D4AF37; font-size: 10.5pt; vertical-align: 1pt; margin-right: 1.5mm; }
+
+  .lead-box {
+    background: #FBF7F3; border-left: 2.5pt solid #D4AF37;
+    border-radius: 0 2.5mm 2.5mm 0;
+    padding: 4mm 5mm; font-size: 9.6pt; color: #5E524C;
+  }
+
+  .bullets { margin-top: 3mm; }
+  .bullet {
+    display: flex; gap: 3mm; align-items: flex-start; margin-top: 2.2mm;
+  }
+  .bullet .dot {
+    flex: 0 0 auto; width: 3.4mm; height: 3.4mm; margin-top: 1.2mm;
+    border-radius: 50%; background: #C4917B;
+    position: relative;
+  }
+  .bullet .dot::after {
+    content: ''; position: absolute; left: 1.05mm; top: 1.6mm; width: 1.4mm; height: 0.7mm;
+    border-left: 0.5pt solid #FFF; border-bottom: 0.5pt solid #FFF;
+    transform: rotate(-45deg) translateY(-0.4mm);
+  }
+  .bullet .txt b { color: #4A3B35; }
+
+  /* feature cards */
+  .feat-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4.5mm; margin-top: 5mm;
+  }
+  .feat {
+    border: 0.5pt solid rgba(196,145,123,0.32);
+    border-radius: 3.5mm;
+    background: #FFFFFF;
+    padding: 5mm 5mm 4.5mm;
+    box-shadow: 0 1mm 3mm rgba(74,59,53,0.04);
+  }
+  .feat .ficon {
+    width: 9.5mm; height: 9.5mm; border-radius: 2.5mm;
+    background: linear-gradient(140deg, #C4917B, #A87060);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 3mm;
+  }
+  .feat .ficon.gold { background: linear-gradient(140deg, #D9B954, #C9A227); }
+  .feat h3 { font-size: 10.3pt; color: #4A3B35; font-weight: 700; }
+  .feat p { font-size: 8.6pt; color: #7A6C66; margin-top: 1.2mm; line-height: 1.5; }
+
+  .feat-badge {
+    display: inline-block; font-size: 6.8pt; font-weight: 700; letter-spacing: 0.8pt;
+    text-transform: uppercase; color: #A87060;
+    background: #FBEFE9; border: 0.5pt solid rgba(196,145,123,0.4);
+    border-radius: 8pt; padding: 0.6mm 2.6mm; margin-left: 1.5mm; vertical-align: 1pt;
+  }
+
+  /* differencial highlights */
+  .diff-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4.5mm; margin-top: 5mm;
+  }
+  .diff {
+    display: flex; gap: 3.5mm; align-items: flex-start;
+    border: 0.5pt solid rgba(212,175,55,0.45);
+    background: #FFFDF8;
+    border-radius: 3.5mm; padding: 4.5mm;
+  }
+  .diff .dicon {
+    flex: 0 0 auto; width: 8mm; height: 8mm; border-radius: 50%;
+    background: #D4AF37; display: flex; align-items: center; justify-content: center;
+  }
+  .diff h4 { font-size: 9.6pt; color: #4A3B35; }
+  .diff p { font-size: 8.4pt; color: #7A6C66; margin-top: 0.8mm; line-height: 1.45; }
+
+  /* comparison table */
+  .tbl-wrap { margin-top: 5mm; border: 0.5pt solid rgba(196,145,123,0.35); border-radius: 3mm; overflow: hidden; }
+  table.cmp { width: 100%; border-collapse: collapse; font-size: 8.8pt; }
+  table.cmp th {
+    background: #F6EAE1; color: #5E4A42; font-size: 8pt; letter-spacing: 0.8pt;
+    text-transform: uppercase; padding: 3mm 4mm; text-align: left; font-weight: 700;
+  }
+  table.cmp th.rbc { background: linear-gradient(140deg, #C4917B, #A87060); color: #FFF; text-align: center; }
+  table.cmp th.mkt { text-align: center; }
+  table.cmp td { padding: 2.8mm 4mm; border-top: 0.4pt solid rgba(196,145,123,0.2); color: #5E524C; }
+  table.cmp td.rbc { text-align: center; background: #FBF7F3; font-weight: 700; color: #A87060; }
+  table.cmp td.mkt { text-align: center; color: #8A7A72; }
+  table.cmp tr.row-feat td { background: #FFFDF8; color: #4A3B35; font-weight: 600; }
+
+  .yes { color: #3E7D55; font-weight: 700; }
+  .no  { color: #B45A4A; font-weight: 700; }
+
+  /* pricing plans */
+  .plan-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4.5mm; margin-top: 6mm; align-items: stretch; }
+  .plan {
+    border: 0.5pt solid rgba(196,145,123,0.4); border-radius: 4mm; padding: 6mm 5.5mm 5.5mm;
+    background: #FFFFFF; position: relative; display: flex; flex-direction: column;
+  }
+  .plan-name { font-size: 7.6pt; letter-spacing: 2pt; text-transform: uppercase; color: #B08A75; font-weight: 700; }
+  .plan-price { font-family: Georgia, serif; font-size: 21pt; color: #4A3B35; font-weight: 700; margin-top: 2mm; }
+  .plan-price .per { font-size: 10.5pt; color: #8A7A72; font-weight: 400; }
+  .plan-note { font-size: 8.2pt; color: #7A6C66; margin-top: 2mm; line-height: 1.5; flex: 1; }
+  .plan-featured { border-color: rgba(196,145,123,0.75); background: #FBF7F3; }
+  .plan-best {
+    background: linear-gradient(150deg, #4A3B35, #5E4A42); border: none; color: #FFF;
+    box-shadow: 0 3mm 8mm rgba(74,59,53,0.22);
+  }
+  .plan-best .plan-name { color: #D9C9C0; }
+  .plan-best .plan-price { color: #F5EADF; }
+  .plan-best .plan-price .per { color: #D9C9C0; }
+  .plan-best .plan-note { color: #EFE4DA; }
+  .plan-tag {
+    position: absolute; top: -3mm; left: 5mm;
+    font-size: 6.8pt; font-weight: 700; letter-spacing: 1pt; text-transform: uppercase;
+    border-radius: 10pt; padding: 1.2mm 3.5mm; white-space: nowrap;
+  }
+  .plan-featured .plan-tag { background: #D4AF37; color: #4A3B35; }
+  .plan-best .plan-tag { background: #C4917B; color: #FFF; }
+
+  .cost-note {
+    margin-top: 4mm; background: #FFFDF8; border: 0.5pt solid rgba(212,175,55,0.5);
+    border-radius: 3mm; padding: 4mm 5mm; font-size: 8.8pt; color: #5E524C;
+  }
+  .cost-note b { color: #4A3B35; }
+
+  .steps { display: flex; gap: 4mm; margin-top: 5mm; }
+  .step {
+    flex: 1; border-radius: 3.5mm; background: #FFFFFF;
+    border: 0.5pt solid rgba(196,145,123,0.32); padding: 4.5mm 4mm;
+  }
+  .step .snum {
+    width: 7mm; height: 7mm; border-radius: 50%; background: #C4917B; color: #FFF;
+    font-weight: 700; display: flex; align-items: center; justify-content: center;
+    font-size: 9pt; margin-bottom: 2.5mm;
+  }
+  .step h4 { font-size: 9.3pt; color: #4A3B35; }
+  .step p { font-size: 8.2pt; color: #7A6C66; margin-top: 1mm; line-height: 1.45; }
+
+  .contact-strip {
+    margin-top: 6mm; display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(140deg, #C4917B, #A87060);
+    border-radius: 3.5mm; padding: 5mm 7mm; color: #FFF;
+  }
+  .contact-strip .cs-title { font-family: Georgia, serif; font-size: 12pt; font-weight: 700; }
+  .contact-strip .cs-sub { font-size: 8.6pt; color: #F3E4DB; margin-top: 0.8mm; }
+  .contact-strip .cs-mail { font-size: 9.5pt; font-weight: 700; letter-spacing: 0.4pt; }
+
+  /* icons */
+  .icon { width: 5.2mm; height: 5.2mm; color: #FFF; display: block; }
+  .icon.dark { color: #4A3B35; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- PAGE 1 · CAPA                                               -->
+<!-- ============================================================ -->
+<div class="sheet cover">
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="topbar">
+      <span class="wordmark serif">RB<span class="gold">Clinic</span></span>
+      <span class="eyebrow">Proposta Comercial</span>
+    </div>
+
+    <div class="cover-mid">
+      <div class="monogram"><span>RB</span></div>
+      <p class="kicker">Licença de Uso · Sistema de Gestão para Estética</p>
+      <h1 class="serif">A gestão completa da sua<br>clínica em um só lugar:<br><span class="gold">beleza</span> e <span class="terra">organização</span></h1>
+      <p class="sub">Agendamento online, anamnese digital com assinatura, ficha em PDF, confirmação por WhatsApp e área do cliente — tudo integrado, com design feito para o seu negócio.</p>
+
+      <div class="price-card">
+        <p class="pc-label">Planos mensal · trimestral · anual</p>
+        <p class="pc-value">R$ 69,90<span class="per">/mês</span></p>
+        <p class="pc-note">Plano anual · Suporte completo e melhorias contínuas durante todo o contrato</p>
+        <div class="pc-tags">
+          <span class="pc-tag">Agenda online</span>
+          <span class="pc-tag">Anamnese digital</span>
+          <span class="pc-tag">Assinatura + PDF</span>
+          <span class="pc-tag">WhatsApp incluso</span>
+        </div>
+      </div>
+
+      <p class="destiny">Apresentado a <strong>[Nome da Clínica]</strong> &nbsp;·&nbsp; Data: <strong>[dd/mm/aaaa]</strong></p>
+    </div>
+
+    <div class="foot">
+      <span>RBClinic · Proposta Comercial</span>
+      <span class="pageno">01</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 2 · CENÁRIO DE MERCADO                                  -->
+<!-- ============================================================ -->
+<div class="sheet">
+  <div class="deco terra"></div>
+  <div class="deco gold top-left"></div>
+  <div class="inner">
+    <div class="topbar">
+      <span class="wordmark serif">RB<span class="gold">Clinic</span></span>
+      <span class="eyebrow">O cenário</span>
+    </div>
+
+    <div class="content">
+      <h2 class="section-title">Um mercado em expansão <span class="accent">exige gestão digital</span></h2>
+      <div class="gold-rule"></div>
+      <p class="section-lead">O setor de estética é um dos que mais crescem no Brasil — e a clínica que ainda depende de agenda de papel, fichas físicas e WhatsApp avulso perde tempo, dinheiro e clientes todos os dias.</p>
+
+      <div class="stats">
+        <div class="stat">
+          <p class="num">R$ 48<span class="suffix"> bi</span></p>
+          <p class="lab">movimentados por ano pelo mercado de estética no Brasil</p>
+        </div>
+        <div class="stat">
+          <p class="num">1,5<span class="suffix"> mi</span></p>
+          <p class="lab">procedimentos estéticos realizados por ano no país</p>
+        </div>
+        <div class="stat">
+          <p class="num">4.º</p>
+          <p class="lab">maior mercado de beleza do mundo — líder na América Latina</p>
+        </div>
+        <div class="stat">
+          <p class="num">até 50%</p>
+          <p class="lab">de redução de faltas com confirmação automática de horários</p>
+        </div>
+      </div>
+
+      <h2 class="h2"><span class="n">01</span>O que o RBClinic resolve</h2>
+      <div class="bullets">
+        <div class="bullet"><span class="dot"></span><span class="txt">Fim das fichas de anamnese em papel: o cliente preenche digitalmente, <b>assina na tela</b> e o sistema arquiva com data e hora.</span></div>
+        <div class="bullet"><span class="dot"></span><span class="txt"><b>Menos faltas</b> com confirmação automática por WhatsApp no momento em que o horário é confirmado.</span></div>
+        <div class="bullet"><span class="dot"></span><span class="txt">Cliente <b>agenda sozinho, 24h por dia</b>, direto pelo site da clínica — sem ligações e sem mensagens perdidas.</span></div>
+        <div class="bullet"><span class="dot"></span><span class="txt"><b>Histórico completo</b> de cada cliente em um clique: procedimentos, formulários preenchidos e assinaturas.</span></div>
+        <div class="bullet"><span class="dot"></span><span class="txt"><b>Pronto para fiscalização sanitária:</b> fichas digitais assinadas e exportáveis em PDF.</span></div>
+        <div class="bullet"><span class="dot"></span><span class="txt"><b>Imagem profissional:</b> identidade visual elegante e responsiva para a sua marca.</span></div>
+      </div>
+
+      <div class="lead-box" style="margin-top:6mm;">
+        O RBClinic não é apenas uma agenda: é a <b>central de relacionamento da sua clínica</b> com cada cliente — do primeiro agendamento ao acompanhamento do histórico.
+      </div>
+    </div>
+
+    <div class="foot">
+      <span>RBClinic · Proposta Comercial</span>
+      <span class="pageno">02</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 3 · FUNCIONALIDADES · ATENDIMENTO & AGENDA               -->
+<!-- ============================================================ -->
+<div class="sheet">
+  <div class="deco gold"></div>
+  <div class="deco terra top-left"></div>
+  <div class="inner">
+    <div class="topbar">
+      <span class="wordmark serif">RB<span class="gold">Clinic</span></span>
+      <span class="eyebrow">Funcionalidades · Parte 1</span>
+    </div>
+
+    <div class="content">
+      <h2 class="section-title">Tudo o que o sistema <span class="accent">faz por você</span></h2>
+      <div class="gold-rule"></div>
+      <p class="section-lead">Dois perfis de acesso em uma única plataforma: a <b>área do cliente</b> (agendamento e histórico próprios) e o <b>painel administrativo</b> (gestão completa da clínica).</p>
+
+      <div class="feat-grid">
+        <div class="feat">
+          <div class="ficon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 15l2 2 4-4"/></svg>
+          </div>
+          <h3>Agendamento Online 24h</h3>
+          <p>O cliente escolhe o procedimento, a data e o horário disponível sozinho, pelo site da clínica — a qualquer hora, de qualquer dispositivo.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon gold">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+          </div>
+          <h3>Agenda do Dia</h3>
+          <p>Painel administrativo com a agenda organizada e fluxo de status completo: Pendente, Confirmado, Concluído e Cancelado.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg>
+          </div>
+          <h3>Confirmação por WhatsApp <span class="feat-badge">Incluso</span></h3>
+          <p>Ao confirmar um horário, o sistema gera automaticamente uma mensagem personalizada de confirmação no WhatsApp do cliente.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon gold">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 2v4M16 2v4"/><path d="M9 15l2 2 4-4"/></svg>
+          </div>
+          <h3>Bloqueio de Agenda</h3>
+          <p>Feriados, férias, reuniões ou horário de almoço: bloqueie o dia inteiro ou apenas um período específico, com o motivo registrado.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="12" x2="14.5" y2="14.5"/></svg>
+          </div>
+          <h3>Catálogo de Procedimentos</h3>
+          <p>Cadastre seus serviços com preço, duração e descrição — e ative ou desative rapidamente cada um deles na vitrine de agendamento.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon gold">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+          </div>
+          <h3>Horário de Funcionamento</h3>
+          <p>Defina os dias e horários de atendimento de cada dia da semana. O sistema só oferece horários dentro da sua disponibilidade.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span>RBClinic · Proposta Comercial</span>
+      <span class="pageno">03</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 4 · FUNCIONALIDADES · CLÍNICA & GESTÃO                   -->
+<!-- ============================================================ -->
+<div class="sheet">
+  <div class="deco terra"></div>
+  <div class="deco gold top-left"></div>
+  <div class="inner">
+    <div class="topbar">
+      <span class="wordmark serif">RB<span class="gold">Clinic</span></span>
+      <span class="eyebrow">Funcionalidades · Parte 2</span>
+    </div>
+
+    <div class="content">
+      <h2 class="section-title">Anamnese, assinatura e <span class="accent">relacionamento</span></h2>
+      <div class="gold-rule"></div>
+      <p class="section-lead">O que poucos sistemas entregam: formulários personalizáveis, assinatura digital, ficha em PDF e portal do cliente — sem cobrança extra de módulos.</p>
+
+      <div class="feat-grid">
+        <div class="feat">
+          <div class="ficon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+          </div>
+          <h3>Anamnese Digital Personalizável</h3>
+          <p>Crie formulários sob medida por procedimento, com 8 tipos de campo e recorrência configurável: só na 1ª vez ou em todo atendimento.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon gold">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.7 12.5a6.5 6.5 0 0 0-1.5-6.8 6.5 6.5 0 0 0-9.4 0L9 7.4"/><path d="M2.3 11.5a6.5 6.5 0 0 0 1.5 6.8 6.5 6.5 0 0 0 9.4 0l1.8-1.7"/><line x1="12" y1="7" x2="12" y2="17"/></svg>
+          </div>
+          <h3>Assinatura Digital + Termo <span class="feat-badge">Incluso</span></h3>
+          <p>O cliente assina na tela do celular ou tablet e aceita o termo, com data e hora registradas — validade e rastreabilidade para a sua rotina.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 13h6M9 17h6"/></svg>
+          </div>
+          <h3>Ficha de Anamnese em PDF</h3>
+          <p>Exporte cada ficha assinada em PDF com a assinatura digital — pronta para arquivar, imprimir ou apresentar à fiscalização sanitária.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon gold">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Histórico Completo do Cliente</h3>
+          <p>Em um clique: todos os agendamentos, procedimentos realizados e formulários preenchidos por cada cliente, com suas assinaturas.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><rect x="7" y="9" width="10" height="4" rx="1"/></svg>
+          </div>
+          <h3>Área do Cliente <span class="feat-badge">Incluso</span></h3>
+          <p>Portal pessoal com login próprio: o cliente acompanha seus agendamentos, histórico e perfil. Experiência premium que fideliza.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon gold">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M9 4h6v3H9z"/></svg>
+          </div>
+          <h3>Painel Administrativo</h3>
+          <p>Indicadores essenciais em um só lugar: total de agendamentos, próximo atendimento e próximo serviço da agenda.</p>
+        </div>
+      </div>
+
+      <div class="lead-box" style="margin-top:5mm;">
+        E por trás de tudo: <b>cadastro completo de clientes</b> (CPF, nascimento, telefone e endereço), <b>controle de acesso por perfil</b> (admin e cliente) e <b>segurança de dados com isolamento por usuário</b> — cada cliente acessa somente as próprias informações.
+      </div>
+    </div>
+
+    <div class="foot">
+      <span>RBClinic · Proposta Comercial</span>
+      <span class="pageno">04</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 5 · DIFERENCIAIS E TABELA COMPARATIVA                    -->
+<!-- ============================================================ -->
+<div class="sheet">
+  <div class="deco gold"></div>
+  <div class="deco terra top-left"></div>
+  <div class="inner">
+    <div class="topbar">
+      <span class="wordmark serif">RB<span class="gold">Clinic</span></span>
+      <span class="eyebrow">Diferenciais</span>
+    </div>
+
+    <div class="content">
+      <h2 class="section-title">Diferenciais que <span class="accent">ninguém te cobra à parte</span></h2>
+      <div class="gold-rule"></div>
+      <p class="section-lead">No mercado, os recursos mais valiosos para clínicas de estética costumam ser vendidos como módulos extras. No RBClinic, todos já vêm inclusos na licença.</p>
+
+      <div class="diff-grid">
+        <div class="diff">
+          <div class="dicon">
+            <svg class="icon dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.7 12.5a6.5 6.5 0 0 0-1.5-6.8 6.5 6.5 0 0 0-9.4 0L9 7.4"/><path d="M2.3 11.5a6.5 6.5 0 0 0 1.5 6.8 6.5 6.5 0 0 0 9.4 0l1.8-1.7"/><line x1="12" y1="7" x2="12" y2="17"/></svg>
+          </div>
+          <div>
+            <h4>Assinatura digital inclusa</h4>
+            <p>Concorrentes chegam a cobrar R$ 45/mês só pelo módulo de assinatura eletrônica. Aqui está no valor da licença.</p>
+          </div>
+        </div>
+        <div class="diff">
+          <div class="dicon">
+            <svg class="icon dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><rect x="7" y="9" width="10" height="4" rx="1"/></svg>
+          </div>
+          <div>
+            <h4>Área do cliente inclusa</h4>
+            <p>Há sistemas que cobram R$ 150/mês pelo app do cliente. O portal da RBClinic já vem de fábrica.</p>
+          </div>
+        </div>
+        <div class="diff">
+          <div class="dicon">
+            <svg class="icon dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg>
+          </div>
+          <div>
+            <h4>WhatsApp incluso</h4>
+            <p>Integração de confirmação que concorrentes vendem por até R$ 229/mês. No RBClinic é nativa.</p>
+          </div>
+        </div>
+        <div class="diff">
+          <div class="dicon">
+            <svg class="icon dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          </div>
+          <div>
+            <h4>Suporte e evolução contínuos</h4>
+            <p>Durante todo o contrato, suporte completo para erros e falhas e o sistema em constante evolução.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table class="cmp">
+          <thead>
+            <tr>
+              <th style="width:46%;">Recurso</th>
+              <th class="rbc" style="width:27%;">RBClinic</th>
+              <th class="mkt" style="width:27%;">Média do mercado*</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-feat">
+              <td>Agendamento online para o cliente</td>
+              <td class="rbc"><span class="yes">Incluso</span></td>
+              <td class="mkt"><span class="yes">Incluso</span></td>
+            </tr>
+            <tr>
+              <td>Anamnese digital personalizável</td>
+              <td class="rbc"><span class="yes">Incluso</span></td>
+              <td class="mkt"><span class="yes">Incluso</span></td>
+            </tr>
+            <tr>
+              <td>Assinatura digital + termo de consentimento</td>
+              <td class="rbc"><span class="yes">Incluso</span></td>
+              <td class="mkt"><span class="no">Até R$ 45/mês</span></td>
+            </tr>
+            <tr>
+              <td>Área / app do cliente</td>
+              <td class="rbc"><span class="yes">Incluso</span></td>
+              <td class="mkt"><span class="no">Até R$ 150/mês</span></td>
+            </tr>
+            <tr>
+              <td>Confirmação por WhatsApp</td>
+              <td class="rbc"><span class="yes">Incluso</span></td>
+              <td class="mkt"><span class="no">Até R$ 229/mês</span></td>
+            </tr>
+            <tr>
+              <td>Ficha de anamnese em PDF com assinatura</td>
+              <td class="rbc"><span class="yes">Incluso</span></td>
+              <td class="mkt"><span class="no">Parcial / não incluso</span></td>
+            </tr>
+            <tr class="row-feat">
+              <td>Modelo de cobrança</td>
+              <td class="rbc"><span class="yes">Mensal · trimestral · anual</span></td>
+              <td class="mkt"><span class="no">Mensalidade R$ 40 a 250/mês</span></td>
+            </tr>
+            <tr>
+              <td>Fidelidade / multa de cancelamento</td>
+              <td class="rbc"><span class="yes">Sem</span></td>
+              <td class="mkt"><span class="no">Comum (até 50%)</span></td>
+            </tr>
+            <tr>
+              <td>Implantação e treinamento</td>
+              <td class="rbc"><span class="yes">Inclusos</span></td>
+              <td class="mkt"><span class="no">Sob consulta</span></td>
+            </tr>
+            <tr>
+              <td>Suporte a erros e falhas + melhorias contínuas</td>
+              <td class="rbc"><span class="yes">Durante todo o contrato</span></td>
+              <td class="mkt"><span class="no">Varia por plano</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-size:7.2pt; color:#A99A94; margin-top:2.5mm;">*Valores públicos de sistemas como Belle Software, Simples Agenda, Gestek, IterClinic e iClinic, verificados em 2026 (módulos e planos mensais).</p>
+    </div>
+
+    <div class="foot">
+      <span>RBClinic · Proposta Comercial</span>
+      <span class="pageno">05</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 6 · INVESTIMENTO · PLANOS                               -->
+<!-- ============================================================ -->
+<div class="sheet">
+  <div class="deco terra"></div>
+  <div class="deco gold top-left"></div>
+  <div class="inner">
+    <div class="topbar">
+      <span class="wordmark serif">RB<span class="gold">Clinic</span></span>
+      <span class="eyebrow">Investimento</span>
+    </div>
+
+    <div class="content">
+      <h2 class="section-title">Planos simples, <span class="accent">sem surpresas</span></h2>
+      <div class="gold-rule"></div>
+      <p class="section-lead">A licença é contratada de forma <b>mensal, trimestral ou anual</b>. Todos os planos incluem o sistema completo, o suporte e a evolução contínua do aplicativo durante todo o período de contrato.</p>
+
+      <div class="plan-grid">
+        <div class="plan">
+          <p class="plan-name">Mensal</p>
+          <p class="plan-price">R$ 89,90<span class="per">/mês</span></p>
+          <p class="plan-note">Ideal para quem quer conhecer o sistema. Faturamento mensal, sem fidelidade e sem multa de cancelamento.</p>
+        </div>
+        <div class="plan plan-featured">
+          <span class="plan-tag">Mais escolhido</span>
+          <p class="plan-name">Trimestral</p>
+          <p class="plan-price">R$ 79,90<span class="per">/mês</span></p>
+          <p class="plan-note">Faturamento a cada 3 meses (R$ 239,70). Economia de 11% frente ao plano mensal.</p>
+        </div>
+        <div class="plan plan-best">
+          <span class="plan-tag">Melhor custo-benefício</span>
+          <p class="plan-name">Anual</p>
+          <p class="plan-price">R$ 69,90<span class="per">/mês</span></p>
+          <p class="plan-note">Faturamento anual (R$ 838,80). Economia de 22% e prioridade na fila de melhorias.</p>
+        </div>
+      </div>
+
+      <div class="cost-note">
+        <b>Por que esse valor é justo?</b> No mercado, sistemas para estética cobram de <b>R$ 39,90 a R$ 250/mês</b> — e recursos como assinatura eletrônica, app do cliente e WhatsApp são vendidos à parte (até <b>R$ 424/mês extras</b>). No RBClinic, <b>tudo já está incluso</b> em um plano a partir de <b>R$ 69,90/mês</b>: assinatura digital, ficha em PDF, área do cliente, confirmação por WhatsApp, suporte completo e melhorias contínuas durante todo o contrato.
+      </div>
+
+      <div class="lead-box" style="margin-top:5mm;">
+        <b>Contratação transparente:</b> sem taxa de implantação, sem fidelidade e sem multa de cancelamento. Durante todo o período do contrato, o cliente conta com suporte para erros e falhas, recebe melhorias do sistema e pode propor novas funcionalidades.
+      </div>
+    </div>
+
+    <div class="foot">
+      <span>RBClinic · Proposta Comercial</span>
+      <span class="pageno">06</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 7 · GARANTIAS DO CONTRATO E PRÓXIMOS PASSOS              -->
+<!-- ============================================================ -->
+<div class="sheet">
+  <div class="deco gold"></div>
+  <div class="deco terra top-left"></div>
+  <div class="inner">
+    <div class="topbar">
+      <span class="wordmark serif">RB<span class="gold">Clinic</span></span>
+      <span class="eyebrow">Garantias do contrato</span>
+    </div>
+
+    <div class="content">
+      <h2 class="section-title">Suporte e evolução <span class="accent">durante todo o contrato</span></h2>
+      <div class="gold-rule"></div>
+      <p class="section-lead">O RBClinic não é um sistema entregue e abandonado: enquanto o contrato estiver vigente, sua clínica conta com suporte dedicado e recebe melhorias continuamente.</p>
+
+      <div class="feat-grid">
+        <div class="feat">
+          <div class="ficon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="12" y1="16" x2="12" y2="21"/><line x1="8" y1="12" x2="3" y2="12"/><line x1="16" y1="12" x2="21" y2="12"/></svg>
+          </div>
+          <h3>Suporte completo para erros e falhas</h3>
+          <p>Durante todo o período do contrato, nossa equipe acompanha o sistema e corrige possíveis erros e falhas com agilidade.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon gold">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          </div>
+          <h3>Desenvolvimento contínuo</h3>
+          <p>O aplicativo permanece em fase de desenvolvimento e recebe a entrega de melhorias e novas funcionalidades durante todo o contrato.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
+          </div>
+          <h3>Melhorias propostas pelo cliente</h3>
+          <p>As sugestões da sua clínica podem ser implementadas, mediante aprovação técnica e análise de contexto do projeto.</p>
+        </div>
+
+        <div class="feat">
+          <div class="ficon gold">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <h3>Atualizações inclusas</h3>
+          <p>Novas versões chegam ao seu ambiente sem custo adicional, mantendo o sistema sempre atualizado durante toda a vigência.</p>
+        </div>
+      </div>
+
+      <h2 class="h2" style="margin-top:6mm;"><span class="n">03</span>Como funciona a implantação</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="snum">1</div>
+          <h4>Diagnóstico</h4>
+          <p>Conhecemos a rotina da sua clínica, os procedimentos e os formulários necessários.</p>
+        </div>
+        <div class="step">
+          <div class="snum">2</div>
+          <h4>Configuração</h4>
+          <p>Cadastramos serviços, horários, formulários de anamnese e identidade visual.</p>
+        </div>
+        <div class="step">
+          <div class="snum">3</div>
+          <h4>Treinamento</h4>
+          <p>Sua equipe aprende na prática, com acompanhamento direto da implantação.</p>
+        </div>
+        <div class="step">
+          <div class="snum">4</div>
+          <h4>Suporte e evolução</h4>
+          <p>Suporte contínuo e entregas de melhorias durante todo o período do contrato.</p>
+        </div>
+      </div>
+
+      <div class="contact-strip" style="margin-top:5mm;">
+        <div>
+          <p class="cs-title">Pronta para dar o próximo passo?</p>
+          <p class="cs-sub">Entre em contato para conhecer o sistema na prática e receber sua demonstração.</p>
+        </div>
+        <span class="cs-mail">contato@rbclinic.com.br</span>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span>RBClinic · Proposta Comercial · Documento de referência — condições finais sob acordo contratual.</span>
+      <span class="pageno">07</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

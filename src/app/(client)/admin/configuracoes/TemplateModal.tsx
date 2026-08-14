@@ -203,7 +203,7 @@ export default function TemplateModal({
                 required
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
-                className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
                 placeholder="Ex: Ficha de Anamnese - Limpeza de Pele"
               />
             </div>
@@ -216,7 +216,7 @@ export default function TemplateModal({
                 rows={2}
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
-                className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none resize-none"
+                className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none resize-none"
                 placeholder="Descreva o propósito deste formulário..."
               />
             </div>
@@ -230,7 +230,7 @@ export default function TemplateModal({
                 <button
                   type="button"
                   onClick={addPergunta}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#C4917B] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#A87060] transition-all duration-200 active:scale-[0.98]"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-dark transition-all duration-200 active:scale-[0.98]"
                 >
                   <span className="text-base leading-none">+</span> Adicionar Pergunta
                 </button>
@@ -260,14 +260,14 @@ export default function TemplateModal({
                         value={pergunta.label}
                         onChange={(e) => updatePergunta(pergunta.id, 'label', e.target.value)}
                         placeholder="Texto da pergunta..."
-                        className="flex-1 rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 bg-white transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                        className="flex-1 rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-800 bg-white transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
                       />
                       <label className="flex items-center gap-1.5 text-xs text-zinc-500 shrink-0">
                         <input
                           type="checkbox"
                           checked={pergunta.required}
                           onChange={(e) => updatePergunta(pergunta.id, 'required', e.target.checked)}
-                          className="rounded text-[#C4917B] focus:ring-[#C4917B]"
+                          className="rounded text-primary focus:ring-primary"
                         />
                         Obrigatório
                       </label>
@@ -278,7 +278,7 @@ export default function TemplateModal({
                       <select
                         value={pergunta.type}
                         onChange={(e) => updatePergunta(pergunta.id, 'type', e.target.value as FieldType)}
-                        className="rounded-xl border border-zinc-200 px-3 py-1.5 text-xs text-zinc-700 bg-white transition-all duration-200 focus:border-[#C4917B] focus:outline-none"
+                        className="rounded-xl border border-zinc-200 px-3 py-1.5 text-xs text-zinc-700 bg-white transition-all duration-200 focus:border-primary focus:outline-none"
                       >
                         {FIELD_TYPES.map((ft) => (
                           <option key={ft.value} value={ft.value}>
@@ -328,7 +328,7 @@ export default function TemplateModal({
                               value={opt}
                               onChange={(e) => updateOption(pergunta.id, optIdx, e.target.value)}
                               placeholder={`Opção ${optIdx + 1}`}
-                              className="flex-1 rounded-xl border border-zinc-200 px-3 py-1.5 text-xs text-zinc-800 bg-white transition-all duration-200 focus:border-[#C4917B] focus:outline-none"
+                              className="flex-1 rounded-xl border border-zinc-200 px-3 py-1.5 text-xs text-zinc-800 bg-white transition-all duration-200 focus:border-primary focus:outline-none"
                             />
                             <button
                               type="button"
@@ -342,7 +342,7 @@ export default function TemplateModal({
                         <button
                           type="button"
                           onClick={() => addOption(pergunta.id)}
-                          className="text-xs font-medium text-[#C4917B] hover:underline"
+                          className="text-xs font-medium text-primary hover:underline"
                         >
                           + Adicionar opção
                         </button>
@@ -426,7 +426,7 @@ export default function TemplateModal({
               <button
                 type="submit"
                 disabled={pending || perguntas.length === 0}
-                className="rounded-xl bg-[#C4917B] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#A87060] transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
+                className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary-dark transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
               >
                 {pending ? 'Salvando...' : 'Salvar Modelo'}
               </button>

@@ -55,7 +55,7 @@ export default function PerfilForm({
                 name="nome"
                 defaultValue={usuario?.nome || ''}
                 required
-                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </div>
             <div>
@@ -67,7 +67,7 @@ export default function PerfilForm({
                 id="usuario"
                 name="usuario"
                 defaultValue={usuario?.usuario || ''}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </div>
             <div>
@@ -79,7 +79,7 @@ export default function PerfilForm({
                 id="new_email"
                 name="new_email"
                 defaultValue={userEmail}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </div>
             <div>
@@ -92,7 +92,7 @@ export default function PerfilForm({
                 name="telefone"
                 defaultValue={usuario?.telefone || ''}
                 required
-                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </div>
             <div>
@@ -111,7 +111,7 @@ export default function PerfilForm({
                     cpfRef.current.value = formatCpf(e.target.value)
                   }
                 }}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </div>
             <div>
@@ -123,7 +123,7 @@ export default function PerfilForm({
                 id="nascimento"
                 name="nascimento"
                 defaultValue={usuario?.nascimento || ''}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </div>
             <div>
@@ -135,7 +135,7 @@ export default function PerfilForm({
                 id="endereco"
                 name="endereco"
                 defaultValue={usuario?.endereco || ''}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </div>
             <div>
@@ -147,7 +147,7 @@ export default function PerfilForm({
                 id="numero"
                 name="numero"
                 defaultValue={usuario?.numero || ''}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </div>
             <div>
@@ -159,7 +159,7 @@ export default function PerfilForm({
                 id="bairro"
                 name="bairro"
                 defaultValue={usuario?.bairro || ''}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </div>
             <div>
@@ -171,7 +171,7 @@ export default function PerfilForm({
                 id="cidade"
                 name="cidade"
                 defaultValue={usuario?.cidade || ''}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </div>
             {isAdmin && (
@@ -183,7 +183,7 @@ export default function PerfilForm({
                   id="role"
                   name="role"
                   defaultValue={usuario?.role || 'client'}
-                  className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                  className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
                 >
                   <option value="client">Cliente</option>
                   <option value="admin">Administrador</option>
@@ -212,7 +212,7 @@ export default function PerfilForm({
           <button
             type="submit"
             disabled={profilePending}
-            className="rounded-xl bg-[#C4917B] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] focus:outline-none focus:ring-2 focus:ring-[#C4917B] focus:ring-offset-2 active:scale-[0.98] disabled:opacity-50"
+            className="rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-[0.98] disabled:opacity-50"
           >
             {profilePending ? 'Salvando...' : 'Salvar Alterações'}
           </button>
@@ -232,7 +232,7 @@ export default function PerfilForm({
                 id="current_password"
                 name="current_password"
                 required
-                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </div>
             <div className="sm:col-span-2 grid gap-6 sm:grid-cols-2">
@@ -246,7 +246,7 @@ export default function PerfilForm({
                   name="new_password"
                   required
                   minLength={6}
-                  className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                  className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
                 />
               </div>
               <div>
@@ -259,7 +259,7 @@ export default function PerfilForm({
                   name="confirm_password"
                   required
                   minLength={6}
-                  className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-[#C4917B] focus:outline-none focus:ring-2 focus:ring-[#C4917B]/15"
+                  className="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-zinc-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
                 />
               </div>
             </div>
@@ -282,7 +282,7 @@ export default function PerfilForm({
           <button
             type="submit"
             disabled={passwordPending}
-            className="rounded-xl border border-zinc-200 bg-white px-6 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-all duration-200 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-[#C4917B] focus:ring-offset-2 active:scale-[0.98] disabled:opacity-50"
+            className="rounded-xl border border-zinc-200 bg-white px-6 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-all duration-200 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-[0.98] disabled:opacity-50"
           >
             {passwordPending ? 'Alterando...' : 'Alterar Senha'}
           </button>

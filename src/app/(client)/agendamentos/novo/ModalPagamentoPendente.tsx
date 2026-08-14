@@ -66,7 +66,7 @@ export default function ModalPagamentoPendente({
         {/* Botão */}
         <button
           onClick={onConfirm}
-          className="w-full rounded-xl bg-[#C4917B] py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98]"
+          className="w-full rounded-xl bg-primary py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark active:scale-[0.98]"
         >
           Entendido
         </button>

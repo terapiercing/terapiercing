@@ -3,6 +3,7 @@
 import { useActionState, Suspense, useRef, useState, useEffect } from 'react'
 import { verifyResetIdentity, resetPasswordDirect } from '@/lib/actions/auth'
 import Link from 'next/link'
+import { useConfig } from '@/lib/config-context'
 
 function formatCpf(value: string): string {
   const digits = value.replace(/\D/g, '').slice(0, 11)
@@ -18,6 +19,7 @@ function EsqueciSenhaForm() {
   const [verifyState, verifyFormAction, verifyPending] = useActionState(verifyResetIdentity, undefined)
   const [resetState, resetFormAction, resetPending] = useActionState(resetPasswordDirect, undefined)
   const cpfRef = useRef<HTMLInputElement>(null)
+  const { nomeClinica } = useConfig()
 
   useEffect(() => {
     if (verifyState?.verified && verifyState.userId) {
@@ -27,11 +29,11 @@ function EsqueciSenhaForm() {
   }, [verifyState])
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#FDFAF8] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <Link href="/" className="font-serif text-4xl tracking-tight text-[#D4AF37] hover:opacity-90">
-            RBClinic
+          <Link href="/" className="font-serif text-4xl tracking-tight text-secondary hover:opacity-90">
+            {nomeClinica}
           </Link>
           <h2 className="mt-6 text-2xl font-semibold text-zinc-800">
             {step === 'verify' ? 'Esqueci minha senha' : 'Redefinir senha'}
@@ -55,7 +57,7 @@ function EsqueciSenhaForm() {
                   name="email"
                   type="email"
                   required
-                  className="mt-1 block w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] placeholder-zinc-400 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                  className="mt-1 block w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] placeholder-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
                   placeholder="seu@email.com"
                 />
               </div>
@@ -76,7 +78,7 @@ function EsqueciSenhaForm() {
                       cpfRef.current.value = formatCpf(e.target.value)
                     }
                   }}
-                  className="mt-1 block w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] placeholder-zinc-400 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                  className="mt-1 block w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] placeholder-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
                   placeholder="000.000.000-00"
                 />
               </div>
@@ -91,7 +93,7 @@ function EsqueciSenhaForm() {
             <button
               type="submit"
               disabled={verifyPending}
-              className="w-full rounded-xl bg-[#C4917B] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] focus:ring-2 focus:ring-[#C4917B]/30 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark focus:ring-2 focus:ring-primary/30 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {verifyPending ? 'Verificando...' : 'Verificar Identidade'}
             </button>
@@ -111,7 +113,7 @@ function EsqueciSenhaForm() {
                   type="password"
                   required
                   minLength={6}
-                  className="mt-1 block w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] placeholder-zinc-400 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                  className="mt-1 block w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] placeholder-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
                   placeholder="Mínimo 6 caracteres"
                 />
               </div>
@@ -126,7 +128,7 @@ function EsqueciSenhaForm() {
                   type="password"
                   required
                   minLength={6}
-                  className="mt-1 block w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] placeholder-zinc-400 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                  className="mt-1 block w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)] placeholder-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
                   placeholder="Repita a nova senha"
                 />
               </div>
@@ -148,7 +150,7 @@ function EsqueciSenhaForm() {
               <button
                 type="submit"
                 disabled={resetPending}
-                className="w-full rounded-xl bg-[#C4917B] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] focus:ring-2 focus:ring-[#C4917B]/30 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark focus:ring-2 focus:ring-primary/30 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {resetPending ? 'Redefinindo...' : 'Redefinir Senha'}
               </button>
@@ -160,7 +162,7 @@ function EsqueciSenhaForm() {
           Lembrou sua senha?{' '}
           <Link
             href="/login"
-            className="font-medium text-[#C4917B] transition-opacity hover:opacity-80"
+            className="font-medium text-primary transition-opacity hover:opacity-80"
           >
             Voltar ao login
           </Link>
@@ -172,7 +174,7 @@ function EsqueciSenhaForm() {
 
 export default function EsqueciSenhaPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-[#FDFAF8] px-4 text-zinc-500 font-medium">Carregando...</div>}>
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-background px-4 text-zinc-500 font-medium">Carregando...</div>}>
       <EsqueciSenhaForm />
     </Suspense>
   )

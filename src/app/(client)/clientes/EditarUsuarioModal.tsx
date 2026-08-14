@@ -64,7 +64,7 @@ export default function EditarUsuarioModal({
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <label htmlFor="edit-nome" className="block text-sm font-medium text-zinc-700">
-                Nome Completo <span className="text-[#C4917B]">*</span>
+                Nome Completo <span className="text-primary">*</span>
               </label>
               <input
                 id="edit-nome"
@@ -72,7 +72,7 @@ export default function EditarUsuarioModal({
                 type="text"
                 required
                 defaultValue={usuario.nome}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
               />
             </div>
 
@@ -85,7 +85,7 @@ export default function EditarUsuarioModal({
                 name="usuario"
                 type="text"
                 defaultValue={usuario.usuario || ''}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
               />
             </div>
 
@@ -105,7 +105,7 @@ export default function EditarUsuarioModal({
 
             <div>
               <label htmlFor="edit-telefone" className="block text-sm font-medium text-zinc-700">
-                Telefone <span className="text-[#C4917B]">*</span>
+                Telefone <span className="text-primary">*</span>
               </label>
               <input
                 id="edit-telefone"
@@ -113,7 +113,7 @@ export default function EditarUsuarioModal({
                 type="tel"
                 required
                 defaultValue={usuario.telefone}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
               />
             </div>
 
@@ -133,7 +133,7 @@ export default function EditarUsuarioModal({
                     cpfRef.current.value = formatCpf(e.target.value)
                   }
                 }}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
               />
             </div>
 
@@ -146,7 +146,7 @@ export default function EditarUsuarioModal({
                 name="nascimento"
                 type="date"
                 defaultValue={usuario.nascimento || ''}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
               />
             </div>
 
@@ -159,7 +159,7 @@ export default function EditarUsuarioModal({
                 name="endereco"
                 type="text"
                 defaultValue={usuario.endereco || ''}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
               />
             </div>
 
@@ -172,7 +172,7 @@ export default function EditarUsuarioModal({
                 name="numero"
                 type="text"
                 defaultValue={usuario.numero || ''}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
               />
             </div>
 
@@ -185,7 +185,7 @@ export default function EditarUsuarioModal({
                 name="bairro"
                 type="text"
                 defaultValue={usuario.bairro || ''}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
               />
             </div>
 
@@ -198,7 +198,7 @@ export default function EditarUsuarioModal({
                 name="cidade"
                 type="text"
                 defaultValue={usuario.cidade || ''}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
               />
             </div>
 
@@ -210,7 +210,7 @@ export default function EditarUsuarioModal({
                 id="edit-role"
                 name="role"
                 defaultValue={usuario.role}
-                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-[#C4917B] focus:ring-2 focus:ring-[#C4917B]/15 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-800 transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none"
               >
                 <option value="client">Cliente</option>
                 <option value="admin">Administrador</option>
@@ -235,7 +235,7 @@ export default function EditarUsuarioModal({
             <button
               type="submit"
               disabled={pending}
-              className="rounded-xl bg-[#C4917B] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#A87060] active:scale-[0.98] disabled:opacity-50 sm:px-5 sm:py-2.5"
+              className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-dark active:scale-[0.98] disabled:opacity-50 sm:px-5 sm:py-2.5"
             >
               {pending ? 'Salvando...' : 'Salvar'}
             </button>
