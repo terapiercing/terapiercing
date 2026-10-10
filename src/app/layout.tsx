@@ -19,9 +19,9 @@ const playfair = Playfair_Display({
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getConfiguracao();
   return {
-    title: `${config.nomeClinica} - Estética Avançada`,
+    title: `${config.nomeClinica} - PIERCING • ESTILO • PERSONALIDADE`,
     description:
-      "Sistema de gestão para clínica de estética. Agende seus horários, acompanhe seus tratamentos e muito mais.",
+      "Sistema de gestão para estúdio de piercing. Agende seus atendimentos e acompanhe seus procedimentos e muito mais.",
     icons: {
       icon: "/favicon.png",
       apple: "/apple-icon.png",

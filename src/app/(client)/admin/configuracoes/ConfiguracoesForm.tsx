@@ -202,16 +202,16 @@ export default function ConfiguracoesForm({
     <div className="grid gap-8 lg:grid-cols-3">
       {/* Services + Templates */}
       <div className="lg:col-span-2 space-y-6">
-        {/* Aparência da Clínica */}
+        {/* Aparência do Estúdio */}
         <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-          <h2 className="text-xl font-semibold text-zinc-800 font-serif">Aparência da Clínica</h2>
+          <h2 className="text-xl font-semibold text-zinc-800 font-serif">Aparência do Estúdio</h2>
           <p className="text-xs text-zinc-400 mt-1 mb-5">
             Nome exibido nas telas e esquema de cores do sistema.
           </p>
 
           <form action={actionConfig} className="space-y-5">
             <div className="space-y-1">
-              <label className="block text-sm font-medium text-zinc-700">Nome da Clínica</label>
+              <label className="block text-sm font-medium text-zinc-700">Nome do Estúdio</label>
               <input
                 type="text"
                 name="nome_clinica"

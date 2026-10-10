@@ -48,9 +48,9 @@ export default async function Page() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-semibold text-zinc-800">Configurações da Clínica</h1>
+        <h1 className="text-3xl font-semibold text-zinc-800">Configurações do Estúdio</h1>
         <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-primary">
-          Gerencie o catálogo de procedimentos da clínica e os horários de funcionamento.
+          Gerencie o catálogo de procedimentos do estúdio e os horários de funcionamento.
         </p>
       </div>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RBClinic - Configurações da Clínica</title>
+  <title>RBClinic - Configurações do Estúdio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
   <style>
@@ -263,8 +263,8 @@
   <main>
     <div class="container">
       <div class="page-header">
-        <h1>Configurações da Clínica</h1>
-        <p>Gerencie o catálogo de procedimentos da clínica e os horários de funcionamento.</p>
+        <h1>Configurações do Estúdio</h1>
+        <p>Gerencie o catálogo de procedimentos do estúdio e os horários de funcionamento.</p>
       </div>
 
       <div class="grid-layout">
@@ -390,7 +390,7 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
           <div class="form-field">
             <label for="form-nome">Nome *</label>
-            <input type="text" id="form-nome" required placeholder="Ex: Limpeza de Pele">
+            <input type="text" id="form-nome" required placeholder="Ex: Perfuração de Lóbulo">
           </div>
           <div class="form-field">
             <label for="form-preco">Preço (R$) *</label>
@@ -444,7 +444,7 @@
         <form id="form-template-form" onsubmit="saveFormTemplate(event)">
           <div class="form-field">
             <label for="template-name">Nome do Modelo *</label>
-            <input type="text" id="template-name" required placeholder="Ex: Avaliação Dermatológica">
+            <input type="text" id="template-name" required placeholder="Ex: Ficha de Anamnese de Piercing">
           </div>
           <div class="form-field">
             <label for="template-json">Definição JSON *</label>
@@ -460,10 +460,10 @@
   <script>
     // Initial mock services
     let mockServices = [
-      { id: '1', nome: 'Limpeza de Pele Profissional', descricao: 'Limpeza profunda com higienização e extração de comedões.', preco: 150, duracao_min: 80, ativo: true, exige_formulario: true, formulario_recorrencia: 'primeira_vez' },
-      { id: '2', nome: 'Toxina Botulínica (Botox)', descricao: 'Aplicação de toxina botulínica para suavizar marcas.', preco: 950, duracao_min: 45, ativo: true, exige_formulario: true, formulario_recorrencia: 'sempre' },
-      { id: '3', nome: 'Preenchimento Labial', descricao: 'Procedimento com ácido hialurônico para volumização dos lábios.', preco: 1200, duracao_min: 60, ativo: true, exige_formulario: false, formulario_recorrencia: 'primeira_vez' },
-      { id: '4', nome: 'Peeling Químico Clareador', descricao: 'Aplicação de ácidos específicos para renovação celular.', preco: 250, duracao_min: 50, ativo: true, exige_formulario: false, formulario_recorrencia: 'primeira_vez' },
+      { id: '1', nome: 'Perfuração de Lóbulo (Orelha)', descricao: 'Perfuração no lóbulo com joia de titânio e material esterilizado.', preco: 60, duracao_min: 20, ativo: true, exige_formulario: true, formulario_recorrencia: 'primeira_vez' },
+      { id: '2', nome: 'Perfuração de Hélix (Cartilagem)', descricao: 'Perfuração na cartilagem superior da orelha com técnica precisa.', preco: 90, duracao_min: 30, ativo: true, exige_formulario: true, formulario_recorrencia: 'sempre' },
+      { id: '3', nome: 'Perfuração de Septo', descricao: 'Perfuração no septo nasal com posicionamento personalizado.', preco: 120, duracao_min: 30, ativo: true, exige_formulario: false, formulario_recorrencia: 'primeira_vez' },
+      { id: '4', nome: 'Piercing Nostril (Narina)', descricao: 'Perfuração na narina com técnica precisa e higiene rigorosa.', preco: 100, duracao_min: 30, ativo: true, exige_formulario: false, formulario_recorrencia: 'primeira_vez' },
     ];
 
     // Load data from localStorage if exists

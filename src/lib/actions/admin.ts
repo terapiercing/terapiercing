@@ -69,7 +69,7 @@ export async function updateConfiguracao(
   const tema = formData.get('tema') as string
 
   if (!nomeClinica) {
-    return { error: 'Informe o nome da clínica.' }
+    return { error: 'Informe o nome do estúdio.' }
   }
 
   if (!isThemeId(tema)) {

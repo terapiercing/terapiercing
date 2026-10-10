@@ -40,17 +40,16 @@ export default async function Home() {
           <div className="flex-1 space-y-8">
             <div className="space-y-2">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
-                Estética Avançada
+                Piercing • Estilo • Personalidade
               </p>
               <h1 className="font-serif text-4xl leading-tight tracking-tight text-zinc-800 sm:text-5xl lg:text-6xl">
-                Sua beleza merece{" "}
-                <span className="text-secondary">cuidado</span>{" "}
-                <span className="text-primary">especial</span>
+                Sua beleza merece um toque de{" "}
+                <span className="text-secondary">personalidade</span>.
               </h1>
             </div>
             <p className="max-w-lg text-base leading-relaxed text-zinc-500 mx-auto lg:mx-0 sm:text-lg">
-              Agende seus horários, acompanhe seus tratamentos e tenha acesso a
-              todo o histórico de procedimentos estéticos em um só lugar.
+              Realce seu estilo com piercings que combinam com você. Agende seu
+              atendimento e acompanhe seus procedimentos em um só lugar.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 lg:justify-start">
               <Link
